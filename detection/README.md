@@ -127,5 +127,6 @@ export ITPN_CKPT=/path/to/checkpoint-1200.pth
 - **FAIR-CSAR detection / FAIR-CSAR 检测**：ReDet + iTPN-Base / iTPN-Large（SL 与 FSI 两种设置）
 - **DOTA detection / DOTA 检测**：Rotated Faster R-CNN + fast_iTPN（`rotated_faster_rcnn` 下 DOTA 配置）
 - **SIVED detection / SIVED 检测**：多种检测头 + iTPN（`rotated_atss` / `rotated_fcos` 等）
+- **SARDet-100K / SSDD / HRSID detection（HBB）**：GFL + iTPN — reference configs & training logs under `results/detection/` / 参考配置与训练日志见 `results/detection/`
 
-See the paper's experimental section for the exact numbers. 具体数值以论文实验章节为准。
+See the paper's experimental section for the exact numbers; per-dataset logs/configs are under `results/detection/`. 具体数值以论文实验章节为准；各数据集日志与配置见 `results/detection/`。

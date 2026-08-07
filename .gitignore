@@ -23,6 +23,23 @@ ckpts/
 *.pt
 *.onnx
 
+# 实验结果目录：保留检测/分割日志与配置（人工整理，随仓库提交）
+!results/
+!results/**
+!results/detection/
+!results/detection/**/*.log
+!results/detection/**/*.log.json
+!results/detection/**/*.py
+!results/segmentation/
+!results/segmentation/**/*.log
+!results/segmentation/**/*.log.json
+!results/segmentation/**/*.py
+!results/visualize/
+!results/visualize/**
+# 但排除 results 下产生的 __pycache__ 等编译产物
+results/**/__pycache__/
+results/**/*.pyc
+
 # 数据 (data stays local)
 data/
 

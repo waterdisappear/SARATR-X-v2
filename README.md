@@ -25,6 +25,10 @@
   <img src="docs/figures/fig_framework_v3.png" width="88%">
 </p>
 
+*<div align="center">**Fig. 1 | Overall framework of SARATR-X-v2 with scale-aware structural pre-training.** Bottom: fixed multi-scale structural extractors spanning six receptive fields produce scale-specific responses, fused by learnable cross-scale weights into one target $y$, each operator robust to multiplicative speckle. Top: hierarchical encoder extracts multi-scale latent features from the masked input, and a decoder reconstructs $y$ under an L2 loss — *design the target to carry the physics*.
+
+**图 1 | SARATR-X-v2 尺度感知结构预训练总体框架。** 下半部分：覆盖六个感受野的固定多尺度结构算子产生各尺度响应，经可学习跨尺度权重融合为统一目标 $y$，每个算子对乘性斑点稳健；上半部分：层次编码器从掩码输入提取多尺度潜在特征，解码器在 L2 损失下重建 $y$ —— “让目标承载物理”。</div>*
+
 </div>
 
 ## Introduction / 简介
@@ -40,6 +44,10 @@ This repository provides a clean, well-commented, and executable implementation 
 <p align="center">
   <img src="docs/figures/fig1_motivation_v2.png" width="85%">
 </p>
+
+*<div align="center">**Fig. 2 | Perturbation-sensitive supervision and task-scale mismatch limit SAR pre-training.** (a) SAR-specific speckle perturbations destabilize pixel-space supervision, while downstream tasks require representations at different scales; (b) our method constructs a fine-to-coarse structural target and performs hierarchical pre-training, yielding perturbation-stable and scale-compatible representations; (c) the resulting representations achieve leading transfer performance across twelve downstream benchmarks.
+
+**图 2 | 扰动敏感监督与任务尺度错配制约 SAR 预训练。** (a) SAR 特有的斑点扰动使像素空间监督不稳定，而下游任务需要不同尺度的表示；(b) 本方法构造由细到粗的结构目标并进行层次化预训练，得到扰动稳定、尺度兼容的表示；(c) 所得表示在 12 个下游基准上取得领先的迁移性能。</div>*
 
 ## Highlights / 方法亮点
 
@@ -61,7 +69,7 @@ SARATR-X-v2/
 ├── visualize/               # Paper-figure reproduction scripts / 论文图表复现脚本
 ├── dataset/                 # Dataset conventions & acquisition / 数据集说明与获取方式
 ├── weights/                 # Pre-trained weights (large files, uploaded separately) / 预训练权重（大文件，单独上传）
-├── results/                 # Experiment results (large files; results/visualize committed) / 实验结果（大文件；results/visualize 随仓库提交）
+├── results/                 # Experiment logs & configs (detection/segmentation) + visualize data / 实验结果日志与配置 + 可视化数据
 └── docs/figures/            # Paper figures used in this README (PNG/PDF) / 论文图
 ```
 
@@ -88,6 +96,10 @@ python main_pretrain.py --data_path <500K pre-training data> --output_dir <work_
   <img src="docs/figures/fig2a_fusion_residual.png" width="85%">
 </p>
 
+*<div align="center">**Fig. 3 | Residual correction visualization of multi-scale fusion.** For each sample (row), from left to right: input SAR image $x$; feature map of the largest-scale branch $f_6$; fused target feature $y$; absolute residual $|y - f_6|$. Corrections concentrate around target boundaries, strong scatterers, and fine-grained structures — the small-scale branches provide structured, target-relevant refinements.
+
+**图 3 | 多尺度融合的残差校正可视化。** 每个样本（行）从左到右依次为：输入 SAR 影像 $x$；最大尺度分支特征 $f_6$；融合目标特征 $y$；绝对残差 $|y - f_6|$。残差集中于目标边界、强散射点与细粒度结构区域，说明小尺度分支提供了结构化的、与目标相关的修正。</div>*
+
 ## Classification / 分类
 
 **EN** — Linear probing and k-NN / few-shot classification on SAR benchmarks with a frozen iTPN / HiViT backbone. See `classification/linear_eval/` and `classification/fewshot/`.
@@ -109,9 +121,9 @@ python SOC_50.py --data_path ../../dataset/classification/SOC_50classes
 
 ## Detection / 检测
 
-**EN** — Rotated object detection on SAR benchmarks with iTPN backbones. This repo ships the **custom MMRotate parts** (backbones, datasets, configs, hooks) for RSAR / FAIR-CSAR / DOTA / SIVED; the framework itself is installed by the user. The paper also reports detection results on SARDet-100K / SSDD / HRSID, whose configs are not included here — build them following the provided ones. See `detection/`.
+**EN** — Rotated object detection on SAR benchmarks with iTPN backbones. This repo ships the **custom MMRotate parts** (backbones, datasets, configs, hooks) for RSAR / FAIR-CSAR / DOTA / SIVED; the framework itself is installed by the user. The paper also reports detection results on SARDet-100K / SSDD / HRSID (GFL + iTPN, horizontal boxes); their reference configs and training logs are provided under `results/detection/`. See `detection/`.
 
-**中文** — 在 SAR 基准上进行旋转目标检测，采用 ReDet / RoI Transformer / Oriented R-CNN + iTPN。本仓库提供 **MMRotate 自定义部分**（骨干、数据集、配置、Hook），覆盖 RSAR / FAIR-CSAR / DOTA / SIVED；框架由用户自行安装。论文中的 SARDet-100K / SSDD / HRSID 检测结果未附带配置，可参考现有配置自行搭建。见 `detection/`。
+**中文** — 在 SAR 基准上进行旋转目标检测，采用 ReDet / RoI Transformer / Oriented R-CNN + iTPN。本仓库提供 **MMRotate 自定义部分**（骨干、数据集、配置、Hook），覆盖 RSAR / FAIR-CSAR / DOTA / SIVED；框架由用户自行安装。论文中的 SARDet-100K / SSDD / HRSID（GFL + iTPN，水平框）检测结果，其参考配置与训练日志见 `results/detection/`。见 `detection/`。
 
 ```bash
 # after copying detection/ into the mmrotate install / 将 detection/ 复制进 mmrotate 安装目录后：
@@ -122,9 +134,9 @@ bash tools/dist_test.sh configs/redet/redet_itpn_base_3x_rsar.py \
 
 ## Segmentation / 分割
 
-**EN** — Semantic segmentation on SAR benchmarks with UperNet + iTPN / HiViT. This repo ships the **custom MMSeg parts** for AIR-PolarSAR-Seg-2.0 / OpenEarthMap-SAR / WHU-OPT-SAR (and ADE20K as reference); the framework itself is installed by the user. The paper also reports segmentation results on DDHR-SK, whose config is not included here. See `segmentation/`.
+**EN** — Semantic segmentation on SAR benchmarks with UperNet + iTPN / HiViT. This repo ships the **custom MMSeg parts** for AIR-PolarSAR-Seg-2.0 / OpenEarthMap-SAR / WHU-OPT-SAR (and ADE20K as reference); the framework itself is installed by the user. The paper also reports segmentation results on DDHR-SK / WHU-OPT-SAR, whose reference configs and training logs are provided under `results/segmentation/`. See `segmentation/`.
 
-**中文** — 在 SAR 基准上进行语义分割，采用 UperNet + iTPN / HiViT。本仓库提供 **MMSeg 自定义部分**，覆盖 AIR-PolarSAR-Seg-2.0 / OpenEarthMap-SAR / WHU-OPT-SAR（及参考用的 ADE20K）；框架由用户自行安装。论文中的 DDHR-SK 分割结果未附带配置。见 `segmentation/`。
+**中文** — 在 SAR 基准上进行语义分割，采用 UperNet + iTPN / HiViT。本仓库提供 **MMSeg 自定义部分**，覆盖 AIR-PolarSAR-Seg-2.0 / OpenEarthMap-SAR / WHU-OPT-SAR（及参考用的 ADE20K）；框架由用户自行安装。论文中的 DDHR-SK / WHU-OPT-SAR 分割结果，其参考配置与训练日志见 `results/segmentation/`。见 `segmentation/`。
 
 ```bash
 bash tools/dist_train.sh \
@@ -133,13 +145,17 @@ bash tools/dist_train.sh \
 
 ## Results / 实验结果
 
-**EN** — SARATR-X-v2 achieves state-of-the-art transfer performance on **12 SAR benchmarks** across classification, detection, and segmentation. See `results/` for the layout and `visualize/` for figure-reproduction scripts.
+**EN** — SARATR-X-v2 achieves state-of-the-art transfer performance on **12 SAR benchmarks** across classification, detection, and segmentation. The detection/segmentation training logs and reference configs are under `results/detection/` and `results/segmentation/`; figure-reproduction scripts are under `visualize/`.
 
-**中文** — SARATR-X-v2 在覆盖分类、检测、分割的 **12 个 SAR 基准**上取得全面领先的迁移性能。结果目录布局见 `results/`，图表复现脚本见 `visualize/`。
+**中文** — SARATR-X-v2 在覆盖分类、检测、分割的 **12 个 SAR 基准**上取得全面领先的迁移性能。检测 / 分割的训练日志与参考配置见 `results/detection/` 与 `results/segmentation/`；图表复现脚本见 `visualize/`。
 
 <p align="center">
   <img src="docs/figures/sar_benchmark_4x3_horizontal_bar.png" width="85%">
 </p>
+
+*<div align="center">**Fig. 4 | Comprehensive comparison of SARATR-X-v2 on twelve SAR benchmarks** spanning classification (ATRNet-STAR, MSTAR, SAR-VSA, FUSAR-Ship), object detection (SARDet-100K, RSAR, SSDD, HRSID), and semantic segmentation (AIR-PolSAR-Seg-2.0, OpenEarthMap-SAR, WHU-OPT-SAR, DDHR-SK). SARATR-X-v2 achieves the best result on 10 of 12 benchmarks and second-best on the remaining two.
+
+**图 4 | SARATR-X-v2 在 12 个 SAR 基准上的综合对比**，涵盖分类（ATRNet-STAR、MSTAR、SAR-VSA、FUSAR-Ship）、目标检测（SARDet-100K、RSAR、SSDD、HRSID）与语义分割（AIR-PolSAR-Seg-2.0、OpenEarthMap-SAR、WHU-OPT-SAR、DDHR-SK）。SARATR-X-v2 在 12 个基准中取得 10 个最优、2 个次优。</div>*
 
 Under synthetic speckle variation, the proposed target reduces perturbation drift in the learned representation by **nearly two orders of magnitude** relative to pixel-space supervision.
 
@@ -149,6 +165,16 @@ Under synthetic speckle variation, the proposed target reduces perturbation drif
   <img src="docs/figures/speckle_stability_lines_replot.png" width="70%">
   <img src="docs/figures/stability_transfer_scatter.png" width="45%">
 </p>
+
+*<div align="center">**Fig. 5 | Stability of target features against synthetic speckle perturbation** — mean $\ell_1$ difference between target features extracted from pairs of speckle realizations vs. perturbation strength $\sigma$ (log-normal speckle). All feature-space targets drift substantially less than raw pixel input, and the fused multi-scale target is the most stable.
+
+**图 5 | 目标特征对合成斑点扰动的稳定性** —— 同一影像的成对斑点实现下目标特征的均值 $\ell_1$ 差异随扰动强度 $\sigma$ 的变化。所有特征空间目标的漂移都远小于原始像素输入，融合多尺度目标最稳定。</div>*
+
+<div align="center">
+  **Fig. 6 | Stability–transfer relationship across pre-training targets.** Each point is one supervision target (pixel, single-scale S1–S6, multi-scale fusion). Horizontal axis: mean $\ell_1$ drift under speckle at $\sigma=0.15$; vertical axis: 10-shot linear-probe accuracy on ATRNet-STAR (SOC-50) with frozen iTPN-B. Lower drift correlates with higher accuracy ($\rho=-0.93$, $p=0.002$).
+
+  **图 6 | 各预训练目标的稳定性–迁移关系。** 每个点为一种监督目标（像素、单尺度 S1–S6、多尺度融合）。横轴：$\sigma=0.15$ 斑点下的均值 $\ell_1$ 漂移；纵轴：冻结 iTPN-B 在 ATRNet-STAR（SOC-50）上的 10-shot 线性探测精度。漂移越小精度越高（$\rho=-0.93$，$p=0.002$）。
+</div>
 
 ## Data / 数据
 
@@ -163,9 +189,9 @@ Under synthetic speckle variation, the proposed target reduces perturbation drif
 
 ## Weights & Results / 权重与结果
 
-**EN** — Pre-trained weights and experiment results are large and **not committed**; download them from the release and place them per the READMEs. `results/visualize/` csv/json (small) are committed for figure reproduction.
+**EN** — Pre-trained weights are large and **not committed**; download them from the release and place them per `weights/README.md`. Experiment logs/configs (detection/segmentation) and the small visualization csv/json are committed under `results/`.
 
-**中文** — 预训练权重与实验结果文件较大，**不随仓库提交**；请从 release 附件获取后按 README 放置。`results/visualize/` 下的实验数据（csv/json，体积小）已随仓库提交，可直接复现论文图表。
+**中文** — 预训练权重较大，**不随仓库提交**；请从 release 附件获取后按 `weights/README.md` 放置。检测 / 分割的实验日志与配置、以及可视化所需的小体积数据已随仓库提交在 `results/`。
 
 - `weights/README.md`：pre-trained weight layout (iTPN-B/L × fusion targets/ablations) and mapping to downstream tasks; `checkpoint-1200.pth` by default; 预训练权重目录结构与下游任务对应关系，默认使用 `checkpoint-1200.pth`。
 - `results/README.md`：downstream result layout; 下游实验结果目录结构。

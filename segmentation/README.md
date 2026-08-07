@@ -103,6 +103,7 @@ python tools/train.py \
 - **AIR-PolarSAR-Seg-2.0 segmentation / 分割**：UperNet + iTPN-Base / iTPN-Large（`pixel_upernet_itpn_*_air_polarsar2_amp_linux.py`）
 - **AIR-PolarSAR-Seg segmentation / 分割**：UperNet + iTPN（`pixel_upernet_itpn_*_air_polarsar_hh_linux*.py`）
 - **WHU-OPT-SAR segmentation / 分割**：UperNet + iTPN（`pixel_upernet_itpn_*_whu_opt_sar_sar_linux.py`）
+- **DDHR-SK segmentation / 分割**：UperNet + iTPN — reference config & training log under `results/segmentation/ddhr-sk/` / 参考配置与训练日志见 `results/segmentation/ddhr-sk/`
 - **Comparison experiments / 对比实验**：UperNet + HiViT（`configs/hivit/`）、CLIP-UperNet + iTPN（`clip_upernet_itpn_*`）
 
-See the paper's experimental section for the exact numbers. 具体数值以论文实验章节为准。
+See the paper's experimental section for the exact numbers; per-dataset logs/configs (including WHU-OPT-SAR and DDHR-SK) are under `results/segmentation/`. 具体数值以论文实验章节为准；各数据集日志与配置（含 WHU-OPT-SAR 与 DDHR-SK）见 `results/segmentation/`。
