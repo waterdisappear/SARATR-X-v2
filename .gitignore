@@ -33,4 +33,9 @@ data/
 *.tif
 *.tiff
 
+# 论文图表（docs/figures）随仓库提交
+!docs/figures/
+!docs/figures/*.png
+!docs/figures/*.pdf
+
 # 权重/结果目录说明 README 保留；占位 .gitkeep 无规则匹配，默认保留
