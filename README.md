@@ -23,9 +23,9 @@
   <img src="docs/figures/fig_framework_v3.png" width="88%">
 </p>
 
-<div align="center"><b>Fig. 1 | Overall framework of SARATR-X-v2 with scale-aware structural pre-training.</b> Bottom: fixed multi-scale structural extractors spanning six receptive fields produce scale-specific responses, fused by learnable cross-scale weights into one target *y*, each operator robust to multiplicative speckle. Top: hierarchical encoder extracts multi-scale latent features from the masked input, and a decoder reconstructs *y* under an L2 loss — *design the target to carry the physics*.
+<div align="center"><b>Fig. 1 | Overall framework of SARATR-X-v2 with scale-aware structural pre-training.</b> Bottom: fixed multi-scale structural extractors spanning six receptive fields produce scale-specific responses, fused by learnable cross-scale weights into one target <i>y</i>, each operator robust to multiplicative speckle. Top: hierarchical encoder extracts multi-scale latent features from the masked input, and a decoder reconstructs <i>y</i> under an L2 loss — <i>design the target to carry the physics</i>.
 
-<b>图 1 | SARATR-X-v2 尺度感知结构预训练总体框架。</b> 下半部分：覆盖六个感受野的固定多尺度结构算子产生各尺度响应，经可学习跨尺度权重融合为统一目标 *y*，每个算子对乘性斑点稳健；上半部分：层次编码器从掩码输入提取多尺度潜在特征，解码器在 L2 损失下重建 *y* —— “让目标承载物理”。</div>
+<b>图 1 | SARATR-X-v2 尺度感知结构预训练总体框架。</b> 下半部分：覆盖六个感受野的固定多尺度结构算子产生各尺度响应，经可学习跨尺度权重融合为统一目标 <i>y</i>，每个算子对乘性斑点稳健；上半部分：层次编码器从掩码输入提取多尺度潜在特征，解码器在 L2 损失下重建 <i>y</i> —— “让目标承载物理”。</div>
 
 </div>
 
