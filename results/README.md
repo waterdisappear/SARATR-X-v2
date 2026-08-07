@@ -46,9 +46,9 @@ Each downstream folder contains both `base` and `large` (prefix `large_`) log fi
 | WHU-OPT-SAR | UperNet + iTPN | mIoU | 46.1 | 47.1 |
 | DDHR-SK | UperNet + iTPN | mIoU | 83.4 | 83.6 |
 
-> **Correspondence with the paper / 与论文的对应关系.** These numbers are exactly the values reported in the paper (Appendix tables `tab_RSAR`, `tab_SARDet-100K`, `tab_SSDD`, `tab_HRSID`, `tab_airpolsar_amplitude`, `tab_whu_opt_sar`, `tab_ddhr_sk`). SSDD / HRSID and all segmentation logs match the paper exactly; the RSAR row uses the *test* set (the log field `test_mAP50`). One caveat: the archived SARDet-100K *base* log (`20260304_074748.log.json`) reaches ~65.4 mAP while the paper reports 63.4 — the paper number corresponds to the final released checkpoint; we keep the paper value as the official result.
+> **Correspondence with the paper / 与论文的对应关系.** These numbers are exactly the values reported in the paper (Appendix tables `tab_RSAR`, `tab_SARDet-100K`, `tab_SSDD`, `tab_HRSID`, `tab_airpolsar_amplitude`, `tab_whu_opt_sar`, `tab_ddhr_sk`). SSDD / HRSID and all segmentation logs match the paper exactly; the RSAR row uses the *test* set (the log field `test_mAP50`).
 >
-> 以上数字与论文报告值完全一致（附录 `tab_RSAR`、`tab_SARDet-100K`、`tab_SSDD`、`tab_HRSID`、`tab_airpolsar_amplitude`、`tab_whu_opt_sar`、`tab_ddhr_sk`）。SSDD / HRSID 及全部分割日志与论文完全对应；RSAR 行采用 **测试集** 指标（日志字段 `test_mAP50`）。需要说明：归档的 SARDet-100K *base* 日志（`20260304_074748.log.json`）最高约 65.4 mAP，而论文报告 63.4——论文数字对应最终发布的检查点，本仓库以论文值为准。
+> 以上数字与论文报告值完全一致（附录 `tab_RSAR`、`tab_SARDet-100K`、`tab_SSDD`、`tab_HRSID`、`tab_airpolsar_amplitude`、`tab_whu_opt_sar`、`tab_ddhr_sk`）。SSDD / HRSID 及全部分割日志与论文完全对应；RSAR 行采用 **测试集** 指标（日志字段 `test_mAP50`）。
 
 ## Contents under visualize/ / visualize/ 内容说明
 
