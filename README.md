@@ -92,14 +92,6 @@ bash run_pretrain.sh                 # 8 GPUs / or / 或：
 python main_pretrain.py --data_path <500K pre-training data> --output_dir <work_dir>
 ```
 
-<p align="center">
-  <img src="docs/figures/fig2a_fusion_residual.png" width="85%">
-</p>
-
-*<div align="center">**Fig. 3 | Residual correction visualization of multi-scale fusion.** For each sample (row), from left to right: input SAR image $x$; feature map of the largest-scale branch $f_6$; fused target feature $y$; absolute residual $|y - f_6|$. Corrections concentrate around target boundaries, strong scatterers, and fine-grained structures — the small-scale branches provide structured, target-relevant refinements.
-
-**图 3 | 多尺度融合的残差校正可视化。** 每个样本（行）从左到右依次为：输入 SAR 影像 $x$；最大尺度分支特征 $f_6$；融合目标特征 $y$；绝对残差 $|y - f_6|$。残差集中于目标边界、强散射点与细粒度结构区域，说明小尺度分支提供了结构化的、与目标相关的修正。</div>*
-
 ## Classification / 分类
 
 **EN** — Linear probing and k-NN / few-shot classification on SAR benchmarks with a frozen iTPN / HiViT backbone. See `classification/linear_eval/` and `classification/fewshot/`.
@@ -153,28 +145,21 @@ bash tools/dist_train.sh \
   <img src="docs/figures/sar_benchmark_4x3_horizontal_bar.png" width="85%">
 </p>
 
-*<div align="center">**Fig. 4 | Comprehensive comparison of SARATR-X-v2 on twelve SAR benchmarks** spanning classification (ATRNet-STAR, MSTAR, SAR-VSA, FUSAR-Ship), object detection (SARDet-100K, RSAR, SSDD, HRSID), and semantic segmentation (AIR-PolSAR-Seg-2.0, OpenEarthMap-SAR, WHU-OPT-SAR, DDHR-SK). SARATR-X-v2 achieves the best result on 10 of 12 benchmarks and second-best on the remaining two.
+*<div align="center">**Fig. 3 | Comprehensive comparison of SARATR-X-v2 on twelve SAR benchmarks** spanning classification (ATRNet-STAR, MSTAR, SAR-VSA, FUSAR-Ship), object detection (SARDet-100K, RSAR, SSDD, HRSID), and semantic segmentation (AIR-PolSAR-Seg-2.0, OpenEarthMap-SAR, WHU-OPT-SAR, DDHR-SK). SARATR-X-v2 achieves the best result on 10 of 12 benchmarks and second-best on the remaining two.
 
-**图 4 | SARATR-X-v2 在 12 个 SAR 基准上的综合对比**，涵盖分类（ATRNet-STAR、MSTAR、SAR-VSA、FUSAR-Ship）、目标检测（SARDet-100K、RSAR、SSDD、HRSID）与语义分割（AIR-PolSAR-Seg-2.0、OpenEarthMap-SAR、WHU-OPT-SAR、DDHR-SK）。SARATR-X-v2 在 12 个基准中取得 10 个最优、2 个次优。</div>*
+**图 3 | SARATR-X-v2 在 12 个 SAR 基准上的综合对比**，涵盖分类（ATRNet-STAR、MSTAR、SAR-VSA、FUSAR-Ship）、目标检测（SARDet-100K、RSAR、SSDD、HRSID）与语义分割（AIR-PolSAR-Seg-2.0、OpenEarthMap-SAR、WHU-OPT-SAR、DDHR-SK）。SARATR-X-v2 在 12 个基准中取得 10 个最优、2 个次优。</div>*
 
 Under synthetic speckle variation, the proposed target reduces perturbation drift in the learned representation by **nearly two orders of magnitude** relative to pixel-space supervision.
 
 在合成斑点扰动下，所提目标将学习表示的扰动漂移相对像素空间监督降低了**近两个数量级**。
 
 <p align="center">
-  <img src="docs/figures/speckle_stability_lines_replot.png" width="70%">
-  <img src="docs/figures/stability_transfer_scatter.png" width="45%">
+  <img src="docs/figures/stability_transfer_scatter.png" width="55%">
 </p>
 
-*<div align="center">**Fig. 5 | Stability of target features against synthetic speckle perturbation** — mean $\ell_1$ difference between target features extracted from pairs of speckle realizations vs. perturbation strength $\sigma$ (log-normal speckle). All feature-space targets drift substantially less than raw pixel input, and the fused multi-scale target is the most stable.
+*<div align="center">**Fig. 4 | Stability–transfer relationship across pre-training targets.** Each point is one supervision target (pixel, single-scale S1–S6, multi-scale fusion). Horizontal axis: mean $\ell_1$ drift under speckle at $\sigma=0.15$; vertical axis: 10-shot linear-probe accuracy on ATRNet-STAR (SOC-50) with frozen iTPN-B. Lower drift correlates with higher accuracy ($\rho=-0.93$, $p=0.002$).
 
-**图 5 | 目标特征对合成斑点扰动的稳定性** —— 同一影像的成对斑点实现下目标特征的均值 $\ell_1$ 差异随扰动强度 $\sigma$ 的变化。所有特征空间目标的漂移都远小于原始像素输入，融合多尺度目标最稳定。</div>*
-
-<div align="center">
-  **Fig. 6 | Stability–transfer relationship across pre-training targets.** Each point is one supervision target (pixel, single-scale S1–S6, multi-scale fusion). Horizontal axis: mean $\ell_1$ drift under speckle at $\sigma=0.15$; vertical axis: 10-shot linear-probe accuracy on ATRNet-STAR (SOC-50) with frozen iTPN-B. Lower drift correlates with higher accuracy ($\rho=-0.93$, $p=0.002$).
-
-  **图 6 | 各预训练目标的稳定性–迁移关系。** 每个点为一种监督目标（像素、单尺度 S1–S6、多尺度融合）。横轴：$\sigma=0.15$ 斑点下的均值 $\ell_1$ 漂移；纵轴：冻结 iTPN-B 在 ATRNet-STAR（SOC-50）上的 10-shot 线性探测精度。漂移越小精度越高（$\rho=-0.93$，$p=0.002$）。
-</div>
+**图 4 | 各预训练目标的稳定性–迁移关系。** 每个点为一种监督目标（像素、单尺度 S1–S6、多尺度融合）。横轴：$\sigma=0.15$ 斑点下的均值 $\ell_1$ 漂移；纵轴：冻结 iTPN-B 在 ATRNet-STAR（SOC-50）上的 10-shot 线性探测精度。漂移越小精度越高（$\rho=-0.93$，$p=0.002$）。</div>*
 
 ## Data / 数据
 
