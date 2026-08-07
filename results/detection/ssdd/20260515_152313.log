@@ -1,0 +1,2693 @@
+2026-05-15 15:23:13,557 - mmdet - INFO - Environment info:
+------------------------------------------------------------
+sys.platform: linux
+Python: 3.7.16 (default, Jan 17 2023, 22:20:44) [GCC 11.2.0]
+CUDA available: True
+GPU 0,1,2,3,4,5: NVIDIA A100-SXM4-80GB
+CUDA_HOME: /usr/local/cuda-11.1
+NVCC: Cuda compilation tools, release 11.1, V11.1.105
+GCC: gcc (Ubuntu 10.5.0-1ubuntu1~22.04.3) 10.5.0
+PyTorch: 1.8.0+cu111
+PyTorch compiling details: PyTorch built with:
+  - GCC 7.3
+  - C++ Version: 201402
+  - Intel(R) oneAPI Math Kernel Library Version 2021.4-Product Build 20210904 for Intel(R) 64 architecture applications
+  - Intel(R) MKL-DNN v1.7.0 (Git Hash 7aed236906b1f7a05c0917e5257a1af05e9ff683)
+  - OpenMP 201511 (a.k.a. OpenMP 4.5)
+  - NNPACK is enabled
+  - CPU capability usage: AVX2
+  - CUDA Runtime 11.1
+  - NVCC architecture flags: -gencode;arch=compute_37,code=sm_37;-gencode;arch=compute_50,code=sm_50;-gencode;arch=compute_60,code=sm_60;-gencode;arch=compute_70,code=sm_70;-gencode;arch=compute_75,code=sm_75;-gencode;arch=compute_80,code=sm_80;-gencode;arch=compute_86,code=sm_86
+  - CuDNN 8.0.5
+  - Magma 2.5.2
+  - Build settings: BLAS_INFO=mkl, BUILD_TYPE=Release, CUDA_VERSION=11.1, CUDNN_VERSION=8.0.5, CXX_COMPILER=/opt/rh/devtoolset-7/root/usr/bin/c++, CXX_FLAGS= -Wno-deprecated -fvisibility-inlines-hidden -DUSE_PTHREADPOOL -fopenmp -DNDEBUG -DUSE_KINETO -DUSE_FBGEMM -DUSE_QNNPACK -DUSE_PYTORCH_QNNPACK -DUSE_XNNPACK -O2 -fPIC -Wno-narrowing -Wall -Wextra -Werror=return-type -Wno-missing-field-initializers -Wno-type-limits -Wno-array-bounds -Wno-unknown-pragmas -Wno-sign-compare -Wno-unused-parameter -Wno-unused-variable -Wno-unused-function -Wno-unused-result -Wno-unused-local-typedefs -Wno-strict-overflow -Wno-strict-aliasing -Wno-error=deprecated-declarations -Wno-stringop-overflow -Wno-psabi -Wno-error=pedantic -Wno-error=redundant-decls -Wno-error=old-style-cast -fdiagnostics-color=always -faligned-new -Wno-unused-but-set-variable -Wno-maybe-uninitialized -fno-math-errno -fno-trapping-math -Werror=format -Wno-stringop-overflow, LAPACK_INFO=mkl, PERF_WITH_AVX=1, PERF_WITH_AVX2=1, PERF_WITH_AVX512=1, TORCH_VERSION=1.8.0, USE_CUDA=ON, USE_CUDNN=ON, USE_EXCEPTION_PTR=1, USE_GFLAGS=OFF, USE_GLOG=OFF, USE_MKL=ON, USE_MKLDNN=ON, USE_MPI=OFF, USE_NCCL=ON, USE_NNPACK=ON, USE_OPENMP=ON, 
+
+TorchVision: 0.9.0+cu111
+OpenCV: 4.11.0
+MMCV: 1.6.0
+MMCV Compiler: GCC 7.3
+MMCV CUDA Compiler: 11.1
+MMDetection: 2.24.1+
+------------------------------------------------------------
+
+2026-05-15 15:23:15,820 - mmdet - INFO - Distributed training: True
+2026-05-15 15:23:17,963 - mmdet - INFO - Config:
+dataset_type = 'CocoDataset'
+data_root = '/mnt/data7t/liweijie19/code/detection_iptn/data/SSDD/'
+img_norm_cfg = dict(
+    mean=[53.7795, 53.7795, 53.7795],
+    std=[55.539, 55.539, 55.539],
+    to_rgb=True)
+train_pipeline = [
+    dict(type='LoadImageFromFile'),
+    dict(type='LoadAnnotations', with_bbox=True),
+    dict(type='RandomFlip', flip_ratio=0.5),
+    dict(
+        type='AutoAugment',
+        policies=[[{
+            'type':
+            'Resize',
+            'img_scale': [(384, 384), (448, 448), (512, 512), (576, 576),
+                          (640, 640), (704, 704), (768, 768), (800, 800)],
+            'multiscale_mode':
+            'value',
+            'keep_ratio':
+            True
+        }],
+                  [{
+                      'type':
+                      'Resize',
+                      'img_scale': [(448, 448), (512, 512), (576, 576),
+                                    (640, 640)],
+                      'multiscale_mode':
+                      'value',
+                      'keep_ratio':
+                      True
+                  }, {
+                      'type':
+                      'Resize',
+                      'img_scale': [(576, 576), (640, 640), (704, 704),
+                                    (768, 768), (800, 800)],
+                      'multiscale_mode':
+                      'value',
+                      'override':
+                      True,
+                      'keep_ratio':
+                      True
+                  }]]),
+    dict(
+        type='Normalize',
+        mean=[53.7795, 53.7795, 53.7795],
+        std=[55.539, 55.539, 55.539],
+        to_rgb=True),
+    dict(type='Pad', size_divisor=32),
+    dict(type='DefaultFormatBundle'),
+    dict(type='Collect', keys=['img', 'gt_bboxes', 'gt_labels'])
+]
+test_pipeline = [
+    dict(type='LoadImageFromFile'),
+    dict(
+        type='MultiScaleFlipAug',
+        img_scale=(800, 800),
+        flip=False,
+        transforms=[
+            dict(type='Resize', keep_ratio=True),
+            dict(
+                type='Normalize',
+                mean=[53.7795, 53.7795, 53.7795],
+                std=[55.539, 55.539, 55.539],
+                to_rgb=True),
+            dict(type='Pad', size_divisor=32),
+            dict(type='ImageToTensor', keys=['img']),
+            dict(type='Collect', keys=['img'])
+        ])
+]
+data = dict(
+    samples_per_gpu=2,
+    workers_per_gpu=2,
+    train=dict(
+        type='CocoDataset',
+        ann_file=
+        '/mnt/data7t/liweijie19/code/detection_iptn/data/SSDD/annotations/train.json',
+        img_prefix=
+        '/mnt/data7t/liweijie19/code/detection_iptn/data/SSDD/images/train/',
+        pipeline=[
+            dict(type='LoadImageFromFile'),
+            dict(type='LoadAnnotations', with_bbox=True),
+            dict(type='RandomFlip', flip_ratio=0.5),
+            dict(
+                type='AutoAugment',
+                policies=[[{
+                    'type':
+                    'Resize',
+                    'img_scale':
+                    [(384, 384), (448, 448), (512, 512), (576, 576),
+                     (640, 640), (704, 704), (768, 768), (800, 800)],
+                    'multiscale_mode':
+                    'value',
+                    'keep_ratio':
+                    True
+                }],
+                          [{
+                              'type':
+                              'Resize',
+                              'img_scale': [(448, 448), (512, 512), (576, 576),
+                                            (640, 640)],
+                              'multiscale_mode':
+                              'value',
+                              'keep_ratio':
+                              True
+                          }, {
+                              'type':
+                              'Resize',
+                              'img_scale': [(576, 576), (640, 640), (704, 704),
+                                            (768, 768), (800, 800)],
+                              'multiscale_mode':
+                              'value',
+                              'override':
+                              True,
+                              'keep_ratio':
+                              True
+                          }]]),
+            dict(
+                type='Normalize',
+                mean=[53.7795, 53.7795, 53.7795],
+                std=[55.539, 55.539, 55.539],
+                to_rgb=True),
+            dict(type='Pad', size_divisor=32),
+            dict(type='DefaultFormatBundle'),
+            dict(type='Collect', keys=['img', 'gt_bboxes', 'gt_labels'])
+        ],
+        filter_empty_gt=True),
+    val=dict(
+        type='CocoDataset',
+        ann_file=
+        '/mnt/data7t/liweijie19/code/detection_iptn/data/SSDD/annotations/test.json',
+        img_prefix=
+        '/mnt/data7t/liweijie19/code/detection_iptn/data/SSDD/images/test/',
+        pipeline=[
+            dict(type='LoadImageFromFile'),
+            dict(
+                type='MultiScaleFlipAug',
+                img_scale=(800, 800),
+                flip=False,
+                transforms=[
+                    dict(type='Resize', keep_ratio=True),
+                    dict(
+                        type='Normalize',
+                        mean=[53.7795, 53.7795, 53.7795],
+                        std=[55.539, 55.539, 55.539],
+                        to_rgb=True),
+                    dict(type='Pad', size_divisor=32),
+                    dict(type='ImageToTensor', keys=['img']),
+                    dict(type='Collect', keys=['img'])
+                ])
+        ]),
+    test=dict(
+        type='CocoDataset',
+        ann_file=
+        '/mnt/data7t/liweijie19/code/detection_iptn/data/SSDD/annotations/test.json',
+        img_prefix=
+        '/mnt/data7t/liweijie19/code/detection_iptn/data/SSDD/images/test/',
+        pipeline=[
+            dict(type='LoadImageFromFile'),
+            dict(
+                type='MultiScaleFlipAug',
+                img_scale=(800, 800),
+                flip=False,
+                transforms=[
+                    dict(type='Resize', keep_ratio=True),
+                    dict(
+                        type='Normalize',
+                        mean=[53.7795, 53.7795, 53.7795],
+                        std=[55.539, 55.539, 55.539],
+                        to_rgb=True),
+                    dict(type='Pad', size_divisor=32),
+                    dict(type='ImageToTensor', keys=['img']),
+                    dict(type='Collect', keys=['img'])
+                ])
+        ]),
+    persistent_workers=True,
+    pin_memory=True)
+evaluation = dict(
+    interval=1,
+    metric='bbox',
+    classwise=True,
+    proposal_nums=(100, 300, 1000),
+    gpu_collect=True)
+optimizer = dict(
+    type='AdamW',
+    lr=0.0002,
+    betas=(0.9, 0.999),
+    weight_decay=0.05,
+    constructor='LayerDecayOptimizerConstructor',
+    paramwise_cfg=dict(
+        num_layers=30,
+        layer_decay_rate=0.9,
+        custom_keys=dict(
+            absolute_pos_embed=dict(decay_mult=0.0),
+            relative_position_bias_table=dict(decay_mult=0.0),
+            norm=dict(decay_mult=0.0),
+            backbone=dict(lr_mult=0.1))))
+optimizer_config = dict(grad_clip=dict(max_norm=35, norm_type=2))
+lr_config = dict(
+    policy='CosineAnnealing',
+    warmup='linear',
+    warmup_iters=500,
+    warmup_ratio=0.001,
+    min_lr_ratio=1e-07,
+    by_epoch=True)
+runner = dict(type='EpochBasedRunner', max_epochs=36)
+checkpoint_config = dict(
+    interval=1, max_keep_ckpts=5, save_optimizer=True, by_epoch=True)
+log_config = dict(interval=20, hooks=[dict(type='TextLoggerHook')])
+custom_hooks = [dict(type='NumClassCheckHook')]
+dist_params = dict(backend='nccl')
+log_level = 'INFO'
+load_from = None
+resume_from = None
+workflow = [('train', 1), ('val', 1)]
+opencv_num_threads = 0
+mp_start_method = 'fork'
+auto_scale_lr = dict(enable=True, base_batch_size=8)
+pretrained = '/mnt/data7t/liweijie19/code/detection_iptn/ckpt/jiaquan_simple/checkpoint-1200.pth'
+model = dict(
+    type='GFL',
+    backbone=dict(
+        _delete_=True,
+        type='iTPN_pixel',
+        img_size=224,
+        patch_size=16,
+        in_chans=3,
+        embed_dim=512,
+        mlp_depth1=3,
+        mlp_depth2=3,
+        fpn_dim=256,
+        fpn_depth=1,
+        depth=24,
+        num_heads=8,
+        bridge_mlp_ratio=3.0,
+        mlp_ratio=4.0,
+        num_outs=5,
+        out_embed_dim=256,
+        drop_path_rate=0.05,
+        num_classes=1,
+        ape=True,
+        rpe=False,
+        patch_norm=True,
+        use_checkpoint=False,
+        init_cfg=dict(
+            type='Pretrained',
+            checkpoint=
+            '/mnt/data7t/liweijie19/code/detection_iptn/ckpt/jiaquan_simple/checkpoint-1200.pth'
+        )),
+    neck=None,
+    bbox_head=dict(
+        type='GFLHead',
+        num_classes=1,
+        in_channels=256,
+        stacked_convs=6,
+        feat_channels=256,
+        anchor_generator=dict(
+            type='AnchorGenerator',
+            ratios=[1.0],
+            octave_base_scale=8,
+            scales_per_octave=1,
+            strides=[4, 8, 16, 32, 64]),
+        loss_cls=dict(
+            type='QualityFocalLoss',
+            use_sigmoid=True,
+            beta=2.0,
+            loss_weight=1.0,
+            reduction='mean'),
+        loss_dfl=dict(
+            type='DistributionFocalLoss', loss_weight=0.25, reduction='mean'),
+        loss_bbox=dict(type='GIoULoss', loss_weight=6.0, reduction='mean'),
+        reg_max=16,
+        norm_cfg=dict(type='GN', num_groups=32, requires_grad=True)),
+    train_cfg=dict(
+        assigner=dict(type='ATSSAssigner', topk=9, ignore_iof_thr=0.5),
+        allowed_border=-1,
+        pos_weight=-1,
+        debug=False),
+    test_cfg=dict(
+        nms_pre=4000,
+        min_bbox_size=2,
+        score_thr=0.03,
+        nms=dict(type='soft_nms', iou_threshold=0.55, method='gaussian'),
+        max_per_img=300))
+fp16 = dict(loss_scale=512.0)
+seed = 42
+deterministic = True
+cudnn_benchmark = True
+work_dir = './work_dirs/pixel_itpn_GFL_ssdd'
+auto_resume = False
+gpu_ids = range(0, 6)
+
+2026-05-15 15:23:17,964 - mmdet - INFO - Set random seed to 0, deterministic: False
+2026-05-15 15:23:20,484 - mmdet - WARNING - The model and loaded state dict do not match exactly
+
+unexpected key in source state_dict: mask_token, decoder_pos_embed, hogs.simple_weights, hogs.SAR_Lay.weight_LBP1, hogs.SAR_Lay.weight_LBP2, hogs.SAR_Layer0.weight_x1, hogs.SAR_Layer0.weight_x2, hogs.SAR_Layer0.weight_y1, hogs.SAR_Layer0.weight_y2, hogs.SAR_Layer1.weight_x1, hogs.SAR_Layer1.weight_x2, hogs.SAR_Layer1.weight_y1, hogs.SAR_Layer1.weight_y2, hogs.SAR_Layer2.weight_x1, hogs.SAR_Layer2.weight_x2, hogs.SAR_Layer2.weight_y1, hogs.SAR_Layer2.weight_y2, hogs.SAR_Layer3.weight_x1, hogs.SAR_Layer3.weight_x2, hogs.SAR_Layer3.weight_y1, hogs.SAR_Layer3.weight_y2, hogs.SAR_Layer4.weight_x1, hogs.SAR_Layer4.weight_x2, hogs.SAR_Layer4.weight_y1, hogs.SAR_Layer4.weight_y2, decoder_embed.0.0.weight, decoder_embed.0.0.bias, decoder_embed.0.1.weight, decoder_embed.0.1.bias, decoder_embed.1.0.weight, decoder_embed.1.0.bias, decoder_embed.1.1.weight, decoder_embed.1.1.bias, decoder_embed.2.0.weight, decoder_embed.2.0.bias, decoder_embed.2.1.weight, decoder_embed.2.1.bias, decoder_blocks.0.norm1.weight, decoder_blocks.0.norm1.bias, decoder_blocks.0.attn.qkv.weight, decoder_blocks.0.attn.qkv.bias, decoder_blocks.0.attn.proj.weight, decoder_blocks.0.attn.proj.bias, decoder_blocks.0.norm2.weight, decoder_blocks.0.norm2.bias, decoder_blocks.0.mlp.fc1.weight, decoder_blocks.0.mlp.fc1.bias, decoder_blocks.0.mlp.fc2.weight, decoder_blocks.0.mlp.fc2.bias, decoder_blocks.1.norm1.weight, decoder_blocks.1.norm1.bias, decoder_blocks.1.attn.qkv.weight, decoder_blocks.1.attn.qkv.bias, decoder_blocks.1.attn.proj.weight, decoder_blocks.1.attn.proj.bias, decoder_blocks.1.norm2.weight, decoder_blocks.1.norm2.bias, decoder_blocks.1.mlp.fc1.weight, decoder_blocks.1.mlp.fc1.bias, decoder_blocks.1.mlp.fc2.weight, decoder_blocks.1.mlp.fc2.bias, decoder_blocks.2.norm1.weight, decoder_blocks.2.norm1.bias, decoder_blocks.2.attn.qkv.weight, decoder_blocks.2.attn.qkv.bias, decoder_blocks.2.attn.proj.weight, decoder_blocks.2.attn.proj.bias, decoder_blocks.2.norm2.weight, decoder_blocks.2.norm2.bias, decoder_blocks.2.mlp.fc1.weight, decoder_blocks.2.mlp.fc1.bias, decoder_blocks.2.mlp.fc2.weight, decoder_blocks.2.mlp.fc2.bias, decoder_blocks.3.norm1.weight, decoder_blocks.3.norm1.bias, decoder_blocks.3.attn.qkv.weight, decoder_blocks.3.attn.qkv.bias, decoder_blocks.3.attn.proj.weight, decoder_blocks.3.attn.proj.bias, decoder_blocks.3.norm2.weight, decoder_blocks.3.norm2.bias, decoder_blocks.3.mlp.fc1.weight, decoder_blocks.3.mlp.fc1.bias, decoder_blocks.3.mlp.fc2.weight, decoder_blocks.3.mlp.fc2.bias, decoder_blocks.4.norm1.weight, decoder_blocks.4.norm1.bias, decoder_blocks.4.attn.qkv.weight, decoder_blocks.4.attn.qkv.bias, decoder_blocks.4.attn.proj.weight, decoder_blocks.4.attn.proj.bias, decoder_blocks.4.norm2.weight, decoder_blocks.4.norm2.bias, decoder_blocks.4.mlp.fc1.weight, decoder_blocks.4.mlp.fc1.bias, decoder_blocks.4.mlp.fc2.weight, decoder_blocks.4.mlp.fc2.bias, decoder_blocks.5.norm1.weight, decoder_blocks.5.norm1.bias, decoder_blocks.5.attn.qkv.weight, decoder_blocks.5.attn.qkv.bias, decoder_blocks.5.attn.proj.weight, decoder_blocks.5.attn.proj.bias, decoder_blocks.5.norm2.weight, decoder_blocks.5.norm2.bias, decoder_blocks.5.mlp.fc1.weight, decoder_blocks.5.mlp.fc1.bias, decoder_blocks.5.mlp.fc2.weight, decoder_blocks.5.mlp.fc2.bias, decoder_blocks.6.norm1.weight, decoder_blocks.6.norm1.bias, decoder_blocks.6.attn.qkv.weight, decoder_blocks.6.attn.qkv.bias, decoder_blocks.6.attn.proj.weight, decoder_blocks.6.attn.proj.bias, decoder_blocks.6.norm2.weight, decoder_blocks.6.norm2.bias, decoder_blocks.6.mlp.fc1.weight, decoder_blocks.6.mlp.fc1.bias, decoder_blocks.6.mlp.fc2.weight, decoder_blocks.6.mlp.fc2.bias, decoder_blocks.7.norm1.weight, decoder_blocks.7.norm1.bias, decoder_blocks.7.attn.qkv.weight, decoder_blocks.7.attn.qkv.bias, decoder_blocks.7.attn.proj.weight, decoder_blocks.7.attn.proj.bias, decoder_blocks.7.norm2.weight, decoder_blocks.7.norm2.bias, decoder_blocks.7.mlp.fc1.weight, decoder_blocks.7.mlp.fc1.bias, decoder_blocks.7.mlp.fc2.weight, decoder_blocks.7.mlp.fc2.bias, decoder_norm.weight, decoder_norm.bias, decoder_pred.weight, decoder_pred.bias, block_16to8.1.norm2.weight, block_16to8.1.norm2.bias, block_16to8.1.mlp.fc1.weight, block_16to8.1.mlp.fc1.bias, block_16to8.1.mlp.fc2.weight, block_16to8.1.mlp.fc2.bias, block_8to4.1.norm2.weight, block_8to4.1.norm2.bias, block_8to4.1.mlp.fc1.weight, block_8to4.1.mlp.fc1.bias, block_8to4.1.mlp.fc2.weight, block_8to4.1.mlp.fc2.bias
+
+2026-05-15 15:23:20,570 - mmdet - INFO - initialize GFLHead with init_cfg {'type': 'Normal', 'layer': 'Conv2d', 'std': 0.01, 'override': {'type': 'Normal', 'name': 'gfl_cls', 'std': 0.01, 'bias_prob': 0.01}}
+Name of parameter - Initialization information
+
+backbone.absolute_pos_embed - torch.Size([1, 196, 512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.patch_embed.proj.weight - torch.Size([128, 3, 4, 4]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.patch_embed.proj.bias - torch.Size([128]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.patch_embed.norm.weight - torch.Size([128]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.patch_embed.norm.bias - torch.Size([128]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.0.norm2.weight - torch.Size([128]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.0.norm2.bias - torch.Size([128]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.0.mlp.fc1.weight - torch.Size([384, 128]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.0.mlp.fc1.bias - torch.Size([384]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.0.mlp.fc2.weight - torch.Size([128, 384]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.0.mlp.fc2.bias - torch.Size([128]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.1.norm2.weight - torch.Size([128]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.1.norm2.bias - torch.Size([128]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.1.mlp.fc1.weight - torch.Size([384, 128]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.1.mlp.fc1.bias - torch.Size([384]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.1.mlp.fc2.weight - torch.Size([128, 384]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.1.mlp.fc2.bias - torch.Size([128]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.2.norm2.weight - torch.Size([128]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.2.norm2.bias - torch.Size([128]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.2.mlp.fc1.weight - torch.Size([384, 128]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.2.mlp.fc1.bias - torch.Size([384]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.2.mlp.fc2.weight - torch.Size([128, 384]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.2.mlp.fc2.bias - torch.Size([128]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.3.norm.weight - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.3.norm.bias - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.3.reduction.weight - torch.Size([256, 512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.4.norm2.weight - torch.Size([256]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.4.norm2.bias - torch.Size([256]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.4.mlp.fc1.weight - torch.Size([768, 256]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.4.mlp.fc1.bias - torch.Size([768]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.4.mlp.fc2.weight - torch.Size([256, 768]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.4.mlp.fc2.bias - torch.Size([256]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.5.norm2.weight - torch.Size([256]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.5.norm2.bias - torch.Size([256]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.5.mlp.fc1.weight - torch.Size([768, 256]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.5.mlp.fc1.bias - torch.Size([768]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.5.mlp.fc2.weight - torch.Size([256, 768]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.5.mlp.fc2.bias - torch.Size([256]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.6.norm2.weight - torch.Size([256]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.6.norm2.bias - torch.Size([256]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.6.mlp.fc1.weight - torch.Size([768, 256]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.6.mlp.fc1.bias - torch.Size([768]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.6.mlp.fc2.weight - torch.Size([256, 768]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.6.mlp.fc2.bias - torch.Size([256]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.7.norm.weight - torch.Size([1024]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.7.norm.bias - torch.Size([1024]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.7.reduction.weight - torch.Size([512, 1024]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.8.norm1.weight - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.8.norm1.bias - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.8.attn.qkv.weight - torch.Size([1536, 512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.8.attn.qkv.bias - torch.Size([1536]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.8.attn.proj.weight - torch.Size([512, 512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.8.attn.proj.bias - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.8.norm2.weight - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.8.norm2.bias - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.8.mlp.fc1.weight - torch.Size([2048, 512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.8.mlp.fc1.bias - torch.Size([2048]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.8.mlp.fc2.weight - torch.Size([512, 2048]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.8.mlp.fc2.bias - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.9.norm1.weight - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.9.norm1.bias - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.9.attn.qkv.weight - torch.Size([1536, 512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.9.attn.qkv.bias - torch.Size([1536]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.9.attn.proj.weight - torch.Size([512, 512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.9.attn.proj.bias - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.9.norm2.weight - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.9.norm2.bias - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.9.mlp.fc1.weight - torch.Size([2048, 512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.9.mlp.fc1.bias - torch.Size([2048]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.9.mlp.fc2.weight - torch.Size([512, 2048]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.9.mlp.fc2.bias - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.10.norm1.weight - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.10.norm1.bias - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.10.attn.qkv.weight - torch.Size([1536, 512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.10.attn.qkv.bias - torch.Size([1536]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.10.attn.proj.weight - torch.Size([512, 512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.10.attn.proj.bias - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.10.norm2.weight - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.10.norm2.bias - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.10.mlp.fc1.weight - torch.Size([2048, 512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.10.mlp.fc1.bias - torch.Size([2048]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.10.mlp.fc2.weight - torch.Size([512, 2048]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.10.mlp.fc2.bias - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.11.norm1.weight - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.11.norm1.bias - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.11.attn.qkv.weight - torch.Size([1536, 512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.11.attn.qkv.bias - torch.Size([1536]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.11.attn.proj.weight - torch.Size([512, 512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.11.attn.proj.bias - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.11.norm2.weight - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.11.norm2.bias - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.11.mlp.fc1.weight - torch.Size([2048, 512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.11.mlp.fc1.bias - torch.Size([2048]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.11.mlp.fc2.weight - torch.Size([512, 2048]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.11.mlp.fc2.bias - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.12.norm1.weight - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.12.norm1.bias - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.12.attn.qkv.weight - torch.Size([1536, 512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.12.attn.qkv.bias - torch.Size([1536]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.12.attn.proj.weight - torch.Size([512, 512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.12.attn.proj.bias - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.12.norm2.weight - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.12.norm2.bias - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.12.mlp.fc1.weight - torch.Size([2048, 512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.12.mlp.fc1.bias - torch.Size([2048]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.12.mlp.fc2.weight - torch.Size([512, 2048]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.12.mlp.fc2.bias - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.13.norm1.weight - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.13.norm1.bias - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.13.attn.qkv.weight - torch.Size([1536, 512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.13.attn.qkv.bias - torch.Size([1536]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.13.attn.proj.weight - torch.Size([512, 512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.13.attn.proj.bias - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.13.norm2.weight - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.13.norm2.bias - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.13.mlp.fc1.weight - torch.Size([2048, 512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.13.mlp.fc1.bias - torch.Size([2048]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.13.mlp.fc2.weight - torch.Size([512, 2048]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.13.mlp.fc2.bias - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.14.norm1.weight - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.14.norm1.bias - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.14.attn.qkv.weight - torch.Size([1536, 512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.14.attn.qkv.bias - torch.Size([1536]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.14.attn.proj.weight - torch.Size([512, 512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.14.attn.proj.bias - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.14.norm2.weight - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.14.norm2.bias - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.14.mlp.fc1.weight - torch.Size([2048, 512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.14.mlp.fc1.bias - torch.Size([2048]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.14.mlp.fc2.weight - torch.Size([512, 2048]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.14.mlp.fc2.bias - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.15.norm1.weight - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.15.norm1.bias - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.15.attn.qkv.weight - torch.Size([1536, 512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.15.attn.qkv.bias - torch.Size([1536]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.15.attn.proj.weight - torch.Size([512, 512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.15.attn.proj.bias - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.15.norm2.weight - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.15.norm2.bias - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.15.mlp.fc1.weight - torch.Size([2048, 512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.15.mlp.fc1.bias - torch.Size([2048]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.15.mlp.fc2.weight - torch.Size([512, 2048]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.15.mlp.fc2.bias - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.16.norm1.weight - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.16.norm1.bias - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.16.attn.qkv.weight - torch.Size([1536, 512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.16.attn.qkv.bias - torch.Size([1536]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.16.attn.proj.weight - torch.Size([512, 512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.16.attn.proj.bias - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.16.norm2.weight - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.16.norm2.bias - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.16.mlp.fc1.weight - torch.Size([2048, 512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.16.mlp.fc1.bias - torch.Size([2048]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.16.mlp.fc2.weight - torch.Size([512, 2048]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.16.mlp.fc2.bias - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.17.norm1.weight - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.17.norm1.bias - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.17.attn.qkv.weight - torch.Size([1536, 512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.17.attn.qkv.bias - torch.Size([1536]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.17.attn.proj.weight - torch.Size([512, 512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.17.attn.proj.bias - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.17.norm2.weight - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.17.norm2.bias - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.17.mlp.fc1.weight - torch.Size([2048, 512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.17.mlp.fc1.bias - torch.Size([2048]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.17.mlp.fc2.weight - torch.Size([512, 2048]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.17.mlp.fc2.bias - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.18.norm1.weight - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.18.norm1.bias - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.18.attn.qkv.weight - torch.Size([1536, 512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.18.attn.qkv.bias - torch.Size([1536]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.18.attn.proj.weight - torch.Size([512, 512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.18.attn.proj.bias - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.18.norm2.weight - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.18.norm2.bias - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.18.mlp.fc1.weight - torch.Size([2048, 512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.18.mlp.fc1.bias - torch.Size([2048]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.18.mlp.fc2.weight - torch.Size([512, 2048]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.18.mlp.fc2.bias - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.19.norm1.weight - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.19.norm1.bias - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.19.attn.qkv.weight - torch.Size([1536, 512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.19.attn.qkv.bias - torch.Size([1536]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.19.attn.proj.weight - torch.Size([512, 512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.19.attn.proj.bias - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.19.norm2.weight - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.19.norm2.bias - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.19.mlp.fc1.weight - torch.Size([2048, 512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.19.mlp.fc1.bias - torch.Size([2048]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.19.mlp.fc2.weight - torch.Size([512, 2048]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.19.mlp.fc2.bias - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.20.norm1.weight - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.20.norm1.bias - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.20.attn.qkv.weight - torch.Size([1536, 512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.20.attn.qkv.bias - torch.Size([1536]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.20.attn.proj.weight - torch.Size([512, 512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.20.attn.proj.bias - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.20.norm2.weight - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.20.norm2.bias - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.20.mlp.fc1.weight - torch.Size([2048, 512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.20.mlp.fc1.bias - torch.Size([2048]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.20.mlp.fc2.weight - torch.Size([512, 2048]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.20.mlp.fc2.bias - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.21.norm1.weight - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.21.norm1.bias - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.21.attn.qkv.weight - torch.Size([1536, 512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.21.attn.qkv.bias - torch.Size([1536]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.21.attn.proj.weight - torch.Size([512, 512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.21.attn.proj.bias - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.21.norm2.weight - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.21.norm2.bias - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.21.mlp.fc1.weight - torch.Size([2048, 512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.21.mlp.fc1.bias - torch.Size([2048]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.21.mlp.fc2.weight - torch.Size([512, 2048]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.21.mlp.fc2.bias - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.22.norm1.weight - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.22.norm1.bias - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.22.attn.qkv.weight - torch.Size([1536, 512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.22.attn.qkv.bias - torch.Size([1536]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.22.attn.proj.weight - torch.Size([512, 512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.22.attn.proj.bias - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.22.norm2.weight - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.22.norm2.bias - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.22.mlp.fc1.weight - torch.Size([2048, 512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.22.mlp.fc1.bias - torch.Size([2048]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.22.mlp.fc2.weight - torch.Size([512, 2048]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.22.mlp.fc2.bias - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.23.norm1.weight - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.23.norm1.bias - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.23.attn.qkv.weight - torch.Size([1536, 512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.23.attn.qkv.bias - torch.Size([1536]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.23.attn.proj.weight - torch.Size([512, 512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.23.attn.proj.bias - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.23.norm2.weight - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.23.norm2.bias - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.23.mlp.fc1.weight - torch.Size([2048, 512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.23.mlp.fc1.bias - torch.Size([2048]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.23.mlp.fc2.weight - torch.Size([512, 2048]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.23.mlp.fc2.bias - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.24.norm1.weight - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.24.norm1.bias - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.24.attn.qkv.weight - torch.Size([1536, 512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.24.attn.qkv.bias - torch.Size([1536]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.24.attn.proj.weight - torch.Size([512, 512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.24.attn.proj.bias - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.24.norm2.weight - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.24.norm2.bias - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.24.mlp.fc1.weight - torch.Size([2048, 512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.24.mlp.fc1.bias - torch.Size([2048]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.24.mlp.fc2.weight - torch.Size([512, 2048]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.24.mlp.fc2.bias - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.25.norm1.weight - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.25.norm1.bias - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.25.attn.qkv.weight - torch.Size([1536, 512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.25.attn.qkv.bias - torch.Size([1536]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.25.attn.proj.weight - torch.Size([512, 512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.25.attn.proj.bias - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.25.norm2.weight - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.25.norm2.bias - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.25.mlp.fc1.weight - torch.Size([2048, 512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.25.mlp.fc1.bias - torch.Size([2048]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.25.mlp.fc2.weight - torch.Size([512, 2048]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.25.mlp.fc2.bias - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.26.norm1.weight - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.26.norm1.bias - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.26.attn.qkv.weight - torch.Size([1536, 512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.26.attn.qkv.bias - torch.Size([1536]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.26.attn.proj.weight - torch.Size([512, 512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.26.attn.proj.bias - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.26.norm2.weight - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.26.norm2.bias - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.26.mlp.fc1.weight - torch.Size([2048, 512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.26.mlp.fc1.bias - torch.Size([2048]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.26.mlp.fc2.weight - torch.Size([512, 2048]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.26.mlp.fc2.bias - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.27.norm1.weight - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.27.norm1.bias - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.27.attn.qkv.weight - torch.Size([1536, 512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.27.attn.qkv.bias - torch.Size([1536]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.27.attn.proj.weight - torch.Size([512, 512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.27.attn.proj.bias - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.27.norm2.weight - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.27.norm2.bias - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.27.mlp.fc1.weight - torch.Size([2048, 512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.27.mlp.fc1.bias - torch.Size([2048]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.27.mlp.fc2.weight - torch.Size([512, 2048]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.27.mlp.fc2.bias - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.28.norm1.weight - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.28.norm1.bias - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.28.attn.qkv.weight - torch.Size([1536, 512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.28.attn.qkv.bias - torch.Size([1536]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.28.attn.proj.weight - torch.Size([512, 512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.28.attn.proj.bias - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.28.norm2.weight - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.28.norm2.bias - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.28.mlp.fc1.weight - torch.Size([2048, 512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.28.mlp.fc1.bias - torch.Size([2048]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.28.mlp.fc2.weight - torch.Size([512, 2048]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.28.mlp.fc2.bias - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.29.norm1.weight - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.29.norm1.bias - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.29.attn.qkv.weight - torch.Size([1536, 512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.29.attn.qkv.bias - torch.Size([1536]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.29.attn.proj.weight - torch.Size([512, 512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.29.attn.proj.bias - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.29.norm2.weight - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.29.norm2.bias - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.29.mlp.fc1.weight - torch.Size([2048, 512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.29.mlp.fc1.bias - torch.Size([2048]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.29.mlp.fc2.weight - torch.Size([512, 2048]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.29.mlp.fc2.bias - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.30.norm1.weight - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.30.norm1.bias - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.30.attn.qkv.weight - torch.Size([1536, 512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.30.attn.qkv.bias - torch.Size([1536]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.30.attn.proj.weight - torch.Size([512, 512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.30.attn.proj.bias - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.30.norm2.weight - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.30.norm2.bias - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.30.mlp.fc1.weight - torch.Size([2048, 512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.30.mlp.fc1.bias - torch.Size([2048]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.30.mlp.fc2.weight - torch.Size([512, 2048]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.30.mlp.fc2.bias - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.31.norm1.weight - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.31.norm1.bias - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.31.attn.qkv.weight - torch.Size([1536, 512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.31.attn.qkv.bias - torch.Size([1536]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.31.attn.proj.weight - torch.Size([512, 512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.31.attn.proj.bias - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.31.norm2.weight - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.31.norm2.bias - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.31.mlp.fc1.weight - torch.Size([2048, 512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.31.mlp.fc1.bias - torch.Size([2048]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.31.mlp.fc2.weight - torch.Size([512, 2048]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.blocks.31.mlp.fc2.bias - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.align_dim_16tofpn.weight - torch.Size([256, 512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.align_dim_16tofpn.bias - torch.Size([256]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.fpn_modules.0.norm2.weight - torch.Size([256]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.fpn_modules.0.norm2.bias - torch.Size([256]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.fpn_modules.0.mlp.fc1.weight - torch.Size([1024, 256]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.fpn_modules.0.mlp.fc1.bias - torch.Size([1024]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.fpn_modules.0.mlp.fc2.weight - torch.Size([256, 1024]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.fpn_modules.0.mlp.fc2.bias - torch.Size([256]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.fpn_modules.1.norm2.weight - torch.Size([256]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.fpn_modules.1.norm2.bias - torch.Size([256]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.fpn_modules.1.mlp.fc1.weight - torch.Size([1024, 256]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.fpn_modules.1.mlp.fc1.bias - torch.Size([1024]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.fpn_modules.1.mlp.fc2.weight - torch.Size([256, 1024]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.fpn_modules.1.mlp.fc2.bias - torch.Size([256]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.fpn_modules.2.norm2.weight - torch.Size([256]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.fpn_modules.2.norm2.bias - torch.Size([256]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.fpn_modules.2.mlp.fc1.weight - torch.Size([1024, 256]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.fpn_modules.2.mlp.fc1.bias - torch.Size([1024]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.fpn_modules.2.mlp.fc2.weight - torch.Size([256, 1024]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.fpn_modules.2.mlp.fc2.bias - torch.Size([256]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.align_dim_16to8.weight - torch.Size([256, 256]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.split_16to8.norm.weight - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.split_16to8.norm.bias - torch.Size([512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.split_16to8.reduction.weight - torch.Size([1024, 512]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.block_16to8.0.norm2.weight - torch.Size([256]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.block_16to8.0.norm2.bias - torch.Size([256]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.block_16to8.0.mlp.fc1.weight - torch.Size([1024, 256]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.block_16to8.0.mlp.fc1.bias - torch.Size([1024]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.block_16to8.0.mlp.fc2.weight - torch.Size([256, 1024]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.block_16to8.0.mlp.fc2.bias - torch.Size([256]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.align_dim_8to4.weight - torch.Size([256, 128]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.split_8to4.norm.weight - torch.Size([256]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.split_8to4.norm.bias - torch.Size([256]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.split_8to4.reduction.weight - torch.Size([1024, 256]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.block_8to4.0.norm2.weight - torch.Size([256]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.block_8to4.0.norm2.bias - torch.Size([256]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.block_8to4.0.mlp.fc1.weight - torch.Size([1024, 256]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.block_8to4.0.mlp.fc1.bias - torch.Size([1024]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.block_8to4.0.mlp.fc2.weight - torch.Size([256, 1024]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+backbone.block_8to4.0.mlp.fc2.bias - torch.Size([256]): 
+Initialized by user-defined `init_weights` in iTPN_pixel  
+
+bbox_head.cls_convs.0.conv.weight - torch.Size([256, 256, 3, 3]): 
+NormalInit: mean=0, std=0.01, bias=0 
+
+bbox_head.cls_convs.0.gn.weight - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of GFL  
+
+bbox_head.cls_convs.0.gn.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of GFL  
+
+bbox_head.cls_convs.1.conv.weight - torch.Size([256, 256, 3, 3]): 
+NormalInit: mean=0, std=0.01, bias=0 
+
+bbox_head.cls_convs.1.gn.weight - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of GFL  
+
+bbox_head.cls_convs.1.gn.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of GFL  
+
+bbox_head.cls_convs.2.conv.weight - torch.Size([256, 256, 3, 3]): 
+NormalInit: mean=0, std=0.01, bias=0 
+
+bbox_head.cls_convs.2.gn.weight - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of GFL  
+
+bbox_head.cls_convs.2.gn.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of GFL  
+
+bbox_head.cls_convs.3.conv.weight - torch.Size([256, 256, 3, 3]): 
+NormalInit: mean=0, std=0.01, bias=0 
+
+bbox_head.cls_convs.3.gn.weight - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of GFL  
+
+bbox_head.cls_convs.3.gn.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of GFL  
+
+bbox_head.cls_convs.4.conv.weight - torch.Size([256, 256, 3, 3]): 
+NormalInit: mean=0, std=0.01, bias=0 
+
+bbox_head.cls_convs.4.gn.weight - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of GFL  
+
+bbox_head.cls_convs.4.gn.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of GFL  
+
+bbox_head.cls_convs.5.conv.weight - torch.Size([256, 256, 3, 3]): 
+NormalInit: mean=0, std=0.01, bias=0 
+
+bbox_head.cls_convs.5.gn.weight - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of GFL  
+
+bbox_head.cls_convs.5.gn.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of GFL  
+
+bbox_head.reg_convs.0.conv.weight - torch.Size([256, 256, 3, 3]): 
+NormalInit: mean=0, std=0.01, bias=0 
+
+bbox_head.reg_convs.0.gn.weight - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of GFL  
+
+bbox_head.reg_convs.0.gn.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of GFL  
+
+bbox_head.reg_convs.1.conv.weight - torch.Size([256, 256, 3, 3]): 
+NormalInit: mean=0, std=0.01, bias=0 
+
+bbox_head.reg_convs.1.gn.weight - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of GFL  
+
+bbox_head.reg_convs.1.gn.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of GFL  
+
+bbox_head.reg_convs.2.conv.weight - torch.Size([256, 256, 3, 3]): 
+NormalInit: mean=0, std=0.01, bias=0 
+
+bbox_head.reg_convs.2.gn.weight - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of GFL  
+
+bbox_head.reg_convs.2.gn.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of GFL  
+
+bbox_head.reg_convs.3.conv.weight - torch.Size([256, 256, 3, 3]): 
+NormalInit: mean=0, std=0.01, bias=0 
+
+bbox_head.reg_convs.3.gn.weight - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of GFL  
+
+bbox_head.reg_convs.3.gn.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of GFL  
+
+bbox_head.reg_convs.4.conv.weight - torch.Size([256, 256, 3, 3]): 
+NormalInit: mean=0, std=0.01, bias=0 
+
+bbox_head.reg_convs.4.gn.weight - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of GFL  
+
+bbox_head.reg_convs.4.gn.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of GFL  
+
+bbox_head.reg_convs.5.conv.weight - torch.Size([256, 256, 3, 3]): 
+NormalInit: mean=0, std=0.01, bias=0 
+
+bbox_head.reg_convs.5.gn.weight - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of GFL  
+
+bbox_head.reg_convs.5.gn.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of GFL  
+
+bbox_head.gfl_cls.weight - torch.Size([1, 256, 3, 3]): 
+NormalInit: mean=0, std=0.01, bias=-4.59511985013459 
+
+bbox_head.gfl_cls.bias - torch.Size([1]): 
+NormalInit: mean=0, std=0.01, bias=-4.59511985013459 
+
+bbox_head.gfl_reg.weight - torch.Size([68, 256, 3, 3]): 
+NormalInit: mean=0, std=0.01, bias=0 
+
+bbox_head.gfl_reg.bias - torch.Size([68]): 
+NormalInit: mean=0, std=0.01, bias=0 
+
+bbox_head.scales.0.scale - torch.Size([]): 
+The value is the same before and after calling `init_weights` of GFL  
+
+bbox_head.scales.1.scale - torch.Size([]): 
+The value is the same before and after calling `init_weights` of GFL  
+
+bbox_head.scales.2.scale - torch.Size([]): 
+The value is the same before and after calling `init_weights` of GFL  
+
+bbox_head.scales.3.scale - torch.Size([]): 
+The value is the same before and after calling `init_weights` of GFL  
+
+bbox_head.scales.4.scale - torch.Size([]): 
+The value is the same before and after calling `init_weights` of GFL  
+2026-05-15 15:23:20,701 - mmdet - INFO - Training with 6 GPU(s) with 2 samples per GPU. The total batch size is 12.
+2026-05-15 15:23:20,701 - mmdet - INFO - LR has been automatically scaled from 0.0002 to 0.00030000000000000003
+2026-05-15 15:23:31,629 - mmdet - INFO - Start running, host: test@test, work_dir: /mnt/data7t/liweijie19/code/detection_iptn/work_dirs/pixel_itpn_GFL_ssdd
+2026-05-15 15:23:31,629 - mmdet - INFO - Hooks will be executed in the following order:
+before_run:
+(VERY_HIGH   ) CosineAnnealingLrUpdaterHook       
+(ABOVE_NORMAL) Fp16OptimizerHook                  
+(NORMAL      ) CheckpointHook                     
+(LOW         ) DistEvalHook                       
+(VERY_LOW    ) TextLoggerHook                     
+ -------------------- 
+before_train_epoch:
+(VERY_HIGH   ) CosineAnnealingLrUpdaterHook       
+(NORMAL      ) NumClassCheckHook                  
+(NORMAL      ) DistSamplerSeedHook                
+(LOW         ) IterTimerHook                      
+(LOW         ) DistEvalHook                       
+(VERY_LOW    ) TextLoggerHook                     
+ -------------------- 
+before_train_iter:
+(VERY_HIGH   ) CosineAnnealingLrUpdaterHook       
+(LOW         ) IterTimerHook                      
+(LOW         ) DistEvalHook                       
+ -------------------- 
+after_train_iter:
+(ABOVE_NORMAL) Fp16OptimizerHook                  
+(NORMAL      ) CheckpointHook                     
+(LOW         ) IterTimerHook                      
+(LOW         ) DistEvalHook                       
+(VERY_LOW    ) TextLoggerHook                     
+ -------------------- 
+after_train_epoch:
+(NORMAL      ) CheckpointHook                     
+(LOW         ) DistEvalHook                       
+(VERY_LOW    ) TextLoggerHook                     
+ -------------------- 
+before_val_epoch:
+(NORMAL      ) NumClassCheckHook                  
+(NORMAL      ) DistSamplerSeedHook                
+(LOW         ) IterTimerHook                      
+(VERY_LOW    ) TextLoggerHook                     
+ -------------------- 
+before_val_iter:
+(LOW         ) IterTimerHook                      
+ -------------------- 
+after_val_iter:
+(LOW         ) IterTimerHook                      
+ -------------------- 
+after_val_epoch:
+(VERY_LOW    ) TextLoggerHook                     
+ -------------------- 
+after_run:
+(VERY_LOW    ) TextLoggerHook                     
+ -------------------- 
+2026-05-15 15:23:31,630 - mmdet - INFO - workflow: [('train', 1), ('val', 1)], max: 36 epochs
+2026-05-15 15:23:31,631 - mmdet - INFO - Checkpoints will be saved to /mnt/data7t/liweijie19/code/detection_iptn/work_dirs/pixel_itpn_GFL_ssdd by HardDiskBackend.
+2026-05-15 15:24:34,984 - mmdet - INFO - Epoch [1][20/79]	lr: 1.169e-05, eta: 2:29:02, time: 3.166, data_time: 0.132, memory: 72788, loss_cls: 0.0937, loss_bbox: 3.6877, loss_dfl: 0.5703, loss: 4.3516, grad_norm: 15.8628
+2026-05-15 15:25:30,903 - mmdet - INFO - Epoch [1][40/79]	lr: 2.368e-05, eta: 2:19:19, time: 2.796, data_time: 0.005, memory: 72788, loss_cls: 0.1702, loss_bbox: 3.5810, loss_dfl: 0.6259, loss: 4.3770, grad_norm: 25.4476
+2026-05-15 15:26:10,694 - mmdet - INFO - Epoch [1][60/79]	lr: 3.566e-05, eta: 2:02:59, time: 1.990, data_time: 0.006, memory: 72797, loss_cls: 0.1940, loss_bbox: 3.2282, loss_dfl: 0.5483, loss: 3.9704, grad_norm: 27.5635
+2026-05-15 15:26:48,356 - mmdet - INFO - Saving checkpoint at 1 epochs
+2026-05-15 15:27:16,880 - mmdet - INFO - Evaluating bbox...
+2026-05-15 15:27:20,873 - mmdet - INFO - 
+Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.111
+Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=1000 ] = 0.420
+Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=1000 ] = 0.017
+Average Precision  (AP) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = 0.138
+Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.032
+Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.101
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.282
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=300 ] = 0.303
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=1000 ] = 0.303
+Average Recall     (AR) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = 0.349
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.155
+Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.350
+
+2026-05-15 15:27:20,873 - mmdet - INFO - 
++----------+-------+
+| category | AP    |
++----------+-------+
+| ship     | 0.111 |
++----------+-------+
+2026-05-15 15:27:20,898 - mmdet - INFO - Exp name: pixel_itpn_GFL_ssdd.py
+2026-05-15 15:27:20,899 - mmdet - INFO - Epoch(val) [1][39]	bbox_mAP: 0.1110, bbox_mAP_50: 0.4200, bbox_mAP_75: 0.0170, bbox_mAP_s: 0.1380, bbox_mAP_m: 0.0320, bbox_mAP_l: 0.1010, bbox_mAP_copypaste: 0.111 0.420 0.017 0.138 0.032 0.101
+2026-05-15 15:27:37,480 - mmdet - INFO - Exp name: pixel_itpn_GFL_ssdd.py
+2026-05-15 15:27:37,480 - mmdet - INFO - Epoch(val) [1][20]	loss_cls: 0.2660, loss_bbox: 2.5649, loss_dfl: 0.5134, loss: 3.3443
+2026-05-15 15:28:11,575 - mmdet - INFO - Epoch [2][20/79]	lr: 5.893e-05, eta: 1:29:15, time: 1.704, data_time: 0.106, memory: 72797, loss_cls: 0.2860, loss_bbox: 2.3759, loss_dfl: 0.4898, loss: 3.1517, grad_norm: 38.3428
+2026-05-15 15:28:46,345 - mmdet - INFO - Epoch [2][40/79]	lr: 7.089e-05, eta: 1:26:58, time: 1.738, data_time: 0.005, memory: 72797, loss_cls: 0.3073, loss_bbox: 2.1928, loss_dfl: 0.4458, loss: 2.9459, grad_norm: 35.4310
+2026-05-15 15:29:17,885 - mmdet - INFO - Epoch [2][60/79]	lr: 8.286e-05, eta: 1:24:08, time: 1.578, data_time: 0.006, memory: 72797, loss_cls: 0.2872, loss_bbox: 2.0612, loss_dfl: 0.4265, loss: 2.7748, grad_norm: 29.9723
+2026-05-15 15:29:48,081 - mmdet - INFO - Saving checkpoint at 2 epochs
+2026-05-15 15:29:57,180 - mmdet - INFO - Evaluating bbox...
+2026-05-15 15:29:59,667 - mmdet - INFO - 
+Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.243
+Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=1000 ] = 0.646
+Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=1000 ] = 0.095
+Average Precision  (AP) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = 0.310
+Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.067
+Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.077
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.434
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=300 ] = 0.450
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=1000 ] = 0.450
+Average Recall     (AR) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = 0.494
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.306
+Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.600
+
+2026-05-15 15:29:59,667 - mmdet - INFO - 
++----------+-------+
+| category | AP    |
++----------+-------+
+| ship     | 0.243 |
++----------+-------+
+2026-05-15 15:29:59,681 - mmdet - INFO - Exp name: pixel_itpn_GFL_ssdd.py
+2026-05-15 15:29:59,681 - mmdet - INFO - Epoch(val) [2][39]	bbox_mAP: 0.2430, bbox_mAP_50: 0.6460, bbox_mAP_75: 0.0950, bbox_mAP_s: 0.3100, bbox_mAP_m: 0.0670, bbox_mAP_l: 0.0770, bbox_mAP_copypaste: 0.243 0.646 0.095 0.310 0.067 0.077
+2026-05-15 15:30:12,276 - mmdet - INFO - Exp name: pixel_itpn_GFL_ssdd.py
+2026-05-15 15:30:12,276 - mmdet - INFO - Epoch(val) [2][20]	loss_cls: 0.2999, loss_bbox: 1.9619, loss_dfl: 0.4094, loss: 2.6712
+2026-05-15 15:30:36,738 - mmdet - INFO - Epoch [3][20/79]	lr: 1.056e-04, eta: 1:10:51, time: 1.222, data_time: 0.107, memory: 72798, loss_cls: 0.3185, loss_bbox: 2.0004, loss_dfl: 0.4204, loss: 2.7394, grad_norm: 33.7531
+2026-05-15 15:30:58,607 - mmdet - INFO - Epoch [3][40/79]	lr: 1.175e-04, eta: 1:08:06, time: 1.094, data_time: 0.006, memory: 72798, loss_cls: 0.3422, loss_bbox: 1.8639, loss_dfl: 0.3938, loss: 2.5998, grad_norm: 26.1251
+2026-05-15 15:31:21,346 - mmdet - INFO - Epoch [3][60/79]	lr: 1.294e-04, eta: 1:05:57, time: 1.137, data_time: 0.005, memory: 72798, loss_cls: 0.3038, loss_bbox: 1.8106, loss_dfl: 0.3741, loss: 2.4885, grad_norm: 22.7623
+2026-05-15 15:31:39,473 - mmdet - INFO - Saving checkpoint at 3 epochs
+2026-05-15 15:31:47,193 - mmdet - INFO - Evaluating bbox...
+2026-05-15 15:31:49,356 - mmdet - INFO - 
+Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.339
+Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=1000 ] = 0.775
+Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=1000 ] = 0.223
+Average Precision  (AP) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = 0.393
+Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.196
+Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.333
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.475
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=300 ] = 0.490
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=1000 ] = 0.490
+Average Recall     (AR) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = 0.516
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.405
+Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.550
+
+2026-05-15 15:31:49,356 - mmdet - INFO - 
++----------+-------+
+| category | AP    |
++----------+-------+
+| ship     | 0.339 |
++----------+-------+
+2026-05-15 15:31:49,366 - mmdet - INFO - Exp name: pixel_itpn_GFL_ssdd.py
+2026-05-15 15:31:49,366 - mmdet - INFO - Epoch(val) [3][39]	bbox_mAP: 0.3390, bbox_mAP_50: 0.7750, bbox_mAP_75: 0.2230, bbox_mAP_s: 0.3930, bbox_mAP_m: 0.1960, bbox_mAP_l: 0.3330, bbox_mAP_copypaste: 0.339 0.775 0.223 0.393 0.196 0.333
+2026-05-15 15:32:00,204 - mmdet - INFO - Exp name: pixel_itpn_GFL_ssdd.py
+2026-05-15 15:32:00,204 - mmdet - INFO - Epoch(val) [3][20]	loss_cls: 0.2808, loss_bbox: 1.8412, loss_dfl: 0.3655, loss: 2.4875
+2026-05-15 15:32:24,709 - mmdet - INFO - Epoch [4][20/79]	lr: 1.511e-04, eta: 0:59:13, time: 1.224, data_time: 0.107, memory: 72798, loss_cls: 0.2737, loss_bbox: 1.7884, loss_dfl: 0.3651, loss: 2.4273, grad_norm: 22.7681
+2026-05-15 15:32:41,150 - mmdet - INFO - Epoch [4][40/79]	lr: 1.629e-04, eta: 0:57:03, time: 0.822, data_time: 0.005, memory: 72798, loss_cls: 0.3099, loss_bbox: 1.7293, loss_dfl: 0.3557, loss: 2.3949, grad_norm: 21.2416
+2026-05-15 15:32:54,251 - mmdet - INFO - Epoch [4][60/79]	lr: 1.747e-04, eta: 0:54:40, time: 0.655, data_time: 0.005, memory: 72798, loss_cls: 0.3058, loss_bbox: 1.6596, loss_dfl: 0.3472, loss: 2.3126, grad_norm: 21.7585
+2026-05-15 15:33:09,992 - mmdet - INFO - Saving checkpoint at 4 epochs
+2026-05-15 15:33:17,515 - mmdet - INFO - Evaluating bbox...
+2026-05-15 15:33:19,656 - mmdet - INFO - 
+Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.378
+Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=1000 ] = 0.812
+Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=1000 ] = 0.291
+Average Precision  (AP) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = 0.440
+Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.216
+Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.163
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.517
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=300 ] = 0.528
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=1000 ] = 0.528
+Average Recall     (AR) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = 0.563
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.416
+Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.350
+
+2026-05-15 15:33:19,656 - mmdet - INFO - 
++----------+-------+
+| category | AP    |
++----------+-------+
+| ship     | 0.378 |
++----------+-------+
+2026-05-15 15:33:19,666 - mmdet - INFO - Exp name: pixel_itpn_GFL_ssdd.py
+2026-05-15 15:33:19,667 - mmdet - INFO - Epoch(val) [4][39]	bbox_mAP: 0.3780, bbox_mAP_50: 0.8120, bbox_mAP_75: 0.2910, bbox_mAP_s: 0.4400, bbox_mAP_m: 0.2160, bbox_mAP_l: 0.1630, bbox_mAP_copypaste: 0.378 0.812 0.291 0.440 0.216 0.163
+2026-05-15 15:33:25,972 - mmdet - INFO - Exp name: pixel_itpn_GFL_ssdd.py
+2026-05-15 15:33:25,972 - mmdet - INFO - Epoch(val) [4][20]	loss_cls: 0.3008, loss_bbox: 1.6475, loss_dfl: 0.3354, loss: 2.2836
+2026-05-15 15:33:40,463 - mmdet - INFO - Epoch [5][20/79]	lr: 1.950e-04, eta: 0:49:23, time: 0.724, data_time: 0.106, memory: 72798, loss_cls: 0.2683, loss_bbox: 1.5289, loss_dfl: 0.3332, loss: 2.1304, grad_norm: 15.6676
+2026-05-15 15:33:56,509 - mmdet - INFO - Epoch [5][40/79]	lr: 2.067e-04, eta: 0:48:06, time: 0.801, data_time: 0.005, memory: 72798, loss_cls: 0.2892, loss_bbox: 1.4797, loss_dfl: 0.3328, loss: 2.1016, grad_norm: 16.7983
+2026-05-15 15:34:18,206 - mmdet - INFO - Epoch [5][60/79]	lr: 2.183e-04, eta: 0:47:33, time: 1.085, data_time: 0.006, memory: 72798, loss_cls: 0.3100, loss_bbox: 1.5180, loss_dfl: 0.3189, loss: 2.1469, grad_norm: 20.4386
+2026-05-15 15:34:34,518 - mmdet - INFO - Saving checkpoint at 5 epochs
+2026-05-15 15:34:42,186 - mmdet - INFO - Evaluating bbox...
+2026-05-15 15:34:44,664 - mmdet - INFO - 
+Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.429
+Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=1000 ] = 0.842
+Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=1000 ] = 0.383
+Average Precision  (AP) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = 0.471
+Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.286
+Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.314
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.556
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=300 ] = 0.565
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=1000 ] = 0.565
+Average Recall     (AR) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = 0.597
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.463
+Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.400
+
+2026-05-15 15:34:44,664 - mmdet - INFO - 
++----------+-------+
+| category | AP    |
++----------+-------+
+| ship     | 0.429 |
++----------+-------+
+2026-05-15 15:34:44,676 - mmdet - INFO - Exp name: pixel_itpn_GFL_ssdd.py
+2026-05-15 15:34:44,676 - mmdet - INFO - Epoch(val) [5][39]	bbox_mAP: 0.4290, bbox_mAP_50: 0.8420, bbox_mAP_75: 0.3830, bbox_mAP_s: 0.4710, bbox_mAP_m: 0.2860, bbox_mAP_l: 0.3140, bbox_mAP_copypaste: 0.429 0.842 0.383 0.471 0.286 0.314
+2026-05-15 15:34:52,896 - mmdet - INFO - Exp name: pixel_itpn_GFL_ssdd.py
+2026-05-15 15:34:52,897 - mmdet - INFO - Epoch(val) [5][20]	loss_cls: 0.2882, loss_bbox: 1.4321, loss_dfl: 0.3225, loss: 2.0427
+2026-05-15 15:35:17,522 - mmdet - INFO - Epoch [6][20/79]	lr: 2.368e-04, eta: 0:44:48, time: 1.230, data_time: 0.106, memory: 72798, loss_cls: 0.2835, loss_bbox: 1.3962, loss_dfl: 0.3120, loss: 1.9917, grad_norm: 15.8467
+2026-05-15 15:35:32,796 - mmdet - INFO - Epoch [6][40/79]	lr: 2.482e-04, eta: 0:43:48, time: 0.764, data_time: 0.005, memory: 72798, loss_cls: 0.2830, loss_bbox: 1.3140, loss_dfl: 0.2971, loss: 1.8941, grad_norm: 16.2601
+2026-05-15 15:35:49,350 - mmdet - INFO - Epoch [6][60/79]	lr: 2.597e-04, eta: 0:42:58, time: 0.828, data_time: 0.005, memory: 72798, loss_cls: 0.2848, loss_bbox: 1.3908, loss_dfl: 0.2977, loss: 1.9733, grad_norm: 15.1341
+2026-05-15 15:36:03,000 - mmdet - INFO - Saving checkpoint at 6 epochs
+2026-05-15 15:36:11,870 - mmdet - INFO - Evaluating bbox...
+2026-05-15 15:36:15,148 - mmdet - INFO - 
+Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.472
+Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=1000 ] = 0.868
+Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=1000 ] = 0.480
+Average Precision  (AP) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = 0.530
+Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.286
+Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.052
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.582
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=300 ] = 0.594
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=1000 ] = 0.594
+Average Recall     (AR) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = 0.636
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.467
+Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.100
+
+2026-05-15 15:36:15,149 - mmdet - INFO - 
++----------+-------+
+| category | AP    |
++----------+-------+
+| ship     | 0.472 |
++----------+-------+
+2026-05-15 15:36:15,168 - mmdet - INFO - Exp name: pixel_itpn_GFL_ssdd.py
+2026-05-15 15:36:15,168 - mmdet - INFO - Epoch(val) [6][39]	bbox_mAP: 0.4720, bbox_mAP_50: 0.8680, bbox_mAP_75: 0.4800, bbox_mAP_s: 0.5300, bbox_mAP_m: 0.2860, bbox_mAP_l: 0.0520, bbox_mAP_copypaste: 0.472 0.868 0.480 0.530 0.286 0.052
+2026-05-15 15:36:24,567 - mmdet - INFO - Exp name: pixel_itpn_GFL_ssdd.py
+2026-05-15 15:36:24,567 - mmdet - INFO - Epoch(val) [6][20]	loss_cls: 0.2972, loss_bbox: 1.3726, loss_dfl: 0.2982, loss: 1.9680
+2026-05-15 15:36:38,613 - mmdet - INFO - Epoch [7][20/79]	lr: 2.760e-04, eta: 0:40:03, time: 0.702, data_time: 0.107, memory: 72798, loss_cls: 0.2732, loss_bbox: 1.2857, loss_dfl: 0.2939, loss: 1.8528, grad_norm: 15.3198
+2026-05-15 15:36:55,196 - mmdet - INFO - Epoch [7][40/79]	lr: 2.799e-04, eta: 0:39:25, time: 0.828, data_time: 0.004, memory: 72798, loss_cls: 0.2708, loss_bbox: 1.3150, loss_dfl: 0.2919, loss: 1.8778, grad_norm: 13.0491
+2026-05-15 15:37:16,245 - mmdet - INFO - Epoch [7][60/79]	lr: 2.799e-04, eta: 0:39:08, time: 1.053, data_time: 0.006, memory: 72798, loss_cls: 0.2605, loss_bbox: 1.3001, loss_dfl: 0.2809, loss: 1.8415, grad_norm: 12.4334
+2026-05-15 15:37:33,384 - mmdet - INFO - Saving checkpoint at 7 epochs
+2026-05-15 15:37:41,119 - mmdet - INFO - Evaluating bbox...
+2026-05-15 15:37:42,850 - mmdet - INFO - 
+Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.515
+Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=1000 ] = 0.900
+Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=1000 ] = 0.540
+Average Precision  (AP) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = 0.543
+Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.429
+Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.309
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.635
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=300 ] = 0.645
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=1000 ] = 0.645
+Average Recall     (AR) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = 0.661
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.597
+Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.450
+
+2026-05-15 15:37:42,851 - mmdet - INFO - 
++----------+-------+
+| category | AP    |
++----------+-------+
+| ship     | 0.515 |
++----------+-------+
+2026-05-15 15:37:42,866 - mmdet - INFO - Exp name: pixel_itpn_GFL_ssdd.py
+2026-05-15 15:37:42,866 - mmdet - INFO - Epoch(val) [7][39]	bbox_mAP: 0.5150, bbox_mAP_50: 0.9000, bbox_mAP_75: 0.5400, bbox_mAP_s: 0.5430, bbox_mAP_m: 0.4290, bbox_mAP_l: 0.3090, bbox_mAP_copypaste: 0.515 0.900 0.540 0.543 0.429 0.309
+2026-05-15 15:37:49,333 - mmdet - INFO - Exp name: pixel_itpn_GFL_ssdd.py
+2026-05-15 15:37:49,333 - mmdet - INFO - Epoch(val) [7][20]	loss_cls: 0.2667, loss_bbox: 1.2629, loss_dfl: 0.2729, loss: 1.8024
+2026-05-15 15:38:05,872 - mmdet - INFO - Epoch [8][20/79]	lr: 2.729e-04, eta: 0:36:56, time: 0.826, data_time: 0.107, memory: 72798, loss_cls: 0.2311, loss_bbox: 1.2123, loss_dfl: 0.2746, loss: 1.7181, grad_norm: 13.5321
+2026-05-15 15:38:27,868 - mmdet - INFO - Epoch [8][40/79]	lr: 2.729e-04, eta: 0:36:46, time: 1.099, data_time: 0.004, memory: 72798, loss_cls: 0.2628, loss_bbox: 1.2794, loss_dfl: 0.2826, loss: 1.8247, grad_norm: 13.0170
+2026-05-15 15:38:46,310 - mmdet - INFO - Epoch [8][60/79]	lr: 2.729e-04, eta: 0:36:22, time: 0.923, data_time: 0.006, memory: 72798, loss_cls: 0.2897, loss_bbox: 1.1903, loss_dfl: 0.2775, loss: 1.7575, grad_norm: 12.9288
+2026-05-15 15:38:55,607 - mmdet - INFO - Saving checkpoint at 8 epochs
+2026-05-15 15:39:04,588 - mmdet - INFO - Evaluating bbox...
+2026-05-15 15:39:07,820 - mmdet - INFO - 
+Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.545
+Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=1000 ] = 0.906
+Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=1000 ] = 0.604
+Average Precision  (AP) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = 0.584
+Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.432
+Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.281
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.652
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=300 ] = 0.664
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=1000 ] = 0.664
+Average Recall     (AR) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = 0.691
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.580
+Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.450
+
+2026-05-15 15:39:07,821 - mmdet - INFO - 
++----------+-------+
+| category | AP    |
++----------+-------+
+| ship     | 0.546 |
++----------+-------+
+2026-05-15 15:39:07,840 - mmdet - INFO - Exp name: pixel_itpn_GFL_ssdd.py
+2026-05-15 15:39:07,841 - mmdet - INFO - Epoch(val) [8][39]	bbox_mAP: 0.5450, bbox_mAP_50: 0.9060, bbox_mAP_75: 0.6040, bbox_mAP_s: 0.5840, bbox_mAP_m: 0.4320, bbox_mAP_l: 0.2810, bbox_mAP_copypaste: 0.545 0.906 0.604 0.584 0.432 0.281
+2026-05-15 15:39:17,175 - mmdet - INFO - Exp name: pixel_itpn_GFL_ssdd.py
+2026-05-15 15:39:17,175 - mmdet - INFO - Epoch(val) [8][20]	loss_cls: 0.2751, loss_bbox: 1.1584, loss_dfl: 0.2626, loss: 1.6961
+2026-05-15 15:39:33,586 - mmdet - INFO - Epoch [9][20/79]	lr: 2.649e-04, eta: 0:34:31, time: 0.820, data_time: 0.106, memory: 72798, loss_cls: 0.2528, loss_bbox: 1.1761, loss_dfl: 0.2608, loss: 1.6897, grad_norm: 12.3635
+2026-05-15 15:39:47,747 - mmdet - INFO - Epoch [9][40/79]	lr: 2.649e-04, eta: 0:33:57, time: 0.708, data_time: 0.005, memory: 72798, loss_cls: 0.2251, loss_bbox: 1.2673, loss_dfl: 0.2707, loss: 1.7631, grad_norm: 11.6219
+2026-05-15 15:40:05,706 - mmdet - INFO - Epoch [9][60/79]	lr: 2.649e-04, eta: 0:33:36, time: 0.898, data_time: 0.005, memory: 72798, loss_cls: 0.2219, loss_bbox: 1.1387, loss_dfl: 0.2618, loss: 1.6224, grad_norm: 11.2191
+2026-05-15 15:40:15,451 - mmdet - INFO - Saving checkpoint at 9 epochs
+2026-05-15 15:40:24,491 - mmdet - INFO - Evaluating bbox...
+2026-05-15 15:40:27,365 - mmdet - INFO - 
+Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.557
+Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=1000 ] = 0.922
+Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=1000 ] = 0.662
+Average Precision  (AP) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = 0.592
+Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.451
+Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.442
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.681
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=300 ] = 0.691
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=1000 ] = 0.691
+Average Recall     (AR) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = 0.712
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.623
+Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.750
+
+2026-05-15 15:40:27,366 - mmdet - INFO - 
++----------+-------+
+| category | AP    |
++----------+-------+
+| ship     | 0.557 |
++----------+-------+
+2026-05-15 15:40:27,376 - mmdet - INFO - Exp name: pixel_itpn_GFL_ssdd.py
+2026-05-15 15:40:27,376 - mmdet - INFO - Epoch(val) [9][39]	bbox_mAP: 0.5570, bbox_mAP_50: 0.9220, bbox_mAP_75: 0.6620, bbox_mAP_s: 0.5920, bbox_mAP_m: 0.4510, bbox_mAP_l: 0.4420, bbox_mAP_copypaste: 0.557 0.922 0.662 0.592 0.451 0.442
+2026-05-15 15:40:36,932 - mmdet - INFO - Exp name: pixel_itpn_GFL_ssdd.py
+2026-05-15 15:40:36,932 - mmdet - INFO - Epoch(val) [9][20]	loss_cls: 0.2378, loss_bbox: 1.1800, loss_dfl: 0.2638, loss: 1.6816
+2026-05-15 15:40:56,387 - mmdet - INFO - Epoch [10][20/79]	lr: 2.561e-04, eta: 0:32:10, time: 0.972, data_time: 0.107, memory: 72798, loss_cls: 0.2370, loss_bbox: 1.0758, loss_dfl: 0.2508, loss: 1.5636, grad_norm: 10.3094
+2026-05-15 15:41:08,339 - mmdet - INFO - Epoch [10][40/79]	lr: 2.561e-04, eta: 0:31:34, time: 0.597, data_time: 0.005, memory: 72798, loss_cls: 0.2425, loss_bbox: 1.1992, loss_dfl: 0.2658, loss: 1.7076, grad_norm: 14.2320
+2026-05-15 15:41:21,160 - mmdet - INFO - Epoch [10][60/79]	lr: 2.561e-04, eta: 0:31:02, time: 0.641, data_time: 0.005, memory: 72798, loss_cls: 0.2270, loss_bbox: 1.1570, loss_dfl: 0.2551, loss: 1.6391, grad_norm: 11.1914
+2026-05-15 15:41:34,186 - mmdet - INFO - Saving checkpoint at 10 epochs
+2026-05-15 15:41:43,384 - mmdet - INFO - Evaluating bbox...
+2026-05-15 15:41:45,151 - mmdet - INFO - 
+Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.584
+Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=1000 ] = 0.928
+Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=1000 ] = 0.692
+Average Precision  (AP) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = 0.616
+Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.492
+Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.552
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.692
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=300 ] = 0.701
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=1000 ] = 0.701
+Average Recall     (AR) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = 0.722
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.636
+Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.600
+
+2026-05-15 15:41:45,151 - mmdet - INFO - 
++----------+-------+
+| category | AP    |
++----------+-------+
+| ship     | 0.585 |
++----------+-------+
+2026-05-15 15:41:45,160 - mmdet - INFO - Exp name: pixel_itpn_GFL_ssdd.py
+2026-05-15 15:41:45,160 - mmdet - INFO - Epoch(val) [10][39]	bbox_mAP: 0.5840, bbox_mAP_50: 0.9280, bbox_mAP_75: 0.6920, bbox_mAP_s: 0.6160, bbox_mAP_m: 0.4920, bbox_mAP_l: 0.5520, bbox_mAP_copypaste: 0.584 0.928 0.692 0.616 0.492 0.552
+2026-05-15 15:41:50,413 - mmdet - INFO - Exp name: pixel_itpn_GFL_ssdd.py
+2026-05-15 15:41:50,413 - mmdet - INFO - Epoch(val) [10][20]	loss_cls: 0.2417, loss_bbox: 1.0848, loss_dfl: 0.2586, loss: 1.5851
+2026-05-15 15:42:01,274 - mmdet - INFO - Epoch [11][20/79]	lr: 2.464e-04, eta: 0:29:26, time: 0.543, data_time: 0.106, memory: 72798, loss_cls: 0.2210, loss_bbox: 1.0580, loss_dfl: 0.2390, loss: 1.5180, grad_norm: 10.2325
+2026-05-15 15:42:17,076 - mmdet - INFO - Epoch [11][40/79]	lr: 2.464e-04, eta: 0:29:05, time: 0.789, data_time: 0.004, memory: 72798, loss_cls: 0.2332, loss_bbox: 1.0719, loss_dfl: 0.2490, loss: 1.5540, grad_norm: 10.8022
+2026-05-15 15:42:35,243 - mmdet - INFO - Epoch [11][60/79]	lr: 2.464e-04, eta: 0:28:49, time: 0.909, data_time: 0.005, memory: 72798, loss_cls: 0.2514, loss_bbox: 1.1106, loss_dfl: 0.2522, loss: 1.6141, grad_norm: 11.1514
+2026-05-15 15:42:46,404 - mmdet - INFO - Saving checkpoint at 11 epochs
+2026-05-15 15:42:55,498 - mmdet - INFO - Evaluating bbox...
+2026-05-15 15:42:57,561 - mmdet - INFO - 
+Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.589
+Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=1000 ] = 0.934
+Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=1000 ] = 0.696
+Average Precision  (AP) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = 0.618
+Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.507
+Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.494
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.684
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=300 ] = 0.692
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=1000 ] = 0.692
+Average Recall     (AR) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = 0.714
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.620
+Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.650
+
+2026-05-15 15:42:57,561 - mmdet - INFO - 
++----------+-------+
+| category | AP    |
++----------+-------+
+| ship     | 0.589 |
++----------+-------+
+2026-05-15 15:42:57,571 - mmdet - INFO - Exp name: pixel_itpn_GFL_ssdd.py
+2026-05-15 15:42:57,572 - mmdet - INFO - Epoch(val) [11][39]	bbox_mAP: 0.5890, bbox_mAP_50: 0.9340, bbox_mAP_75: 0.6960, bbox_mAP_s: 0.6180, bbox_mAP_m: 0.5070, bbox_mAP_l: 0.4940, bbox_mAP_copypaste: 0.589 0.934 0.696 0.618 0.507 0.494
+2026-05-15 15:43:05,465 - mmdet - INFO - Exp name: pixel_itpn_GFL_ssdd.py
+2026-05-15 15:43:05,466 - mmdet - INFO - Epoch(val) [11][20]	loss_cls: 0.2426, loss_bbox: 1.0991, loss_dfl: 0.2520, loss: 1.5938
+2026-05-15 15:43:21,267 - mmdet - INFO - Epoch [12][20/79]	lr: 2.360e-04, eta: 0:27:36, time: 0.790, data_time: 0.107, memory: 72798, loss_cls: 0.2047, loss_bbox: 1.0245, loss_dfl: 0.2435, loss: 1.4726, grad_norm: 9.2000
+2026-05-15 15:43:33,311 - mmdet - INFO - Epoch [12][40/79]	lr: 2.360e-04, eta: 0:27:08, time: 0.602, data_time: 0.004, memory: 72798, loss_cls: 0.2028, loss_bbox: 1.0241, loss_dfl: 0.2402, loss: 1.4671, grad_norm: 9.7582
+2026-05-15 15:43:44,426 - mmdet - INFO - Epoch [12][60/79]	lr: 2.360e-04, eta: 0:26:40, time: 0.556, data_time: 0.005, memory: 72798, loss_cls: 0.2327, loss_bbox: 1.0809, loss_dfl: 0.2489, loss: 1.5625, grad_norm: 10.3586
+2026-05-15 15:43:59,175 - mmdet - INFO - Saving checkpoint at 12 epochs
+2026-05-15 15:44:07,108 - mmdet - INFO - Evaluating bbox...
+2026-05-15 15:44:08,826 - mmdet - INFO - 
+Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.622
+Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=1000 ] = 0.939
+Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=1000 ] = 0.764
+Average Precision  (AP) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = 0.652
+Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.533
+Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.554
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.727
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=300 ] = 0.736
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=1000 ] = 0.736
+Average Recall     (AR) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = 0.752
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.684
+Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.700
+
+2026-05-15 15:44:08,826 - mmdet - INFO - 
++----------+-------+
+| category | AP    |
++----------+-------+
+| ship     | 0.622 |
++----------+-------+
+2026-05-15 15:44:08,833 - mmdet - INFO - Exp name: pixel_itpn_GFL_ssdd.py
+2026-05-15 15:44:08,833 - mmdet - INFO - Epoch(val) [12][39]	bbox_mAP: 0.6220, bbox_mAP_50: 0.9390, bbox_mAP_75: 0.7640, bbox_mAP_s: 0.6520, bbox_mAP_m: 0.5330, bbox_mAP_l: 0.5540, bbox_mAP_copypaste: 0.622 0.939 0.764 0.652 0.533 0.554
+2026-05-15 15:44:16,942 - mmdet - INFO - Exp name: pixel_itpn_GFL_ssdd.py
+2026-05-15 15:44:16,943 - mmdet - INFO - Epoch(val) [12][20]	loss_cls: 0.2396, loss_bbox: 1.0249, loss_dfl: 0.2406, loss: 1.5052
+2026-05-15 15:44:31,285 - mmdet - INFO - Epoch [13][20/79]	lr: 2.250e-04, eta: 0:25:32, time: 0.716, data_time: 0.107, memory: 72798, loss_cls: 0.2049, loss_bbox: 1.0219, loss_dfl: 0.2360, loss: 1.4628, grad_norm: 11.0069
+2026-05-15 15:44:41,997 - mmdet - INFO - Epoch [13][40/79]	lr: 2.250e-04, eta: 0:25:05, time: 0.536, data_time: 0.005, memory: 72798, loss_cls: 0.2003, loss_bbox: 1.0055, loss_dfl: 0.2433, loss: 1.4491, grad_norm: 9.0983
+2026-05-15 15:44:52,228 - mmdet - INFO - Epoch [13][60/79]	lr: 2.250e-04, eta: 0:24:38, time: 0.511, data_time: 0.004, memory: 72798, loss_cls: 0.2003, loss_bbox: 0.9435, loss_dfl: 0.2322, loss: 1.3760, grad_norm: 9.1513
+2026-05-15 15:45:03,541 - mmdet - INFO - Saving checkpoint at 13 epochs
+2026-05-15 15:45:12,059 - mmdet - INFO - Evaluating bbox...
+2026-05-15 15:45:14,636 - mmdet - INFO - 
+Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.603
+Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=1000 ] = 0.935
+Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=1000 ] = 0.724
+Average Precision  (AP) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = 0.632
+Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.520
+Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.404
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.710
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=300 ] = 0.721
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=1000 ] = 0.721
+Average Recall     (AR) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = 0.740
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.662
+Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.450
+
+2026-05-15 15:45:14,636 - mmdet - INFO - 
++----------+-------+
+| category | AP    |
++----------+-------+
+| ship     | 0.604 |
++----------+-------+
+2026-05-15 15:45:14,652 - mmdet - INFO - Exp name: pixel_itpn_GFL_ssdd.py
+2026-05-15 15:45:14,652 - mmdet - INFO - Epoch(val) [13][39]	bbox_mAP: 0.6030, bbox_mAP_50: 0.9350, bbox_mAP_75: 0.7240, bbox_mAP_s: 0.6320, bbox_mAP_m: 0.5200, bbox_mAP_l: 0.4040, bbox_mAP_copypaste: 0.603 0.935 0.724 0.632 0.520 0.404
+2026-05-15 15:45:19,706 - mmdet - INFO - Exp name: pixel_itpn_GFL_ssdd.py
+2026-05-15 15:45:19,706 - mmdet - INFO - Epoch(val) [13][20]	loss_cls: 0.2925, loss_bbox: 1.0312, loss_dfl: 0.2375, loss: 1.5613
+2026-05-15 15:45:34,159 - mmdet - INFO - Epoch [14][20/79]	lr: 2.134e-04, eta: 0:23:37, time: 0.722, data_time: 0.106, memory: 72798, loss_cls: 0.2167, loss_bbox: 0.9949, loss_dfl: 0.2306, loss: 1.4422, grad_norm: 10.5542
+2026-05-15 15:45:42,674 - mmdet - INFO - Epoch [14][40/79]	lr: 2.134e-04, eta: 0:23:09, time: 0.426, data_time: 0.004, memory: 72798, loss_cls: 0.2066, loss_bbox: 0.9589, loss_dfl: 0.2346, loss: 1.4002, grad_norm: 9.3470
+2026-05-15 15:45:56,186 - mmdet - INFO - Epoch [14][60/79]	lr: 2.134e-04, eta: 0:22:50, time: 0.676, data_time: 0.004, memory: 72798, loss_cls: 0.1955, loss_bbox: 0.9275, loss_dfl: 0.2273, loss: 1.3503, grad_norm: 8.6849
+2026-05-15 15:46:04,520 - mmdet - INFO - Saving checkpoint at 14 epochs
+2026-05-15 15:46:12,302 - mmdet - INFO - Evaluating bbox...
+2026-05-15 15:46:13,946 - mmdet - INFO - 
+Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.630
+Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=1000 ] = 0.944
+Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=1000 ] = 0.778
+Average Precision  (AP) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = 0.649
+Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.571
+Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.572
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.725
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=300 ] = 0.732
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=1000 ] = 0.732
+Average Recall     (AR) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = 0.749
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.677
+Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.750
+
+2026-05-15 15:46:13,947 - mmdet - INFO - 
++----------+-------+
+| category | AP    |
++----------+-------+
+| ship     | 0.630 |
++----------+-------+
+2026-05-15 15:46:13,954 - mmdet - INFO - Exp name: pixel_itpn_GFL_ssdd.py
+2026-05-15 15:46:13,954 - mmdet - INFO - Epoch(val) [14][39]	bbox_mAP: 0.6300, bbox_mAP_50: 0.9440, bbox_mAP_75: 0.7780, bbox_mAP_s: 0.6490, bbox_mAP_m: 0.5710, bbox_mAP_l: 0.5720, bbox_mAP_copypaste: 0.630 0.944 0.778 0.649 0.571 0.572
+2026-05-15 15:46:21,058 - mmdet - INFO - Exp name: pixel_itpn_GFL_ssdd.py
+2026-05-15 15:46:21,058 - mmdet - INFO - Epoch(val) [14][20]	loss_cls: 0.2215, loss_bbox: 0.9922, loss_dfl: 0.2386, loss: 1.4523
+2026-05-15 15:46:37,046 - mmdet - INFO - Epoch [15][20/79]	lr: 2.013e-04, eta: 0:21:58, time: 0.799, data_time: 0.106, memory: 72798, loss_cls: 0.1974, loss_bbox: 0.9850, loss_dfl: 0.2272, loss: 1.4097, grad_norm: 10.5089
+2026-05-15 15:46:46,721 - mmdet - INFO - Epoch [15][40/79]	lr: 2.013e-04, eta: 0:21:34, time: 0.483, data_time: 0.005, memory: 72798, loss_cls: 0.1898, loss_bbox: 0.9515, loss_dfl: 0.2364, loss: 1.3777, grad_norm: 8.6793
+2026-05-15 15:46:59,114 - mmdet - INFO - Epoch [15][60/79]	lr: 2.013e-04, eta: 0:21:15, time: 0.620, data_time: 0.005, memory: 72798, loss_cls: 0.1885, loss_bbox: 0.9483, loss_dfl: 0.2278, loss: 1.3645, grad_norm: 10.4224
+2026-05-15 15:47:15,517 - mmdet - INFO - Saving checkpoint at 15 epochs
+2026-05-15 15:47:23,109 - mmdet - INFO - Evaluating bbox...
+2026-05-15 15:47:24,535 - mmdet - INFO - 
+Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.642
+Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=1000 ] = 0.951
+Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=1000 ] = 0.782
+Average Precision  (AP) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = 0.663
+Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.582
+Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.591
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.733
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=300 ] = 0.741
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=1000 ] = 0.741
+Average Recall     (AR) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = 0.757
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.689
+Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.650
+
+2026-05-15 15:47:24,535 - mmdet - INFO - 
++----------+-------+
+| category | AP    |
++----------+-------+
+| ship     | 0.643 |
++----------+-------+
+2026-05-15 15:47:24,541 - mmdet - INFO - Exp name: pixel_itpn_GFL_ssdd.py
+2026-05-15 15:47:24,541 - mmdet - INFO - Epoch(val) [15][39]	bbox_mAP: 0.6420, bbox_mAP_50: 0.9510, bbox_mAP_75: 0.7820, bbox_mAP_s: 0.6630, bbox_mAP_m: 0.5820, bbox_mAP_l: 0.5910, bbox_mAP_copypaste: 0.642 0.951 0.782 0.663 0.582 0.591
+2026-05-15 15:47:35,490 - mmdet - INFO - Exp name: pixel_itpn_GFL_ssdd.py
+2026-05-15 15:47:35,490 - mmdet - INFO - Epoch(val) [15][20]	loss_cls: 0.2199, loss_bbox: 1.0005, loss_dfl: 0.2369, loss: 1.4573
+2026-05-15 15:47:48,473 - mmdet - INFO - Epoch [16][20/79]	lr: 1.888e-04, eta: 0:20:22, time: 0.649, data_time: 0.106, memory: 72798, loss_cls: 0.1846, loss_bbox: 0.8799, loss_dfl: 0.2203, loss: 1.2849, grad_norm: 11.3279
+2026-05-15 15:48:00,896 - mmdet - INFO - Epoch [16][40/79]	lr: 1.888e-04, eta: 0:20:04, time: 0.621, data_time: 0.005, memory: 72798, loss_cls: 0.2100, loss_bbox: 0.9441, loss_dfl: 0.2279, loss: 1.3821, grad_norm: 8.7953
+2026-05-15 15:48:14,591 - mmdet - INFO - Epoch [16][60/79]	lr: 1.888e-04, eta: 0:19:48, time: 0.685, data_time: 0.005, memory: 72798, loss_cls: 0.2018, loss_bbox: 0.9515, loss_dfl: 0.2336, loss: 1.3869, grad_norm: 12.2677
+2026-05-15 15:48:29,451 - mmdet - INFO - Saving checkpoint at 16 epochs
+2026-05-15 15:48:37,110 - mmdet - INFO - Evaluating bbox...
+2026-05-15 15:48:38,319 - mmdet - INFO - 
+Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.648
+Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=1000 ] = 0.955
+Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=1000 ] = 0.798
+Average Precision  (AP) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = 0.671
+Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.583
+Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.636
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.743
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=300 ] = 0.752
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=1000 ] = 0.752
+Average Recall     (AR) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = 0.768
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.701
+Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.750
+
+2026-05-15 15:48:38,319 - mmdet - INFO - 
++----------+-------+
+| category | AP    |
++----------+-------+
+| ship     | 0.649 |
++----------+-------+
+2026-05-15 15:48:38,324 - mmdet - INFO - Exp name: pixel_itpn_GFL_ssdd.py
+2026-05-15 15:48:38,324 - mmdet - INFO - Epoch(val) [16][39]	bbox_mAP: 0.6480, bbox_mAP_50: 0.9550, bbox_mAP_75: 0.7980, bbox_mAP_s: 0.6710, bbox_mAP_m: 0.5830, bbox_mAP_l: 0.6360, bbox_mAP_copypaste: 0.648 0.955 0.798 0.671 0.583 0.636
+2026-05-15 15:48:45,234 - mmdet - INFO - Exp name: pixel_itpn_GFL_ssdd.py
+2026-05-15 15:48:45,234 - mmdet - INFO - Epoch(val) [16][20]	loss_cls: 0.2049, loss_bbox: 1.0083, loss_dfl: 0.2363, loss: 1.4495
+2026-05-15 15:48:58,674 - mmdet - INFO - Epoch [17][20/79]	lr: 1.760e-04, eta: 0:19:00, time: 0.671, data_time: 0.107, memory: 72798, loss_cls: 0.1692, loss_bbox: 0.8818, loss_dfl: 0.2200, loss: 1.2709, grad_norm: 8.4827
+2026-05-15 15:49:11,661 - mmdet - INFO - Epoch [17][40/79]	lr: 1.760e-04, eta: 0:18:43, time: 0.649, data_time: 0.005, memory: 72798, loss_cls: 0.1738, loss_bbox: 0.9003, loss_dfl: 0.2250, loss: 1.2991, grad_norm: 9.3032
+2026-05-15 15:49:25,720 - mmdet - INFO - Epoch [17][60/79]	lr: 1.760e-04, eta: 0:18:28, time: 0.703, data_time: 0.004, memory: 72798, loss_cls: 0.1936, loss_bbox: 0.8842, loss_dfl: 0.2204, loss: 1.2982, grad_norm: 9.1273
+2026-05-15 15:49:39,196 - mmdet - INFO - Saving checkpoint at 17 epochs
+2026-05-15 15:49:47,650 - mmdet - INFO - Evaluating bbox...
+2026-05-15 15:49:48,795 - mmdet - INFO - 
+Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.648
+Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=1000 ] = 0.958
+Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=1000 ] = 0.788
+Average Precision  (AP) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = 0.669
+Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.587
+Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.506
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.747
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=300 ] = 0.755
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=1000 ] = 0.755
+Average Recall     (AR) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = 0.766
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.722
+Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.600
+
+2026-05-15 15:49:48,796 - mmdet - INFO - 
++----------+-------+
+| category | AP    |
++----------+-------+
+| ship     | 0.649 |
++----------+-------+
+2026-05-15 15:49:48,803 - mmdet - INFO - Exp name: pixel_itpn_GFL_ssdd.py
+2026-05-15 15:49:48,803 - mmdet - INFO - Epoch(val) [17][39]	bbox_mAP: 0.6480, bbox_mAP_50: 0.9580, bbox_mAP_75: 0.7880, bbox_mAP_s: 0.6690, bbox_mAP_m: 0.5870, bbox_mAP_l: 0.5060, bbox_mAP_copypaste: 0.648 0.958 0.788 0.669 0.587 0.506
+2026-05-15 15:49:56,296 - mmdet - INFO - Exp name: pixel_itpn_GFL_ssdd.py
+2026-05-15 15:49:56,296 - mmdet - INFO - Epoch(val) [17][20]	loss_cls: 0.2002, loss_bbox: 0.9525, loss_dfl: 0.2301, loss: 1.3827
+2026-05-15 15:50:07,284 - mmdet - INFO - Epoch [18][20/79]	lr: 1.631e-04, eta: 0:17:41, time: 0.549, data_time: 0.106, memory: 72798, loss_cls: 0.1967, loss_bbox: 0.9162, loss_dfl: 0.2267, loss: 1.3395, grad_norm: 10.1508
+2026-05-15 15:50:19,153 - mmdet - INFO - Epoch [18][40/79]	lr: 1.631e-04, eta: 0:17:24, time: 0.593, data_time: 0.004, memory: 72798, loss_cls: 0.1937, loss_bbox: 0.8995, loss_dfl: 0.2200, loss: 1.3133, grad_norm: 8.9105
+2026-05-15 15:50:34,469 - mmdet - INFO - Epoch [18][60/79]	lr: 1.631e-04, eta: 0:17:10, time: 0.766, data_time: 0.005, memory: 72798, loss_cls: 0.1696, loss_bbox: 0.8216, loss_dfl: 0.2112, loss: 1.2024, grad_norm: 9.0244
+2026-05-15 15:50:45,761 - mmdet - INFO - Saving checkpoint at 18 epochs
+2026-05-15 15:50:53,330 - mmdet - INFO - Evaluating bbox...
+2026-05-15 15:50:54,368 - mmdet - INFO - 
+Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.659
+Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=1000 ] = 0.958
+Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=1000 ] = 0.804
+Average Precision  (AP) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = 0.675
+Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.616
+Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.684
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.749
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=300 ] = 0.756
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=1000 ] = 0.756
+Average Recall     (AR) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = 0.763
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.731
+Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.700
+
+2026-05-15 15:50:54,368 - mmdet - INFO - 
++----------+-------+
+| category | AP    |
++----------+-------+
+| ship     | 0.660 |
++----------+-------+
+2026-05-15 15:50:54,372 - mmdet - INFO - Exp name: pixel_itpn_GFL_ssdd.py
+2026-05-15 15:50:54,372 - mmdet - INFO - Epoch(val) [18][39]	bbox_mAP: 0.6590, bbox_mAP_50: 0.9580, bbox_mAP_75: 0.8040, bbox_mAP_s: 0.6750, bbox_mAP_m: 0.6160, bbox_mAP_l: 0.6840, bbox_mAP_copypaste: 0.659 0.958 0.804 0.675 0.616 0.684
+2026-05-15 15:50:59,550 - mmdet - INFO - Exp name: pixel_itpn_GFL_ssdd.py
+2026-05-15 15:50:59,550 - mmdet - INFO - Epoch(val) [18][20]	loss_cls: 0.2108, loss_bbox: 0.9287, loss_dfl: 0.2273, loss: 1.3668
+2026-05-15 15:51:10,156 - mmdet - INFO - Epoch [19][20/79]	lr: 1.500e-04, eta: 0:16:26, time: 0.530, data_time: 0.107, memory: 72798, loss_cls: 0.1750, loss_bbox: 0.8000, loss_dfl: 0.2127, loss: 1.1877, grad_norm: 7.7544
+2026-05-15 15:51:20,881 - mmdet - INFO - Epoch [19][40/79]	lr: 1.500e-04, eta: 0:16:09, time: 0.536, data_time: 0.005, memory: 72798, loss_cls: 0.1633, loss_bbox: 0.8602, loss_dfl: 0.2117, loss: 1.2353, grad_norm: 8.2076
+2026-05-15 15:51:29,777 - mmdet - INFO - Epoch [19][60/79]	lr: 1.500e-04, eta: 0:15:50, time: 0.445, data_time: 0.005, memory: 72798, loss_cls: 0.1633, loss_bbox: 0.8428, loss_dfl: 0.2110, loss: 1.2171, grad_norm: 8.4137
+2026-05-15 15:51:40,398 - mmdet - INFO - Saving checkpoint at 19 epochs
+2026-05-15 15:51:48,382 - mmdet - INFO - Evaluating bbox...
+2026-05-15 15:51:49,498 - mmdet - INFO - 
+Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.659
+Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=1000 ] = 0.956
+Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=1000 ] = 0.780
+Average Precision  (AP) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = 0.674
+Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.622
+Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.621
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.757
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=300 ] = 0.764
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=1000 ] = 0.764
+Average Recall     (AR) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = 0.771
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.741
+Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.700
+
+2026-05-15 15:51:49,499 - mmdet - INFO - 
++----------+-------+
+| category | AP    |
++----------+-------+
+| ship     | 0.659 |
++----------+-------+
+2026-05-15 15:51:49,503 - mmdet - INFO - Exp name: pixel_itpn_GFL_ssdd.py
+2026-05-15 15:51:49,503 - mmdet - INFO - Epoch(val) [19][39]	bbox_mAP: 0.6590, bbox_mAP_50: 0.9560, bbox_mAP_75: 0.7800, bbox_mAP_s: 0.6740, bbox_mAP_m: 0.6220, bbox_mAP_l: 0.6210, bbox_mAP_copypaste: 0.659 0.956 0.780 0.674 0.622 0.621
+2026-05-15 15:51:57,361 - mmdet - INFO - Exp name: pixel_itpn_GFL_ssdd.py
+2026-05-15 15:51:57,361 - mmdet - INFO - Epoch(val) [19][20]	loss_cls: 0.2098, loss_bbox: 0.9652, loss_dfl: 0.2286, loss: 1.4036
+2026-05-15 15:52:09,220 - mmdet - INFO - Epoch [20][20/79]	lr: 1.369e-04, eta: 0:15:09, time: 0.592, data_time: 0.106, memory: 72798, loss_cls: 0.1885, loss_bbox: 0.8607, loss_dfl: 0.2218, loss: 1.2709, grad_norm: 8.3358
+2026-05-15 15:52:18,080 - mmdet - INFO - Epoch [20][40/79]	lr: 1.369e-04, eta: 0:14:51, time: 0.443, data_time: 0.004, memory: 72798, loss_cls: 0.1731, loss_bbox: 0.8137, loss_dfl: 0.2120, loss: 1.1988, grad_norm: 8.0990
+2026-05-15 15:52:27,267 - mmdet - INFO - Epoch [20][60/79]	lr: 1.369e-04, eta: 0:14:34, time: 0.459, data_time: 0.005, memory: 72798, loss_cls: 0.1695, loss_bbox: 0.8638, loss_dfl: 0.2131, loss: 1.2465, grad_norm: 8.1796
+2026-05-15 15:52:38,889 - mmdet - INFO - Saving checkpoint at 20 epochs
+2026-05-15 15:52:46,388 - mmdet - INFO - Evaluating bbox...
+2026-05-15 15:52:47,180 - mmdet - INFO - 
+Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.677
+Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=1000 ] = 0.960
+Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=1000 ] = 0.824
+Average Precision  (AP) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = 0.691
+Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.638
+Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.729
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.769
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=300 ] = 0.774
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=1000 ] = 0.774
+Average Recall     (AR) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = 0.780
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.754
+Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.800
+
+2026-05-15 15:52:47,180 - mmdet - INFO - 
++----------+-------+
+| category | AP    |
++----------+-------+
+| ship     | 0.677 |
++----------+-------+
+2026-05-15 15:52:47,184 - mmdet - INFO - Exp name: pixel_itpn_GFL_ssdd.py
+2026-05-15 15:52:47,184 - mmdet - INFO - Epoch(val) [20][39]	bbox_mAP: 0.6770, bbox_mAP_50: 0.9600, bbox_mAP_75: 0.8240, bbox_mAP_s: 0.6910, bbox_mAP_m: 0.6380, bbox_mAP_l: 0.7290, bbox_mAP_copypaste: 0.677 0.960 0.824 0.691 0.638 0.729
+2026-05-15 15:52:51,999 - mmdet - INFO - Exp name: pixel_itpn_GFL_ssdd.py
+2026-05-15 15:52:51,999 - mmdet - INFO - Epoch(val) [20][20]	loss_cls: 0.2207, loss_bbox: 0.9038, loss_dfl: 0.2243, loss: 1.3487
+2026-05-15 15:53:03,985 - mmdet - INFO - Epoch [21][20/79]	lr: 1.240e-04, eta: 0:13:56, time: 0.599, data_time: 0.106, memory: 72798, loss_cls: 0.1663, loss_bbox: 0.7848, loss_dfl: 0.2064, loss: 1.1575, grad_norm: 8.1997
+2026-05-15 15:53:14,693 - mmdet - INFO - Epoch [21][40/79]	lr: 1.240e-04, eta: 0:13:40, time: 0.535, data_time: 0.005, memory: 72798, loss_cls: 0.1627, loss_bbox: 0.8081, loss_dfl: 0.2117, loss: 1.1824, grad_norm: 9.3278
+2026-05-15 15:53:24,792 - mmdet - INFO - Epoch [21][60/79]	lr: 1.240e-04, eta: 0:13:25, time: 0.504, data_time: 0.005, memory: 72798, loss_cls: 0.1596, loss_bbox: 0.7767, loss_dfl: 0.2078, loss: 1.1441, grad_norm: 8.2696
+2026-05-15 15:53:35,230 - mmdet - INFO - Saving checkpoint at 21 epochs
+2026-05-15 15:53:43,373 - mmdet - INFO - Evaluating bbox...
+2026-05-15 15:53:44,364 - mmdet - INFO - 
+Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.679
+Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=1000 ] = 0.959
+Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=1000 ] = 0.833
+Average Precision  (AP) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = 0.692
+Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.646
+Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.620
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.763
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=300 ] = 0.771
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=1000 ] = 0.771
+Average Recall     (AR) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = 0.778
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.750
+Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.700
+
+2026-05-15 15:53:44,364 - mmdet - INFO - 
++----------+-------+
+| category | AP    |
++----------+-------+
+| ship     | 0.679 |
++----------+-------+
+2026-05-15 15:53:44,369 - mmdet - INFO - Exp name: pixel_itpn_GFL_ssdd.py
+2026-05-15 15:53:44,370 - mmdet - INFO - Epoch(val) [21][39]	bbox_mAP: 0.6790, bbox_mAP_50: 0.9590, bbox_mAP_75: 0.8330, bbox_mAP_s: 0.6920, bbox_mAP_m: 0.6460, bbox_mAP_l: 0.6200, bbox_mAP_copypaste: 0.679 0.959 0.833 0.692 0.646 0.620
+2026-05-15 15:53:51,689 - mmdet - INFO - Exp name: pixel_itpn_GFL_ssdd.py
+2026-05-15 15:53:51,689 - mmdet - INFO - Epoch(val) [21][20]	loss_cls: 0.2164, loss_bbox: 0.9068, loss_dfl: 0.2245, loss: 1.3477
+2026-05-15 15:54:03,884 - mmdet - INFO - Epoch [22][20/79]	lr: 1.112e-04, eta: 0:12:49, time: 0.609, data_time: 0.106, memory: 72798, loss_cls: 0.1543, loss_bbox: 0.7562, loss_dfl: 0.2063, loss: 1.1167, grad_norm: 7.6497
+2026-05-15 15:54:16,218 - mmdet - INFO - Epoch [22][40/79]	lr: 1.112e-04, eta: 0:12:35, time: 0.617, data_time: 0.005, memory: 72798, loss_cls: 0.1769, loss_bbox: 0.8300, loss_dfl: 0.2147, loss: 1.2216, grad_norm: inf
+2026-05-15 15:54:26,317 - mmdet - INFO - Epoch [22][60/79]	lr: 1.112e-04, eta: 0:12:20, time: 0.505, data_time: 0.004, memory: 72798, loss_cls: 0.1631, loss_bbox: 0.7608, loss_dfl: 0.2086, loss: 1.1326, grad_norm: 9.0811
+2026-05-15 15:54:39,903 - mmdet - INFO - Saving checkpoint at 22 epochs
+2026-05-15 15:54:47,642 - mmdet - INFO - Evaluating bbox...
+2026-05-15 15:54:48,435 - mmdet - INFO - 
+Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.671
+Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=1000 ] = 0.960
+Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=1000 ] = 0.815
+Average Precision  (AP) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = 0.689
+Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.628
+Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.613
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.762
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=300 ] = 0.768
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=1000 ] = 0.768
+Average Recall     (AR) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = 0.776
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.743
+Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.650
+
+2026-05-15 15:54:48,435 - mmdet - INFO - 
++----------+-------+
+| category | AP    |
++----------+-------+
+| ship     | 0.671 |
++----------+-------+
+2026-05-15 15:54:48,439 - mmdet - INFO - Exp name: pixel_itpn_GFL_ssdd.py
+2026-05-15 15:54:48,439 - mmdet - INFO - Epoch(val) [22][39]	bbox_mAP: 0.6710, bbox_mAP_50: 0.9600, bbox_mAP_75: 0.8150, bbox_mAP_s: 0.6890, bbox_mAP_m: 0.6280, bbox_mAP_l: 0.6130, bbox_mAP_copypaste: 0.671 0.960 0.815 0.689 0.628 0.613
+2026-05-15 15:54:54,086 - mmdet - INFO - Exp name: pixel_itpn_GFL_ssdd.py
+2026-05-15 15:54:54,086 - mmdet - INFO - Epoch(val) [22][20]	loss_cls: 0.2082, loss_bbox: 0.9081, loss_dfl: 0.2196, loss: 1.3359
+2026-05-15 15:55:04,762 - mmdet - INFO - Epoch [23][20/79]	lr: 9.870e-05, eta: 0:11:45, time: 0.533, data_time: 0.106, memory: 72798, loss_cls: 0.1524, loss_bbox: 0.7703, loss_dfl: 0.2049, loss: 1.1276, grad_norm: 9.0030
+2026-05-15 15:55:19,364 - mmdet - INFO - Epoch [23][40/79]	lr: 9.870e-05, eta: 0:11:33, time: 0.730, data_time: 0.005, memory: 72798, loss_cls: 0.1519, loss_bbox: 0.7549, loss_dfl: 0.2027, loss: 1.1095, grad_norm: 8.2443
+2026-05-15 15:55:32,147 - mmdet - INFO - Epoch [23][60/79]	lr: 9.870e-05, eta: 0:11:20, time: 0.639, data_time: 0.005, memory: 72798, loss_cls: 0.1475, loss_bbox: 0.7539, loss_dfl: 0.2011, loss: 1.1025, grad_norm: 7.8063
+2026-05-15 15:55:41,462 - mmdet - INFO - Saving checkpoint at 23 epochs
+2026-05-15 15:55:48,991 - mmdet - INFO - Evaluating bbox...
+2026-05-15 15:55:49,782 - mmdet - INFO - 
+Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.689
+Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=1000 ] = 0.959
+Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=1000 ] = 0.835
+Average Precision  (AP) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = 0.706
+Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.646
+Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.578
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.776
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=300 ] = 0.781
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=1000 ] = 0.781
+Average Recall     (AR) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = 0.791
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.748
+Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.750
+
+2026-05-15 15:55:49,782 - mmdet - INFO - 
++----------+-------+
+| category | AP    |
++----------+-------+
+| ship     | 0.690 |
++----------+-------+
+2026-05-15 15:55:49,786 - mmdet - INFO - Exp name: pixel_itpn_GFL_ssdd.py
+2026-05-15 15:55:49,787 - mmdet - INFO - Epoch(val) [23][39]	bbox_mAP: 0.6890, bbox_mAP_50: 0.9590, bbox_mAP_75: 0.8350, bbox_mAP_s: 0.7060, bbox_mAP_m: 0.6460, bbox_mAP_l: 0.5780, bbox_mAP_copypaste: 0.689 0.959 0.835 0.706 0.646 0.578
+2026-05-15 15:55:55,023 - mmdet - INFO - Exp name: pixel_itpn_GFL_ssdd.py
+2026-05-15 15:55:55,023 - mmdet - INFO - Epoch(val) [23][20]	loss_cls: 0.2105, loss_bbox: 0.8757, loss_dfl: 0.2137, loss: 1.3000
+2026-05-15 15:56:09,589 - mmdet - INFO - Epoch [24][20/79]	lr: 8.661e-05, eta: 0:10:48, time: 0.728, data_time: 0.106, memory: 72798, loss_cls: 0.1441, loss_bbox: 0.6960, loss_dfl: 0.1985, loss: 1.0386, grad_norm: 9.7269
+2026-05-15 15:56:19,181 - mmdet - INFO - Epoch [24][40/79]	lr: 8.661e-05, eta: 0:10:34, time: 0.479, data_time: 0.004, memory: 72798, loss_cls: 0.1528, loss_bbox: 0.7497, loss_dfl: 0.2002, loss: 1.1027, grad_norm: 8.6506
+2026-05-15 15:56:31,701 - mmdet - INFO - Epoch [24][60/79]	lr: 8.661e-05, eta: 0:10:21, time: 0.627, data_time: 0.006, memory: 72798, loss_cls: 0.1494, loss_bbox: 0.7541, loss_dfl: 0.1975, loss: 1.1011, grad_norm: inf
+2026-05-15 15:56:40,660 - mmdet - INFO - Saving checkpoint at 24 epochs
+2026-05-15 15:56:48,098 - mmdet - INFO - Evaluating bbox...
+2026-05-15 15:56:48,763 - mmdet - INFO - 
+Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.680
+Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=1000 ] = 0.959
+Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=1000 ] = 0.822
+Average Precision  (AP) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = 0.693
+Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.648
+Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.642
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.770
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=300 ] = 0.774
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=1000 ] = 0.774
+Average Recall     (AR) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = 0.781
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.753
+Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.700
+
+2026-05-15 15:56:48,764 - mmdet - INFO - 
++----------+-------+
+| category | AP    |
++----------+-------+
+| ship     | 0.681 |
++----------+-------+
+2026-05-15 15:56:48,767 - mmdet - INFO - Exp name: pixel_itpn_GFL_ssdd.py
+2026-05-15 15:56:48,767 - mmdet - INFO - Epoch(val) [24][39]	bbox_mAP: 0.6800, bbox_mAP_50: 0.9590, bbox_mAP_75: 0.8220, bbox_mAP_s: 0.6930, bbox_mAP_m: 0.6480, bbox_mAP_l: 0.6420, bbox_mAP_copypaste: 0.680 0.959 0.822 0.693 0.648 0.642
+2026-05-15 15:56:53,651 - mmdet - INFO - Exp name: pixel_itpn_GFL_ssdd.py
+2026-05-15 15:56:53,651 - mmdet - INFO - Epoch(val) [24][20]	loss_cls: 0.2093, loss_bbox: 0.8635, loss_dfl: 0.2145, loss: 1.2872
+2026-05-15 15:57:06,874 - mmdet - INFO - Epoch [25][20/79]	lr: 7.500e-05, eta: 0:09:50, time: 0.660, data_time: 0.107, memory: 72798, loss_cls: 0.1383, loss_bbox: 0.7474, loss_dfl: 0.1996, loss: 1.0853, grad_norm: 8.5839
+2026-05-15 15:57:15,353 - mmdet - INFO - Epoch [25][40/79]	lr: 7.500e-05, eta: 0:09:35, time: 0.424, data_time: 0.005, memory: 72798, loss_cls: 0.1594, loss_bbox: 0.7507, loss_dfl: 0.2073, loss: 1.1174, grad_norm: 9.2243
+2026-05-15 15:57:28,623 - mmdet - INFO - Epoch [25][60/79]	lr: 7.500e-05, eta: 0:09:23, time: 0.663, data_time: 0.005, memory: 72798, loss_cls: 0.1549, loss_bbox: 0.7404, loss_dfl: 0.2013, loss: 1.0966, grad_norm: 11.5864
+2026-05-15 15:57:36,821 - mmdet - INFO - Saving checkpoint at 25 epochs
+2026-05-15 15:57:44,807 - mmdet - INFO - Evaluating bbox...
+2026-05-15 15:57:45,727 - mmdet - INFO - 
+Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.691
+Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=1000 ] = 0.965
+Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=1000 ] = 0.843
+Average Precision  (AP) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = 0.703
+Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.657
+Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.716
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.776
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=300 ] = 0.780
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=1000 ] = 0.780
+Average Recall     (AR) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = 0.788
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.753
+Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.800
+
+2026-05-15 15:57:45,727 - mmdet - INFO - 
++----------+-------+
+| category | AP    |
++----------+-------+
+| ship     | 0.691 |
++----------+-------+
+2026-05-15 15:57:45,731 - mmdet - INFO - Exp name: pixel_itpn_GFL_ssdd.py
+2026-05-15 15:57:45,731 - mmdet - INFO - Epoch(val) [25][39]	bbox_mAP: 0.6910, bbox_mAP_50: 0.9650, bbox_mAP_75: 0.8430, bbox_mAP_s: 0.7030, bbox_mAP_m: 0.6570, bbox_mAP_l: 0.7160, bbox_mAP_copypaste: 0.691 0.965 0.843 0.703 0.657 0.716
+2026-05-15 15:57:53,656 - mmdet - INFO - Exp name: pixel_itpn_GFL_ssdd.py
+2026-05-15 15:57:53,656 - mmdet - INFO - Epoch(val) [25][20]	loss_cls: 0.2010, loss_bbox: 0.8418, loss_dfl: 0.2140, loss: 1.2568
+2026-05-15 15:58:07,503 - mmdet - INFO - Epoch [26][20/79]	lr: 6.396e-05, eta: 0:08:53, time: 0.692, data_time: 0.109, memory: 72798, loss_cls: 0.1372, loss_bbox: 0.7142, loss_dfl: 0.1975, loss: 1.0490, grad_norm: 8.4245
+2026-05-15 15:58:16,709 - mmdet - INFO - Epoch [26][40/79]	lr: 6.396e-05, eta: 0:08:40, time: 0.460, data_time: 0.005, memory: 72798, loss_cls: 0.1322, loss_bbox: 0.6951, loss_dfl: 0.1973, loss: 1.0246, grad_norm: 8.0440
+2026-05-15 15:58:28,139 - mmdet - INFO - Epoch [26][60/79]	lr: 6.396e-05, eta: 0:08:27, time: 0.571, data_time: 0.004, memory: 72798, loss_cls: 0.1526, loss_bbox: 0.7339, loss_dfl: 0.2037, loss: 1.0902, grad_norm: 7.7405
+2026-05-15 15:58:38,760 - mmdet - INFO - Saving checkpoint at 26 epochs
+2026-05-15 15:58:46,326 - mmdet - INFO - Evaluating bbox...
+2026-05-15 15:58:47,737 - mmdet - INFO - 
+Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.698
+Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=1000 ] = 0.966
+Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=1000 ] = 0.844
+Average Precision  (AP) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = 0.712
+Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.660
+Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.713
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.779
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=300 ] = 0.784
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=1000 ] = 0.784
+Average Recall     (AR) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = 0.788
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.769
+Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.750
+
+2026-05-15 15:58:47,737 - mmdet - INFO - 
++----------+-------+
+| category | AP    |
++----------+-------+
+| ship     | 0.699 |
++----------+-------+
+2026-05-15 15:58:47,741 - mmdet - INFO - Exp name: pixel_itpn_GFL_ssdd.py
+2026-05-15 15:58:47,742 - mmdet - INFO - Epoch(val) [26][39]	bbox_mAP: 0.6980, bbox_mAP_50: 0.9660, bbox_mAP_75: 0.8440, bbox_mAP_s: 0.7120, bbox_mAP_m: 0.6600, bbox_mAP_l: 0.7130, bbox_mAP_copypaste: 0.698 0.966 0.844 0.712 0.660 0.713
+2026-05-15 15:58:53,960 - mmdet - INFO - Exp name: pixel_itpn_GFL_ssdd.py
+2026-05-15 15:58:53,960 - mmdet - INFO - Epoch(val) [26][20]	loss_cls: 0.1983, loss_bbox: 0.8622, loss_dfl: 0.2174, loss: 1.2779
+2026-05-15 15:59:04,747 - mmdet - INFO - Epoch [27][20/79]	lr: 5.358e-05, eta: 0:07:57, time: 0.539, data_time: 0.106, memory: 72798, loss_cls: 0.1480, loss_bbox: 0.7302, loss_dfl: 0.2025, loss: 1.0807, grad_norm: 11.9906
+2026-05-15 15:59:15,363 - mmdet - INFO - Epoch [27][40/79]	lr: 5.358e-05, eta: 0:07:44, time: 0.531, data_time: 0.005, memory: 72798, loss_cls: 0.1396, loss_bbox: 0.6952, loss_dfl: 0.1952, loss: 1.0300, grad_norm: 8.3712
+2026-05-15 15:59:26,658 - mmdet - INFO - Epoch [27][60/79]	lr: 5.358e-05, eta: 0:07:31, time: 0.565, data_time: 0.005, memory: 72798, loss_cls: 0.1384, loss_bbox: 0.7115, loss_dfl: 0.1963, loss: 1.0462, grad_norm: 8.0492
+2026-05-15 15:59:37,843 - mmdet - INFO - Saving checkpoint at 27 epochs
+2026-05-15 15:59:46,006 - mmdet - INFO - Evaluating bbox...
+2026-05-15 15:59:46,761 - mmdet - INFO - 
+Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.696
+Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=1000 ] = 0.964
+Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=1000 ] = 0.835
+Average Precision  (AP) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = 0.710
+Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.658
+Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.680
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.782
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=300 ] = 0.784
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=1000 ] = 0.784
+Average Recall     (AR) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = 0.788
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.773
+Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.800
+
+2026-05-15 15:59:46,762 - mmdet - INFO - 
++----------+-------+
+| category | AP    |
++----------+-------+
+| ship     | 0.697 |
++----------+-------+
+2026-05-15 15:59:46,765 - mmdet - INFO - Exp name: pixel_itpn_GFL_ssdd.py
+2026-05-15 15:59:46,765 - mmdet - INFO - Epoch(val) [27][39]	bbox_mAP: 0.6960, bbox_mAP_50: 0.9640, bbox_mAP_75: 0.8350, bbox_mAP_s: 0.7100, bbox_mAP_m: 0.6580, bbox_mAP_l: 0.6800, bbox_mAP_copypaste: 0.696 0.964 0.835 0.710 0.658 0.680
+2026-05-15 15:59:53,286 - mmdet - INFO - Exp name: pixel_itpn_GFL_ssdd.py
+2026-05-15 15:59:53,287 - mmdet - INFO - Epoch(val) [27][20]	loss_cls: 0.1982, loss_bbox: 0.8419, loss_dfl: 0.2071, loss: 1.2472
+2026-05-15 16:00:06,231 - mmdet - INFO - Epoch [28][20/79]	lr: 4.393e-05, eta: 0:07:03, time: 0.647, data_time: 0.106, memory: 72798, loss_cls: 0.1560, loss_bbox: 0.6980, loss_dfl: 0.1990, loss: 1.0530, grad_norm: 11.6978
+2026-05-15 16:00:16,950 - mmdet - INFO - Epoch [28][40/79]	lr: 4.393e-05, eta: 0:06:51, time: 0.535, data_time: 0.005, memory: 72798, loss_cls: 0.1509, loss_bbox: 0.6765, loss_dfl: 0.1965, loss: 1.0239, grad_norm: 13.1551
+2026-05-15 16:00:26,463 - mmdet - INFO - Epoch [28][60/79]	lr: 4.393e-05, eta: 0:06:38, time: 0.476, data_time: 0.004, memory: 72798, loss_cls: 0.1493, loss_bbox: 0.7254, loss_dfl: 0.1983, loss: 1.0730, grad_norm: 10.1751
+2026-05-15 16:00:35,915 - mmdet - INFO - Saving checkpoint at 28 epochs
+2026-05-15 16:00:43,606 - mmdet - INFO - Evaluating bbox...
+2026-05-15 16:00:44,380 - mmdet - INFO - 
+Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.701
+Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=1000 ] = 0.964
+Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=1000 ] = 0.838
+Average Precision  (AP) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = 0.716
+Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.660
+Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.675
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.777
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=300 ] = 0.783
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=1000 ] = 0.783
+Average Recall     (AR) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = 0.789
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.764
+Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.800
+
+2026-05-15 16:00:44,380 - mmdet - INFO - 
++----------+-------+
+| category | AP    |
++----------+-------+
+| ship     | 0.701 |
++----------+-------+
+2026-05-15 16:00:44,383 - mmdet - INFO - Exp name: pixel_itpn_GFL_ssdd.py
+2026-05-15 16:00:44,383 - mmdet - INFO - Epoch(val) [28][39]	bbox_mAP: 0.7010, bbox_mAP_50: 0.9640, bbox_mAP_75: 0.8380, bbox_mAP_s: 0.7160, bbox_mAP_m: 0.6600, bbox_mAP_l: 0.6750, bbox_mAP_copypaste: 0.701 0.964 0.838 0.716 0.660 0.675
+2026-05-15 16:00:50,414 - mmdet - INFO - Exp name: pixel_itpn_GFL_ssdd.py
+2026-05-15 16:00:50,414 - mmdet - INFO - Epoch(val) [28][20]	loss_cls: 0.2014, loss_bbox: 0.8482, loss_dfl: 0.2110, loss: 1.2606
+2026-05-15 16:01:01,790 - mmdet - INFO - Epoch [29][20/79]	lr: 3.509e-05, eta: 0:06:10, time: 0.568, data_time: 0.107, memory: 72798, loss_cls: 0.1277, loss_bbox: 0.6538, loss_dfl: 0.1931, loss: 0.9745, grad_norm: 6.9982
+2026-05-15 16:01:10,529 - mmdet - INFO - Epoch [29][40/79]	lr: 3.509e-05, eta: 0:05:57, time: 0.437, data_time: 0.005, memory: 72798, loss_cls: 0.1530, loss_bbox: 0.7121, loss_dfl: 0.1988, loss: 1.0638, grad_norm: 7.8651
+2026-05-15 16:01:24,969 - mmdet - INFO - Epoch [29][60/79]	lr: 3.509e-05, eta: 0:05:46, time: 0.721, data_time: 0.004, memory: 72798, loss_cls: 0.1370, loss_bbox: 0.6310, loss_dfl: 0.1956, loss: 0.9636, grad_norm: 7.4712
+2026-05-15 16:01:33,676 - mmdet - INFO - Saving checkpoint at 29 epochs
+2026-05-15 16:01:41,088 - mmdet - INFO - Evaluating bbox...
+2026-05-15 16:01:42,208 - mmdet - INFO - 
+Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.705
+Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=1000 ] = 0.963
+Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=1000 ] = 0.855
+Average Precision  (AP) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = 0.719
+Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.670
+Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.663
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.781
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=300 ] = 0.785
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=1000 ] = 0.785
+Average Recall     (AR) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = 0.788
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.777
+Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.800
+
+2026-05-15 16:01:42,209 - mmdet - INFO - 
++----------+-------+
+| category | AP    |
++----------+-------+
+| ship     | 0.705 |
++----------+-------+
+2026-05-15 16:01:42,213 - mmdet - INFO - Exp name: pixel_itpn_GFL_ssdd.py
+2026-05-15 16:01:42,213 - mmdet - INFO - Epoch(val) [29][39]	bbox_mAP: 0.7050, bbox_mAP_50: 0.9630, bbox_mAP_75: 0.8550, bbox_mAP_s: 0.7190, bbox_mAP_m: 0.6700, bbox_mAP_l: 0.6630, bbox_mAP_copypaste: 0.705 0.963 0.855 0.719 0.670 0.663
+2026-05-15 16:01:47,239 - mmdet - INFO - Exp name: pixel_itpn_GFL_ssdd.py
+2026-05-15 16:01:47,239 - mmdet - INFO - Epoch(val) [29][20]	loss_cls: 0.1942, loss_bbox: 0.8544, loss_dfl: 0.2110, loss: 1.2596
+2026-05-15 16:02:01,056 - mmdet - INFO - Epoch [30][20/79]	lr: 2.713e-05, eta: 0:05:20, time: 0.691, data_time: 0.106, memory: 72798, loss_cls: 0.1429, loss_bbox: 0.6459, loss_dfl: 0.1934, loss: 0.9823, grad_norm: 9.6152
+2026-05-15 16:02:09,912 - mmdet - INFO - Epoch [30][40/79]	lr: 2.713e-05, eta: 0:05:07, time: 0.442, data_time: 0.004, memory: 72798, loss_cls: 0.1293, loss_bbox: 0.6567, loss_dfl: 0.1899, loss: 0.9760, grad_norm: 9.2061
+2026-05-15 16:02:19,485 - mmdet - INFO - Epoch [30][60/79]	lr: 2.713e-05, eta: 0:04:55, time: 0.479, data_time: 0.006, memory: 72798, loss_cls: 0.1304, loss_bbox: 0.6604, loss_dfl: 0.1910, loss: 0.9819, grad_norm: 8.0135
+2026-05-15 16:02:32,091 - mmdet - INFO - Saving checkpoint at 30 epochs
+2026-05-15 16:02:40,373 - mmdet - INFO - Evaluating bbox...
+2026-05-15 16:02:41,080 - mmdet - INFO - 
+Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.705
+Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=1000 ] = 0.965
+Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=1000 ] = 0.846
+Average Precision  (AP) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = 0.719
+Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.671
+Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.713
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.781
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=300 ] = 0.785
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=1000 ] = 0.785
+Average Recall     (AR) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = 0.787
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.778
+Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.750
+
+2026-05-15 16:02:41,080 - mmdet - INFO - 
++----------+-------+
+| category | AP    |
++----------+-------+
+| ship     | 0.705 |
++----------+-------+
+2026-05-15 16:02:41,083 - mmdet - INFO - Exp name: pixel_itpn_GFL_ssdd.py
+2026-05-15 16:02:41,083 - mmdet - INFO - Epoch(val) [30][39]	bbox_mAP: 0.7050, bbox_mAP_50: 0.9650, bbox_mAP_75: 0.8460, bbox_mAP_s: 0.7190, bbox_mAP_m: 0.6710, bbox_mAP_l: 0.7130, bbox_mAP_copypaste: 0.705 0.965 0.846 0.719 0.671 0.713
+2026-05-15 16:02:45,689 - mmdet - INFO - Exp name: pixel_itpn_GFL_ssdd.py
+2026-05-15 16:02:45,689 - mmdet - INFO - Epoch(val) [30][20]	loss_cls: 0.2119, loss_bbox: 0.8144, loss_dfl: 0.2069, loss: 1.2332
+2026-05-15 16:02:56,185 - mmdet - INFO - Epoch [31][20/79]	lr: 2.010e-05, eta: 0:04:29, time: 0.524, data_time: 0.107, memory: 72798, loss_cls: 0.1316, loss_bbox: 0.6774, loss_dfl: 0.1934, loss: 1.0024, grad_norm: 8.3564
+2026-05-15 16:03:07,289 - mmdet - INFO - Epoch [31][40/79]	lr: 2.010e-05, eta: 0:04:17, time: 0.554, data_time: 0.005, memory: 72798, loss_cls: 0.1232, loss_bbox: 0.6294, loss_dfl: 0.1890, loss: 0.9416, grad_norm: 7.4345
+2026-05-15 16:03:16,096 - mmdet - INFO - Epoch [31][60/79]	lr: 2.010e-05, eta: 0:04:05, time: 0.442, data_time: 0.006, memory: 72798, loss_cls: 0.1351, loss_bbox: 0.6661, loss_dfl: 0.1958, loss: 0.9970, grad_norm: 7.6511
+2026-05-15 16:03:25,393 - mmdet - INFO - Saving checkpoint at 31 epochs
+2026-05-15 16:03:33,078 - mmdet - INFO - Evaluating bbox...
+2026-05-15 16:03:33,861 - mmdet - INFO - 
+Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.705
+Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=1000 ] = 0.965
+Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=1000 ] = 0.849
+Average Precision  (AP) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = 0.720
+Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.667
+Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.685
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.782
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=300 ] = 0.785
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=1000 ] = 0.785
+Average Recall     (AR) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = 0.788
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.776
+Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.750
+
+2026-05-15 16:03:33,861 - mmdet - INFO - 
++----------+-------+
+| category | AP    |
++----------+-------+
+| ship     | 0.706 |
++----------+-------+
+2026-05-15 16:03:33,865 - mmdet - INFO - Exp name: pixel_itpn_GFL_ssdd.py
+2026-05-15 16:03:33,866 - mmdet - INFO - Epoch(val) [31][39]	bbox_mAP: 0.7050, bbox_mAP_50: 0.9650, bbox_mAP_75: 0.8490, bbox_mAP_s: 0.7200, bbox_mAP_m: 0.6670, bbox_mAP_l: 0.6850, bbox_mAP_copypaste: 0.705 0.965 0.849 0.720 0.667 0.685
+2026-05-15 16:03:38,798 - mmdet - INFO - Exp name: pixel_itpn_GFL_ssdd.py
+2026-05-15 16:03:38,799 - mmdet - INFO - Epoch(val) [31][20]	loss_cls: 0.2085, loss_bbox: 0.8072, loss_dfl: 0.2080, loss: 1.2238
+2026-05-15 16:03:50,432 - mmdet - INFO - Epoch [32][20/79]	lr: 1.405e-05, eta: 0:03:40, time: 0.580, data_time: 0.107, memory: 72798, loss_cls: 0.1232, loss_bbox: 0.6201, loss_dfl: 0.1912, loss: 0.9345, grad_norm: 8.0263
+2026-05-15 16:03:59,321 - mmdet - INFO - Epoch [32][40/79]	lr: 1.405e-05, eta: 0:03:28, time: 0.445, data_time: 0.005, memory: 72798, loss_cls: 0.1264, loss_bbox: 0.6363, loss_dfl: 0.1885, loss: 0.9511, grad_norm: 8.3660
+2026-05-15 16:04:08,132 - mmdet - INFO - Epoch [32][60/79]	lr: 1.405e-05, eta: 0:03:15, time: 0.441, data_time: 0.005, memory: 72798, loss_cls: 0.1239, loss_bbox: 0.6701, loss_dfl: 0.1946, loss: 0.9886, grad_norm: 7.8855
+2026-05-15 16:04:20,509 - mmdet - INFO - Saving checkpoint at 32 epochs
+2026-05-15 16:04:28,514 - mmdet - INFO - Evaluating bbox...
+2026-05-15 16:04:29,192 - mmdet - INFO - 
+Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.704
+Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=1000 ] = 0.965
+Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=1000 ] = 0.850
+Average Precision  (AP) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = 0.716
+Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.677
+Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.694
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.784
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=300 ] = 0.787
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=1000 ] = 0.787
+Average Recall     (AR) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = 0.788
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.786
+Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.750
+
+2026-05-15 16:04:29,192 - mmdet - INFO - 
++----------+-------+
+| category | AP    |
++----------+-------+
+| ship     | 0.704 |
++----------+-------+
+2026-05-15 16:04:29,194 - mmdet - INFO - Exp name: pixel_itpn_GFL_ssdd.py
+2026-05-15 16:04:29,195 - mmdet - INFO - Epoch(val) [32][39]	bbox_mAP: 0.7040, bbox_mAP_50: 0.9650, bbox_mAP_75: 0.8500, bbox_mAP_s: 0.7160, bbox_mAP_m: 0.6770, bbox_mAP_l: 0.6940, bbox_mAP_copypaste: 0.704 0.965 0.850 0.716 0.677 0.694
+2026-05-15 16:04:33,809 - mmdet - INFO - Exp name: pixel_itpn_GFL_ssdd.py
+2026-05-15 16:04:33,810 - mmdet - INFO - Epoch(val) [32][20]	loss_cls: 0.2018, loss_bbox: 0.8004, loss_dfl: 0.2031, loss: 1.2053
+2026-05-15 16:04:44,471 - mmdet - INFO - Epoch [33][20/79]	lr: 9.046e-06, eta: 0:02:51, time: 0.532, data_time: 0.107, memory: 72798, loss_cls: 0.1205, loss_bbox: 0.6264, loss_dfl: 0.1878, loss: 0.9347, grad_norm: 7.3506
+2026-05-15 16:04:54,868 - mmdet - INFO - Epoch [33][40/79]	lr: 9.046e-06, eta: 0:02:40, time: 0.520, data_time: 0.005, memory: 72798, loss_cls: 0.1435, loss_bbox: 0.6580, loss_dfl: 0.1943, loss: 0.9958, grad_norm: 12.2281
+2026-05-15 16:05:03,389 - mmdet - INFO - Epoch [33][60/79]	lr: 9.046e-06, eta: 0:02:28, time: 0.426, data_time: 0.005, memory: 72798, loss_cls: 0.1241, loss_bbox: 0.6203, loss_dfl: 0.1902, loss: 0.9346, grad_norm: 8.3964
+2026-05-15 16:05:12,738 - mmdet - INFO - Saving checkpoint at 33 epochs
+2026-05-15 16:05:20,836 - mmdet - INFO - Evaluating bbox...
+2026-05-15 16:05:21,534 - mmdet - INFO - 
+Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.708
+Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=1000 ] = 0.965
+Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=1000 ] = 0.849
+Average Precision  (AP) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = 0.721
+Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.676
+Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.713
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.786
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=300 ] = 0.789
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=1000 ] = 0.789
+Average Recall     (AR) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = 0.791
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.784
+Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.750
+
+2026-05-15 16:05:21,535 - mmdet - INFO - 
++----------+-------+
+| category | AP    |
++----------+-------+
+| ship     | 0.709 |
++----------+-------+
+2026-05-15 16:05:21,538 - mmdet - INFO - Exp name: pixel_itpn_GFL_ssdd.py
+2026-05-15 16:05:21,538 - mmdet - INFO - Epoch(val) [33][39]	bbox_mAP: 0.7080, bbox_mAP_50: 0.9650, bbox_mAP_75: 0.8490, bbox_mAP_s: 0.7210, bbox_mAP_m: 0.6760, bbox_mAP_l: 0.7130, bbox_mAP_copypaste: 0.708 0.965 0.849 0.721 0.676 0.713
+2026-05-15 16:05:26,420 - mmdet - INFO - Exp name: pixel_itpn_GFL_ssdd.py
+2026-05-15 16:05:26,420 - mmdet - INFO - Epoch(val) [33][20]	loss_cls: 0.2054, loss_bbox: 0.8102, loss_dfl: 0.2071, loss: 1.2227
+2026-05-15 16:05:39,643 - mmdet - INFO - Epoch [34][20/79]	lr: 5.111e-06, eta: 0:02:04, time: 0.661, data_time: 0.107, memory: 72798, loss_cls: 0.1300, loss_bbox: 0.6361, loss_dfl: 0.1908, loss: 0.9569, grad_norm: 7.1152
+2026-05-15 16:05:48,818 - mmdet - INFO - Epoch [34][40/79]	lr: 5.111e-06, eta: 0:01:53, time: 0.458, data_time: 0.005, memory: 72798, loss_cls: 0.1487, loss_bbox: 0.6808, loss_dfl: 0.1979, loss: 1.0274, grad_norm: 7.8813
+2026-05-15 16:05:59,857 - mmdet - INFO - Epoch [34][60/79]	lr: 5.111e-06, eta: 0:01:41, time: 0.552, data_time: 0.005, memory: 72798, loss_cls: 0.1271, loss_bbox: 0.6091, loss_dfl: 0.1881, loss: 0.9242, grad_norm: 7.9875
+2026-05-15 16:06:08,156 - mmdet - INFO - Saving checkpoint at 34 epochs
+2026-05-15 16:06:16,225 - mmdet - INFO - Evaluating bbox...
+2026-05-15 16:06:17,455 - mmdet - INFO - 
+Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.709
+Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=1000 ] = 0.965
+Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=1000 ] = 0.857
+Average Precision  (AP) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = 0.721
+Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.679
+Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.713
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.785
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=300 ] = 0.788
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=1000 ] = 0.788
+Average Recall     (AR) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = 0.791
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.780
+Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.750
+
+2026-05-15 16:06:17,455 - mmdet - INFO - 
++----------+-------+
+| category | AP    |
++----------+-------+
+| ship     | 0.709 |
++----------+-------+
+2026-05-15 16:06:17,459 - mmdet - INFO - Exp name: pixel_itpn_GFL_ssdd.py
+2026-05-15 16:06:17,459 - mmdet - INFO - Epoch(val) [34][39]	bbox_mAP: 0.7090, bbox_mAP_50: 0.9650, bbox_mAP_75: 0.8570, bbox_mAP_s: 0.7210, bbox_mAP_m: 0.6790, bbox_mAP_l: 0.7130, bbox_mAP_copypaste: 0.709 0.965 0.857 0.721 0.679 0.713
+2026-05-15 16:06:24,267 - mmdet - INFO - Exp name: pixel_itpn_GFL_ssdd.py
+2026-05-15 16:06:24,268 - mmdet - INFO - Epoch(val) [34][20]	loss_cls: 0.1984, loss_bbox: 0.8114, loss_dfl: 0.2057, loss: 1.2155
+2026-05-15 16:06:35,620 - mmdet - INFO - Epoch [35][20/79]	lr: 2.279e-06, eta: 0:01:18, time: 0.567, data_time: 0.107, memory: 72798, loss_cls: 0.1176, loss_bbox: 0.6012, loss_dfl: 0.1871, loss: 0.9059, grad_norm: 6.9561
+2026-05-15 16:06:44,779 - mmdet - INFO - Epoch [35][40/79]	lr: 2.279e-06, eta: 0:01:07, time: 0.458, data_time: 0.005, memory: 72798, loss_cls: 0.1259, loss_bbox: 0.6233, loss_dfl: 0.1911, loss: 0.9402, grad_norm: 8.4311
+2026-05-15 16:06:53,311 - mmdet - INFO - Epoch [35][60/79]	lr: 2.279e-06, eta: 0:00:55, time: 0.427, data_time: 0.005, memory: 72798, loss_cls: 0.1296, loss_bbox: 0.6506, loss_dfl: 0.1903, loss: 0.9705, grad_norm: inf
+2026-05-15 16:07:01,766 - mmdet - INFO - Saving checkpoint at 35 epochs
+2026-05-15 16:07:10,461 - mmdet - INFO - Evaluating bbox...
+2026-05-15 16:07:11,081 - mmdet - INFO - 
+Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.710
+Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=1000 ] = 0.965
+Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=1000 ] = 0.858
+Average Precision  (AP) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = 0.723
+Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.680
+Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.696
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.786
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=300 ] = 0.790
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=1000 ] = 0.790
+Average Recall     (AR) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = 0.792
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.786
+Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.750
+
+2026-05-15 16:07:11,081 - mmdet - INFO - 
++----------+-------+
+| category | AP    |
++----------+-------+
+| ship     | 0.711 |
++----------+-------+
+2026-05-15 16:07:11,083 - mmdet - INFO - Exp name: pixel_itpn_GFL_ssdd.py
+2026-05-15 16:07:11,083 - mmdet - INFO - Epoch(val) [35][39]	bbox_mAP: 0.7100, bbox_mAP_50: 0.9650, bbox_mAP_75: 0.8580, bbox_mAP_s: 0.7230, bbox_mAP_m: 0.6800, bbox_mAP_l: 0.6960, bbox_mAP_copypaste: 0.710 0.965 0.858 0.723 0.680 0.696
+2026-05-15 16:07:17,479 - mmdet - INFO - Exp name: pixel_itpn_GFL_ssdd.py
+2026-05-15 16:07:17,480 - mmdet - INFO - Epoch(val) [35][20]	loss_cls: 0.1984, loss_bbox: 0.8162, loss_dfl: 0.2051, loss: 1.2197
+2026-05-15 16:07:28,695 - mmdet - INFO - Epoch [36][20/79]	lr: 5.708e-07, eta: 0:00:33, time: 0.560, data_time: 0.106, memory: 72798, loss_cls: 0.1274, loss_bbox: 0.6328, loss_dfl: 0.1905, loss: 0.9507, grad_norm: 8.1016
+2026-05-15 16:07:37,585 - mmdet - INFO - Epoch [36][40/79]	lr: 5.708e-07, eta: 0:00:21, time: 0.444, data_time: 0.005, memory: 72798, loss_cls: 0.1142, loss_bbox: 0.5956, loss_dfl: 0.1855, loss: 0.8953, grad_norm: 9.9803
+2026-05-15 16:07:46,247 - mmdet - INFO - Epoch [36][60/79]	lr: 5.708e-07, eta: 0:00:10, time: 0.433, data_time: 0.004, memory: 72798, loss_cls: 0.1305, loss_bbox: 0.6514, loss_dfl: 0.1931, loss: 0.9749, grad_norm: 7.5908
+2026-05-15 16:07:55,125 - mmdet - INFO - Saving checkpoint at 36 epochs
+2026-05-15 16:08:02,980 - mmdet - INFO - Evaluating bbox...
+2026-05-15 16:08:03,664 - mmdet - INFO - 
+Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.710
+Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=1000 ] = 0.965
+Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=1000 ] = 0.856
+Average Precision  (AP) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = 0.723
+Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.679
+Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.696
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.787
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=300 ] = 0.790
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=1000 ] = 0.790
+Average Recall     (AR) @[ IoU=0.50:0.95 | area= small | maxDets=1000 ] = 0.792
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=1000 ] = 0.785
+Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=1000 ] = 0.750
+
+2026-05-15 16:08:03,665 - mmdet - INFO - 
++----------+-------+
+| category | AP    |
++----------+-------+
+| ship     | 0.710 |
++----------+-------+
+2026-05-15 16:08:03,667 - mmdet - INFO - Exp name: pixel_itpn_GFL_ssdd.py
+2026-05-15 16:08:03,667 - mmdet - INFO - Epoch(val) [36][39]	bbox_mAP: 0.7100, bbox_mAP_50: 0.9650, bbox_mAP_75: 0.8560, bbox_mAP_s: 0.7230, bbox_mAP_m: 0.6790, bbox_mAP_l: 0.6960, bbox_mAP_copypaste: 0.710 0.965 0.856 0.723 0.679 0.696
+2026-05-15 16:08:10,008 - mmdet - INFO - Exp name: pixel_itpn_GFL_ssdd.py
+2026-05-15 16:08:10,008 - mmdet - INFO - Epoch(val) [36][20]	loss_cls: 0.1879, loss_bbox: 0.8200, loss_dfl: 0.2087, loss: 1.2166
