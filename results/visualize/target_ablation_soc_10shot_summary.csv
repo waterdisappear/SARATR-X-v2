@@ -1,0 +1,9 @@
+﻿mode,display,accuracy_mean,accuracy_std,macro_f1_mean,n_seeds
+pixel,Pixel,32.90,0.29,33.83,3
+single_s1,S1 (3×3),35.20,0.14,36.23,3
+single_s2,S2,29.10,0.14,30.10,3
+single_s3,S3,33.63,0.21,34.93,3
+single_s4,S4,37.20,0.36,38.53,3
+single_s5,S5,38.40,0.28,39.73,3
+single_s6,S6,38.33,0.12,39.63,3
+multi,Multi (simple),39.17,0.21,40.37,3

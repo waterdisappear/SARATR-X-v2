@@ -1,0 +1,85 @@
+{
+  "speckle_std": 0.15,
+  "points": [
+    {
+      "mode": "pixel",
+      "speckle_key": "pixel",
+      "label": "Pixel",
+      "drift_l1": 0.011742412705280009,
+      "transfer_acc": 32.9,
+      "transfer_acc_std": 0.29439202887759586,
+      "macro_f1": 33.833333333333336
+    },
+    {
+      "mode": "single_s1",
+      "speckle_key": "S1",
+      "label": "S1",
+      "drift_l1": 0.0003000491672992212,
+      "transfer_acc": 35.199999999999996,
+      "transfer_acc_std": 0.14142135623730817,
+      "macro_f1": 36.23333333333333
+    },
+    {
+      "mode": "single_s2",
+      "speckle_key": "S2",
+      "label": "S2",
+      "drift_l1": 0.00044683115779662317,
+      "transfer_acc": 29.099999999999998,
+      "transfer_acc_std": 0.14142135623730984,
+      "macro_f1": 30.099999999999998
+    },
+    {
+      "mode": "single_s3",
+      "speckle_key": "S3",
+      "label": "S3",
+      "drift_l1": 0.00029870716280129274,
+      "transfer_acc": 33.63333333333333,
+      "transfer_acc_std": 0.2054804667656324,
+      "macro_f1": 34.93333333333333
+    },
+    {
+      "mode": "single_s4",
+      "speckle_key": "S4",
+      "label": "S4",
+      "drift_l1": 0.00019487706852032717,
+      "transfer_acc": 37.2,
+      "transfer_acc_std": 0.35590260840104543,
+      "macro_f1": 38.53333333333333
+    },
+    {
+      "mode": "single_s5",
+      "speckle_key": "S5",
+      "label": "S5",
+      "drift_l1": 0.00015145701863730207,
+      "transfer_acc": 38.4,
+      "transfer_acc_std": 0.2828427124746163,
+      "macro_f1": 39.733333333333334
+    },
+    {
+      "mode": "single_s6",
+      "speckle_key": "S6",
+      "label": "S6",
+      "drift_l1": 0.0001267369597968582,
+      "transfer_acc": 38.333333333333336,
+      "transfer_acc_std": 0.12472191289246395,
+      "macro_f1": 39.63333333333333
+    },
+    {
+      "mode": "multi",
+      "speckle_key": "multi",
+      "label": "Fused",
+      "drift_l1": 0.00012037649849787613,
+      "transfer_acc": 39.166666666666664,
+      "transfer_acc_std": 0.20548046676563278,
+      "macro_f1": 40.36666666666667
+    }
+  ],
+  "spearman": {
+    "rho": -0.9285714285714287,
+    "p_exact": 0.002232142857142857,
+    "p_method": "exact_permutation",
+    "p_asymptotic_scipy": 0.0008629681828999769,
+    "n": 8,
+    "note": "For n<=9, report the exact two-sided permutation p-value; do not use scipy's asymptotic p (can falsely suggest p<0.001)."
+  }
+}

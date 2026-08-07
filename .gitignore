@@ -1,0 +1,36 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.ipynb_checkpoints/
+*.so
+.eggs/
+build/
+dist/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+.DS_Store
+
+# 训练产物 (training artifacts)
+work_dirs/
+checkpoints/
+ckpts/
+*.log
+*.pth
+*.pt
+*.onnx
+
+# 数据 (data stays local)
+data/
+
+# 可视化生成的图片 (generated figures)
+*.png
+*.pdf
+*.svg
+*.tif
+*.tiff
+
+# 权重/结果目录说明 README 保留；占位 .gitkeep 无规则匹配，默认保留

@@ -1,0 +1,28 @@
+# MIM_linear_itpn (iTPN 线性探测) 配置
+# MIM_linear_itpn (iTPN linear probing) configuration
+
+DATALOADER:
+  TRAIN_X:
+    BATCH_SIZE: 25
+  TEST:
+    BATCH_SIZE: 50
+  NUM_WORKERS: 0
+
+INPUT:
+  SIZE: (224, 224)
+  INTERPOLATION: "bicubic"
+  PIXEL_MEAN: [0.2109]   # SAR 强度图统计值 (SAR intensity statistics)
+  PIXEL_STD: [0.2178]
+  TRANSFORMS: ["normalize"]
+
+OPTIM:
+  NAME: "adamw"
+  LR: 5e-4
+  MAX_EPOCH: 30
+  WEIGHT_DECAY: 1e-4
+  ADAM_BETA1: 0.9
+  ADAM_BETA2: 0.95
+  LR_SCHEDULER: "cosine"
+
+TRAIN:
+  PRINT_FREQ: 5

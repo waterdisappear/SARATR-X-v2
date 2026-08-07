@@ -1,0 +1,32 @@
+# SARATR-X-v2 根依赖（预训练 + 分类线性评测 + 可视化）
+# 检测 / 分割需要 mmrotate / mmseg 等独立框架，见各子目录 README。
+#
+# 注意：由于环境差异，建议使用 pip 按需安装，而非一键安装全部。
+
+# 深度学习框架
+torch>=1.13
+torchvision>=0.14
+
+# 图像处理
+opencv-python>=4.6
+pillow>=9.0
+scikit-image>=0.19
+
+# 预训练与模型
+timm>=0.6.12
+einops>=0.6.0
+
+# 训练与日志
+tensorboardX>=2.5
+numpy>=1.21
+scipy>=1.7
+
+# k-NN 评测（linear_eval）
+faiss-cpu>=1.7.3
+
+# 可视化
+matplotlib>=3.5
+
+# 通用
+tqdm>=4.60
+pyyaml>=6.0
