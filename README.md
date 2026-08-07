@@ -25,9 +25,9 @@
   <img src="docs/figures/fig_framework_v3.png" width="88%">
 </p>
 
-<div align="center">**Fig. 1 | Overall framework of SARATR-X-v2 with scale-aware structural pre-training.** Bottom: fixed multi-scale structural extractors spanning six receptive fields produce scale-specific responses, fused by learnable cross-scale weights into one target $y$, each operator robust to multiplicative speckle. Top: hierarchical encoder extracts multi-scale latent features from the masked input, and a decoder reconstructs $y$ under an L2 loss — *design the target to carry the physics*.
+<div align="center">**Fig. 1 | Overall framework of SARATR-X-v2 with scale-aware structural pre-training.** Bottom: fixed multi-scale structural extractors spanning six receptive fields produce scale-specific responses, fused by learnable cross-scale weights into one target *y*, each operator robust to multiplicative speckle. Top: hierarchical encoder extracts multi-scale latent features from the masked input, and a decoder reconstructs *y* under an L2 loss — *design the target to carry the physics*.
 
-**图 1 | SARATR-X-v2 尺度感知结构预训练总体框架。** 下半部分：覆盖六个感受野的固定多尺度结构算子产生各尺度响应，经可学习跨尺度权重融合为统一目标 $y$，每个算子对乘性斑点稳健；上半部分：层次编码器从掩码输入提取多尺度潜在特征，解码器在 L2 损失下重建 $y$ —— “让目标承载物理”。</div>
+**图 1 | SARATR-X-v2 尺度感知结构预训练总体框架。** 下半部分：覆盖六个感受野的固定多尺度结构算子产生各尺度响应，经可学习跨尺度权重融合为统一目标 *y*，每个算子对乘性斑点稳健；上半部分：层次编码器从掩码输入提取多尺度潜在特征，解码器在 L2 损失下重建 *y* —— “让目标承载物理”。</div>
 
 </div>
 
@@ -157,9 +157,9 @@ Under synthetic speckle variation, the proposed target reduces perturbation drif
   <img src="docs/figures/stability_transfer_scatter.png" width="55%">
 </p>
 
-<div align="center">**Fig. 4 | Stability–transfer relationship across pre-training targets.** Each point is one supervision target (pixel, single-scale S1–S6, multi-scale fusion). Horizontal axis: mean $\ell_1$ drift under speckle at $\sigma=0.15$; vertical axis: 10-shot linear-probe accuracy on ATRNet-STAR (SOC-50) with frozen iTPN-B. Lower drift correlates with higher accuracy ($\rho=-0.93$, $p=0.002$).
+<div align="center">**Fig. 4 | Stability–transfer relationship across pre-training targets.** Each point is one supervision target (pixel, single-scale S1–S6, multi-scale fusion). Horizontal axis: mean ℓ₁ drift under speckle at σ = 0.15; vertical axis: 10-shot linear-probe accuracy on ATRNet-STAR (SOC-50) with frozen iTPN-B. Lower drift correlates with higher accuracy (ρ = −0.93, p = 0.002).
 
-**图 4 | 各预训练目标的稳定性–迁移关系。** 每个点为一种监督目标（像素、单尺度 S1–S6、多尺度融合）。横轴：$\sigma=0.15$ 斑点下的均值 $\ell_1$ 漂移；纵轴：冻结 iTPN-B 在 ATRNet-STAR（SOC-50）上的 10-shot 线性探测精度。漂移越小精度越高（$\rho=-0.93$，$p=0.002$）。</div>
+**图 4 | 各预训练目标的稳定性–迁移关系。** 每个点为一种监督目标（像素、单尺度 S1–S6、多尺度融合）。横轴：σ = 0.15 斑点下的均值 ℓ₁ 漂移；纵轴：冻结 iTPN-B 在 ATRNet-STAR（SOC-50）上的 10-shot 线性探测精度。漂移越小精度越高（ρ = −0.93，p = 0.002）。</div>
 
 ## Data / 数据
 
