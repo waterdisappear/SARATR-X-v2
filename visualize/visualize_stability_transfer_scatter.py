@@ -11,7 +11,7 @@ Stability vs transfer scatter: ℓ₁ drift (speckle) × SOC 10-shot linear accu
 【x 轴：Mean ℓ₁ difference】
   文件 : visualize/speckle_stability_out_50ep/speckle_stability_summary.json
   生成 : python visualize/visualize_speckle_target_stability.py
-         --checkpoint D:\\2024_SARatrX_2\\MIM_weight\\500K\\base\\old_2\\jiaquan_simple\\checkpoint-50.pth
+         --checkpoint weights/base/jiaquan_simple/checkpoint-50.pth
          --output_dir visualize/speckle_stability_out_50ep
          （默认 64 张 held-out SAR、K=5 speckle 对、patch=16、σ  sweep）
   取点 : by_condition 中 speckle_std=0.15 的 mean_over_images.{pixel,S1..S6,multi}
@@ -24,10 +24,10 @@ Stability vs transfer scatter: ℓ₁ drift (speckle) × SOC 10-shot linear accu
   生成 : python visualize/run_linear_eval_target_ablation.py
          （finetune_HiVit / MIM_linear_itpn / SOC_50classes / 10-shot / 3 seeds）
   取点 : results.<mode>.accuracy_mean（mode = pixel | single_s1..s6 | multi）
-  权重 : D:\\2024_SARatrX_2\\result\\base\\target\\base\\<mode>\\checkpoint-49.pth
+  权重 : weights/base/target/<mode>/checkpoint-49.pth
          （50 epoch target ablation 预训练，见 visualize/run_pretrain_target_ablation.sh）
 
-【σ=0.15 时 8 个点数值（Multi α = checkpoint-50 / old_2/jiaquan_simple）】
+【σ=0.15 时 8 个点数值（Multi α = checkpoint-50 / jiaquan_simple）】
   Spearman ρ ≈ -0.93, exact two-sided p ≈ 0.0022 (n=8, 8! permutations)
   注意：scipy.stats.spearmanr 的渐近 p≈8.6e-4 会误报为 p<0.001；小样本须用精确置换 p。
 
@@ -118,7 +118,7 @@ if _DEFAULT_TRANSFER_JSON.exists():
 # ---------------------------------------------------------------------------
 # drift  : speckle_stability_out_50ep/...（α from checkpoint-50, paired with 50-epoch transfer）
 # transfer: target_ablation_soc_10shot_summary.json → results[mode].accuracy_mean
-# weights: D:/2024_SARatrX_2/result/base/target/base/<mode>/checkpoint-49.pth
+# weights: weights/base/target/<mode>/checkpoint-49.pth
 
 # 相对 speckle 参考图字号 +2 pt
 FONT_BUMP = 2

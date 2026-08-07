@@ -76,7 +76,6 @@ img_norm_cfg = dict(
 
 dataset_type = 'CustomDataset'
 data_root = r'data/earthmap'
-# data_root = r'D:\Data\SAR\地物\EarthMap'
 train_root = data_root + '/train'
 val_root = data_root + '/val'
 test_root = data_root + '/test'

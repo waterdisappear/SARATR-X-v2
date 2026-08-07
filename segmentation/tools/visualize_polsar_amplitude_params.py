@@ -4,7 +4,7 @@
 用法示例（Linux，任选一张 HH 幅度图）::
 
     python tools/visualize_polsar_amplitude_params.py \\
-        --hh /mnt/data7t/lwj/mmseg_lwj/data/AIR-PolarSAR-Seg-2.0/val/hh/xxx_hh_amp.tiff \\
+        --hh data/air-polarsar-seg-2.0/val/hh/xxx_hh_amp.tiff \\
         -o work_dirs/polsar_amp_param_grid.png
 
 默认会画多组参数网格；也可用 --clips / --gains 自定义。

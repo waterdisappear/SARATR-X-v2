@@ -6,7 +6,7 @@
 
 用法:
   python tools/stats_earthmap_label_pixels.py --data-root /path/to/EarthMap
-  python tools/stats_earthmap_label_pixels.py --data-root D:\\Data\\SAR\\地物\\EarthMap --max-files 500
+  python tools/stats_earthmap_label_pixels.py --data-root dataset/segmentation/earthmap --max-files 500
 """
 from __future__ import annotations
 

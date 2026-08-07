@@ -13,7 +13,6 @@ _base_ = [
 
 # 路径：按机器只改下面一行。
 data_root = 'data/whu_opt_sar_mmseg_256_split'
-# data_root = r'D:\Data\Multimodal\whu-opt-sar\whu_opt_sar_mmseg_256_split'
 
 log_config = dict(
     _delete_=True,

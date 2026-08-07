@@ -62,7 +62,7 @@ def parse_args() -> argparse.Namespace:
     p.add_argument(
         "--data_path",
         type=str,
-        default=r"D:\2023_SARatrX_1\Pre-Train Data\500K",
+        default="dataset/pre-training",
         help="Folder of SAR images (recursive walk) or single image path.",
     )
     p.add_argument("--max_images", type=int, default=64, help="Max images to use from folder.")

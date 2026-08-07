@@ -263,7 +263,7 @@ def parse_args() -> argparse.Namespace:
     p.add_argument(
         "--dataset_root",
         type=str,
-        default=r"D:\Data\检测数据集\3HRSID",
+        default="dataset/pre-training",
         help="含 JPEGImages 的根目录；annotations 模式还需 Annotations/*.json。",
     )
     p.add_argument(
@@ -310,7 +310,7 @@ def parse_args() -> argparse.Namespace:
     p.add_argument(
         "--pretrained",
         type=str,
-        default=r"D:\2024_SARatrX_2\MIM_weight\500K\base\jiaquan_simple",
+        default="weights/base/jiaquan_simple",
         help="My_SAR_feature 权重 .pth 路径，或含 checkpoint*.pth 的目录（自动取排序最后一个）。",
     )
     p.add_argument("--strict_load", action="store_true", help="strict=True 加载 checkpoint。")

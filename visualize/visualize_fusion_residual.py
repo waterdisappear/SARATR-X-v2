@@ -10,7 +10,7 @@
 
 示例（从目录随机 5 张，默认 scan_dir 或显式）::
   python visualize/visualize_fusion_residual.py
-  python visualize/visualize_fusion_residual.py --images "D:\\data\\500K"
+  python visualize/visualize_fusion_residual.py --images "dataset/pre-training"
   python visualize/visualize_fusion_residual.py --num_random 5 --seed 1
 """
 from __future__ import annotations
@@ -229,7 +229,7 @@ def parse_args() -> argparse.Namespace:
     p.add_argument(
         "--scan_dir",
         type=str,
-        default=r"D:\2023_SARatrX_1\Pre-Train Data\500K",
+        default="dataset/pre-training",
         help="未指定 --image/--images 时，从此目录递归随机抽样 --num_random 张。",
     )
     p.add_argument(

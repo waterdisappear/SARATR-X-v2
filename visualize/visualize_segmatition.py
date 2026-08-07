@@ -162,7 +162,7 @@ def blend_sar_overlay(
 
 
 def parse_args() -> argparse.Namespace:
-    default_train = r"D:\Data\SAR\地物\AIR-PolarSAR-Seg-2.0\train"
+    default_train = "dataset/segmentation/air-polarsar-seg-2.0/train"
     here = Path(__file__).resolve().parent
     parser = argparse.ArgumentParser(description="随机 hh + gt_color 叠加可视化语义分割示意。")
     parser.add_argument("--train_dir", type=str, default=default_train, help="train 根目录（内含 hh、gt_color）。")

@@ -7,11 +7,8 @@ _base_ = [
     '../_base_/schedules/schedule_160k.py'
 ]
 
-# 路径：按机器只改下面一行（与仓库内其它 *linux* 配置同一服务器根目录习惯）。
-# 服务器：
+# 路径：按机器只改下面一行。
 data_root = 'data/whu_opt_sar_mmseg_256_split'
-# Windows 本地示例：
-# data_root = r'D:\Data\Multimodal\whu-opt-sar\whu_opt_sar_mmseg_256_split'
 
 # _delete_=True：避免与 default_runtime 的 TextLoggerHook 合并成「双日志器」
 log_config = dict(

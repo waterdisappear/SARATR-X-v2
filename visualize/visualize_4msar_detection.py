@@ -200,7 +200,7 @@ def draw_boxes_cv2(
 
 def parse_args() -> argparse.Namespace:
     here = Path(__file__).resolve().parent
-    default_root = Path(r"D:\Data\检测数据集\4MSAR\large")
+    default_root = Path("dataset/detection/4msar")
     parser = argparse.ArgumentParser(description="4MSAR：指定或随机 XML + 对应图像检测框可视化。")
     parser.add_argument("--jpeg_dir", type=str, default=str(default_root / "JPEGImages"), help="图像目录。")
     parser.add_argument(

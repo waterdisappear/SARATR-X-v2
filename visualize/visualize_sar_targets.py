@@ -36,11 +36,11 @@ def parse_args() -> argparse.Namespace:
         description="Visualize SAR image, masked image, multi-scale SAR features, and fused target feature."
     )
     parser.add_argument(
-    "--image_path",
-    type=str,
-    default=r"D:\2023_SARatrX_1\Pre-Train Data\500K\FAIR_CSAR\FSI-TRAINVAL\PNGImages\GF3_MYN_FSI_030002_E121.5_N31.4_20220422_L1A_VV_L10000000008_03072_16011.png",
-    help="Path to the input SAR image."
-)
+        "--image_path",
+        type=str,
+        default="dataset/pre-training",
+        help="Path to the input SAR image.",
+    )
     parser.add_argument("--output_dir", type=str, default="./vis_output", help="Directory to save visualizations.")
     parser.add_argument(
         "--pretrained",
