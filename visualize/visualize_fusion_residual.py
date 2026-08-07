@@ -242,7 +242,7 @@ def parse_args() -> argparse.Namespace:
     p.add_argument(
         "--pretrained",
         type=str,
-        default=resolve_pretrain_ckpt(),
+        default=vsar.resolve_pretrain_ckpt(),
         help="Checkpoint with hogs.* / My_SAR_feature weights.",
     )
     p.add_argument("--strict_load", action="store_true", help="strict=True for load_state_dict.")

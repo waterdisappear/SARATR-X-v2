@@ -6,8 +6,8 @@
 #   - multi          : simple 可学习多尺度融合 (softmax simple_weights)
 #
 # Model : itpn_base_dec512d8b（init: itpn_base_fpn256.pth，见 main_pretrain.py）
-# Data  : /home/data/500K/
-# Output: <项目根目录>/pretrain_ablation/base/<target_mode>/
+# Data  : 500K（环境变量 SARATRX_PRETRAIN_DATA，默认 /path/to/500K）
+# Output: <项目根目录>/weights/base/<target_mode>/  （直接输出到权重目录，供下游消融直接使用）
 # Weights: checkpoint-49.pth（仅最后一轮，50 epoch）
 #
 # Usage:
@@ -24,8 +24,8 @@ cd "${ROOT}"
 NUM_GPUS="${1:-8}"
 ONLY_MODE="${2:-}"   # 可选：只跑某一种 target_mode
 
-DATA_PATH="/home/data/500K/"
-OUTPUT_ROOT="${ROOT}/output/pretrain_ablation/base"
+DATA_PATH="${SARATRX_PRETRAIN_DATA:-/path/to/500K}"
+OUTPUT_ROOT="${ROOT}/../weights/base"
 EPOCHS=50
 BATCH_SIZE=200
 WARMUP=5

@@ -27,14 +27,14 @@ from model.hivit import HiViT
 
 # HiViT 预训练权重路径 (resolve the HiViT pretrained checkpoint path)：
 #   优先使用环境变量 SARATRX_HIVIT_CKPT (env var first)；
-#   否则默认指向仓库 weights/hivit/checkpoint-1200.pth
-#   (otherwise default to weights/hivit/checkpoint-1200.pth，见 weights/README.md)。
+#   否则默认指向仓库 weights/base/hivit/checkpoint-1200.pth
+#   (otherwise default to weights/base/hivit/checkpoint-1200.pth，见 weights/README.md)。
 def resolve_hivit_ckpt() -> str:
     ckpt = os.environ.get("SARATRX_HIVIT_CKPT", "").strip()
     if ckpt:
         return ckpt
     here = os.path.dirname(os.path.abspath(__file__))
-    default = os.path.join(here, "..", "..", "..", "weights", "hivit", "checkpoint-1200.pth")
+    default = os.path.join(here, "..", "..", "..", "weights", "base", "hivit", "checkpoint-1200.pth")
     return os.path.normpath(default)
 
 

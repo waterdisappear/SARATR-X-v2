@@ -15,15 +15,18 @@ weights/
 │   ├── scale_6/                   # 6-scale target setting (ablation) / 6 尺度目标设置（消融）
 │   ├── itpn/                      # baseline iTPN (official target) / 基线 iTPN（官方目标）
 │   ├── hivit/                     # baseline HiViT (comparison backbone) / 基线 HiViT（对比骨干）
-│   └── hivit_fused/               # HiViT + fused target (comparison backbone) / HiViT + 融合目标（对比骨干）
+│   ├── hivit_fused/               # HiViT + fused target (comparison backbone) / HiViT + 融合目标（对比骨干）
+│   ├── pixel/                     # target ablation: pixel reconstruction / 目标消融：像素重建
+│   ├── single_s1 .. single_s6/    # target ablation: single-scale targets / 目标消融：单尺度目标
+│   └── multi/                     # target ablation: fused target / 目标消融：融合目标
 └── large/                         # iTPN-Large series (embed_dim=768) / iTPN-Large 系列
     ├── jiaquan_simple/            # [Main model] iTPN-Large weighted simple fusion / 【论文主模型】iTPN-Large 加权简单融合
     └── jiaquan_complex/           # weighted complex fusion target (ablation) / 加权复杂融合目标（消融）
 ```
 
-Each directory contains checkpoints saved per epoch, e.g. `checkpoint-{100,...,1600}.pth`. **The paper experiments use `checkpoint-1200.pth` by default.**
+Each directory contains checkpoints saved per epoch, e.g. `checkpoint-{100,...,1600}.pth`. **The paper experiments use `checkpoint-1200.pth` by default.** The target-ablation directories (`pixel` / `single_s1..s6` / `multi`) contain the 50-epoch checkpoints (`checkpoint-49.pth`) produced by `pre-training/run_pretrain_target_ablation.sh`.
 
-每个目录内含 `checkpoint-{100,...,1600}.pth` 等按 epoch 保存的检查点，**论文实验默认使用 `checkpoint-1200.pth`**。
+每个目录内含 `checkpoint-{100,...,1600}.pth` 等按 epoch 保存的检查点，**论文实验默认使用 `checkpoint-1200.pth`**。目标消融目录（`pixel` / `single_s1..s6` / `multi`）存放由 `pre-training/run_pretrain_target_ablation.sh` 产出的 50 epoch 检查点（`checkpoint-49.pth`）。
 
 ## Mapping to Downstream Tasks / 与下游任务的对应关系
 
@@ -37,8 +40,8 @@ Each directory contains checkpoints saved per epoch, e.g. `checkpoint-{100,...,1
 
 Each module resolves weights via environment variables or default paths. 各模块通过环境变量或默认路径引用权重：
 
-- **Linear eval / 线性评测**（`classification/linear_eval`）：`SARATRX_PRETRAIN_CKPT`（default / 默认 `weights/jiaquan_simple/checkpoint-1200.pth`）
-- **Few-shot / 少样本**（`classification/fewshot`）：`SARATRX_PRETRAIN_CKPT`（iTPN）/ `HIVIT_PRETRAIN_CKPT`（HiViT）
+- **Linear eval / 线性评测**（`classification/linear_eval`）：`SARATRX_PRETRAIN_CKPT`（default / 默认 `weights/base/jiaquan_simple/checkpoint-1200.pth`）
+- **Few-shot / 少样本**（`classification/fewshot`）：`SARATRX_PRETRAIN_CKPT`（iTPN）/ `SARATRX_HIVIT_CKPT`（HiViT）
 - **Detection / 检测**（`detection`）：`ITPN_CKPT`（iTPN-B）/ `ITPN_LARGE_CKPT`（iTPN-L），default / 默认 `ckpts/iTPN/...`
 - **Segmentation / 分割**（`segmentation`）：set `model.pretrained` in config or pass `--cfg-options model.pretrained=...`
 - **Visualization / 可视化**（`visualize`）：`SARATRX_PRETRAIN_CKPT`

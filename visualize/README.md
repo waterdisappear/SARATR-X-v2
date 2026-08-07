@@ -8,8 +8,8 @@ This directory collects the visualization scripts directly related to the paper 
   生成的 PNG / PDF / SVG 等图片产物**不纳入版本控制**，运行脚本即可在本目录生成。
 - The small experiment data (csv/json) needed by the scripts lives under `results/visualize/` at the repo root.
   脚本运行所需的少量实验数据（csv/json）放在仓库根目录的 `results/visualize/` 下。
-- Scripts that need pre-trained weights (`hogs.*` / `My_SAR_feature`) resolve them via the env var `SARATRX_PRETRAIN_CKPT` or the default path `weights/jiaquan_simple/checkpoint-1200.pth` (see each script's `resolve_pretrain_ckpt()`).
-  需要预训练权重的脚本统一通过环境变量 `SARATRX_PRETRAIN_CKPT` 或默认路径 `weights/jiaquan_simple/checkpoint-1200.pth` 解析（见各脚本 `resolve_pretrain_ckpt()`）。
+- Scripts that need pre-trained weights (`hogs.*` / `My_SAR_feature`) resolve them via the env var `SARATRX_PRETRAIN_CKPT` or the default path `weights/base/jiaquan_simple/checkpoint-1200.pth` (see each script's `resolve_pretrain_ckpt()`).
+  需要预训练权重的脚本统一通过环境变量 `SARATRX_PRETRAIN_CKPT` 或默认路径 `weights/base/jiaquan_simple/checkpoint-1200.pth` 解析（见各脚本 `resolve_pretrain_ckpt()`）。
 
 ## Scripts and Corresponding Paper Figures / 目录结构与论文图对应关系
 
@@ -50,7 +50,7 @@ python visualize/visualize_stability_transfer_scatter.py
 
 | Dependency / 依赖 | Location / 位置与获取方式 |
 | --- | --- |
-| Pre-trained weights (`hogs.*` / `My_SAR_feature`) | `weights/jiaquan_simple/checkpoint-1200.pth` or `SARATRX_PRETRAIN_CKPT` |
+| Pre-trained weights (`hogs.*` / `My_SAR_feature`) | `weights/base/jiaquan_simple/checkpoint-1200.pth` or `SARATRX_PRETRAIN_CKPT` |
 | Speckle-stability experiment data | `results/visualize/speckle_stability_out(_50ep)/` |
 | Target-ablation 10-shot data | `results/visualize/target_ablation_soc_10shot_summary.csv/.json` |
 | Stability–transfer scatter data | `results/visualize/stability_transfer_out/stability_transfer_xy.csv/.json` |
@@ -61,8 +61,8 @@ python visualize/visualize_stability_transfer_scatter.py
 ## Runtime Environment / 运行环境
 
 - Python 3.8+
-- Requires the `pre-training/` module (scripts import `models.masked_autoencoder`), so add the repo root to `PYTHONPATH` or run from the repo root.
-  需要 `pre-training/` 模块（脚本会 import `models.masked_autoencoder`），因此请将仓库根目录加入 `PYTHONPATH` 或从仓库根目录运行。
+- Scripts that need the model (`models.masked_autoencoder`) automatically add both the repo root and `pre-training/` to `sys.path`, so they can be run from anywhere.
+  需要模型（`models.masked_autoencoder`）的脚本会自动把仓库根目录与 `pre-training/` 加入 `sys.path`，可在任意目录运行。
 - Dependencies / 依赖：`torch`, `torchvision`, `numpy`, `opencv-python`, `matplotlib`, `Pillow`
 
 > Note / 注：`visualize_4msar_detection.py` and `visualize_segmatition.py` depend on the detection/segmentation datasets

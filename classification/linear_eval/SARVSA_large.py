@@ -8,7 +8,6 @@ Compared to SARVASA.py, only the backbone is switched from itpn_base
 to itpn_large (see model/models_itpn.py).
 """
 import os
-import sys
 import argparse
 import collections
 
@@ -18,7 +17,7 @@ import torchvision.transforms as transforms
 from tqdm import tqdm
 
 from utils.DataLoad import load_data
-from utils.TrainTest import model_train, model_val, model_test
+from utils.TrainTest import model_train, model_test
 from model.models_itpn import itpn_large
 
 # 仓库根目录：用于定位 dataset/ 下数据的默认路径

@@ -24,10 +24,10 @@ cd classification/linear_eval
 
 # Linear probing on SOC-50 (iTPN-Base)
 export SARATRX_PRETRAIN_CKPT=/path/to/weights/base/jiaquan_simple/checkpoint-1200.pth
-python SOC_50.py --data_root ../../dataset/classification/SOC_50classes
+python SOC_50.py --data_path ../../dataset/classification/SOC_50classes
 
 # k-NN on FUSAR-Ship
-python zero_shot_newfusar.py --data_root ../../dataset/classification/FUSAR-Ship
+python zero_shot_newfusar.py --data_path ../../dataset/classification/FUSAR-Ship
 ```
 
 - Weights are resolved via `SARATRX_PRETRAIN_CKPT` (default `weights/base/jiaquan_simple/checkpoint-1200.pth`). See `model/models_itpn.py` for the weight-loading logic.
@@ -37,4 +37,4 @@ python zero_shot_newfusar.py --data_root ../../dataset/classification/FUSAR-Ship
 
 ## Requirements / 依赖
 
-`torch`, `torchvision`, `numpy`, `opencv-python`, `faiss-cpu`（k-NN），以及 `pre-training/` 模块（脚本会 import `models.models_itpn`）。将仓库根目录加入 `PYTHONPATH` 或从仓库根目录运行。
+`torch`, `torchvision`, `numpy`, `opencv-python`, `faiss-cpu`（k-NN）。脚本从自身目录运行即可（`utils` / `model` 包就在本目录下，无需额外 PYTHONPATH）。

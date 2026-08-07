@@ -65,7 +65,7 @@ def resolve_pretrain_ckpt() -> str:
         return ckpt
     here = os.path.dirname(os.path.abspath(__file__))
     default = os.path.join(here, "..", "..", "..", "weights",
-                           "jiaquan_simple", "checkpoint-1200.pth")
+                           "base", "jiaquan_simple", "checkpoint-1200.pth")
     return os.path.normpath(default)
 
 

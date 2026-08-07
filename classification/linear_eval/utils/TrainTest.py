@@ -10,7 +10,6 @@
                   (Same as model_test, used for validation)
 """
 
-import numpy as np
 import torch
 import torch.nn as nn
 

@@ -37,11 +37,9 @@ from pathlib import Path
 import numpy as np
 import torch
 import torch.backends.cudnn as cudnn
-import torchvision.datasets as datasets
 import torchvision.transforms as transforms
 from torch.utils.tensorboard import SummaryWriter
 
-import timm
 import timm.optim.optim_factory as optim_factory
 
 import util.misc as misc

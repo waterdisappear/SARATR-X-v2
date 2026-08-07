@@ -4,9 +4,10 @@
 # (Linear probe ablation on SOC_50classes for each target-mode pretrained weight)
 #
 # 权重放置 (weight layout)：
-#   <repo>/weights/target_ablation/<mode>/checkpoint-49.pth
+#   <repo>/weights/base/<mode>/checkpoint-49.pth
 #   mode ∈ {pixel, single_s1, ..., single_s6, multi}
-#   可通过环境变量 TARGET_WEIGHT_ROOT 覆盖权重根目录。
+#   预训练消融（pre-training/run_pretrain_target_ablation.sh）产出的
+#   checkpoint-49.pth 需复制到该目录；也可通过环境变量 TARGET_WEIGHT_ROOT 覆盖权重根目录。
 #
 # 输出 (output)：output/SOC_50classes/MIM_linear_itpn/<mode>_vit_b16_10shots/seed*
 #
@@ -30,8 +31,8 @@ SHOTS="${1:-10}"
 ONLY_MODE="${2:-all}"
 ONLY_SEED="${3:-all}"
 
-# 消融权重根目录（默认仓库 weights/target_ablation，可用环境变量覆盖）
-WEIGHT_ROOT="${TARGET_WEIGHT_ROOT:-${ROOT}/../../weights/target_ablation}"
+# 消融权重根目录（默认仓库 weights/base，可用环境变量 TARGET_WEIGHT_ROOT 覆盖）
+WEIGHT_ROOT="${TARGET_WEIGHT_ROOT:-${ROOT}/../../weights/base}"
 CKPT_NAME="checkpoint-49.pth"
 
 TARGET_MODES=(

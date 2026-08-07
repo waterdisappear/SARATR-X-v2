@@ -24,6 +24,12 @@ from typing import Union, List
 
 from mmrotate.models.builder import ROTATED_BACKBONES
 
+try:
+    # SwiGLU 分支依赖 xformers；未安装时仅在使用 swiglu=True 时才会报错
+    from xformers import xops  # noqa: F401
+except ImportError:  # pragma: no cover
+    xops = None
+
 def _cfg(url='', **kwargs):
     return {
         'url': url,
@@ -310,6 +316,8 @@ class Block(nn.Module):
 
         mlp_hidden_dim = int(dim * mlp_ratio)
         if swiglu:
+            if xops is None:
+                raise ImportError("swiglu=True requires xformers (pip install xformers).")
             self.mlp = xops.SwiGLU(
                 in_features=dim,
                 hidden_features=mlp_hidden_dim
@@ -401,6 +409,8 @@ class ConvMlpBlock(nn.Module):
         mlp_hidden_dim = int(dim * mlp_ratio)
 
         if swiglu:
+            if xops is None:
+                raise ImportError("swiglu=True requires xformers (pip install xformers).")
             self.mlp = xops.SwiGLU(
                 in_features=dim,
                 hidden_features=mlp_hidden_dim

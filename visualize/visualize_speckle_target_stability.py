@@ -23,10 +23,13 @@ import sys
 from pathlib import Path
 from typing import Dict, List, Tuple
 
-# 脚本在 visualize/ 下运行时，需把项目根目录加入 path，才能 import models.*
+# 脚本在 visualize/ 下运行时，需把仓库根目录与 pre-training/ 加入 path：
+# models 包位于 pre-training/models/；plot_speckle_stability_figure 与脚本同目录。
 _REPO_ROOT = Path(__file__).resolve().parent.parent
-if str(_REPO_ROOT) not in sys.path:
-    sys.path.insert(0, str(_REPO_ROOT))
+_PRETRAIN_DIR = _REPO_ROOT / "pre-training"
+for _p in (_REPO_ROOT, _PRETRAIN_DIR):
+    if str(_p) not in sys.path:
+        sys.path.insert(0, str(_p))
 
 import cv2
 import numpy as np
@@ -43,13 +46,13 @@ def resolve_pretrain_ckpt() -> str:
     """解析预训练权重路径 (resolve the pretrained checkpoint path)。
 
     优先使用环境变量 SARATRX_PRETRAIN_CKPT；否则默认指向仓库
-    weights/jiaquan_simple/checkpoint-1200.pth。
-    (env var first, otherwise <repo>/weights/jiaquan_simple/checkpoint-1200.pth)
+    weights/base/jiaquan_simple/checkpoint-1200.pth。
+    (env var first, otherwise <repo>/weights/base/jiaquan_simple/checkpoint-1200.pth)
     """
     ckpt = os.environ.get("SARATRX_PRETRAIN_CKPT", "").strip()
     if ckpt:
         return ckpt
-    default = _REPO_ROOT / "weights" / "jiaquan_simple" / "checkpoint-1200.pth"
+    default = _REPO_ROOT / "weights" / "base" / "jiaquan_simple" / "checkpoint-1200.pth"
     return str(default)
 
 # masked_autoencoder.SAR_Layer4 使用 k=17 的 reflect pad，要求 H,W > 17；训练常用 224。

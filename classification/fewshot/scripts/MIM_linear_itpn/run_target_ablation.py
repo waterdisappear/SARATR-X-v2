@@ -18,11 +18,13 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-# 消融权重根目录：默认 <repo>/weights/target_ablation/<mode>/checkpoint-49.pth，
+# 消融权重根目录：默认 <repo>/weights/base/<mode>/checkpoint-49.pth
+# （预训练消融 pre-training/run_pretrain_target_ablation.sh 的产出需复制到该目录），
 # 可用环境变量 TARGET_WEIGHT_ROOT 覆盖。
-# (ablation weight root: default <repo>/weights/target_ablation/<mode>/checkpoint-49.pth,
+# (ablation weight root: default <repo>/weights/base/<mode>/checkpoint-49.pth,
+#  copy the checkpoints produced by pre-training/run_pretrain_target_ablation.sh here,
 #  overridable via the TARGET_WEIGHT_ROOT environment variable)
-WEIGHT_ROOT = Path(os.environ.get("TARGET_WEIGHT_ROOT", str(ROOT.parents[1] / "weights" / "target_ablation")))
+WEIGHT_ROOT = Path(os.environ.get("TARGET_WEIGHT_ROOT", str(ROOT.parents[1] / "weights" / "base")))
 CKPT_NAME = "checkpoint-49.pth"
 TARGET_MODES = [
     "pixel",

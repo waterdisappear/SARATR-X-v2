@@ -4,7 +4,7 @@
 
 **Scale-Aware Structural Pre-Training for SAR Foundation Models**
 
-<h5 align="center"><em> Weijie Li (李玮杰), Yafei Song, Yongxiang Liu (刘永祥), Bowen Peng, Jie Zhou, Jingyuan Xia, Wei Yang (杨威), Tianpeng Liu, Zhen Liu, and Li Liu (刘丽) </em></h5>
+<h5 align="center"><em> Weijie Li (李玮杰), Yafei Song (宋娅菲), Yongxiang Liu (刘永祥), Bowen Peng (彭渤文), Jie Zhou (周洁), Jingyuan Xia (夏靖远), Wei Yang (杨威), Tianpeng Liu (刘天鹏), Zhen Liu (刘振), and Li Liu (刘丽) </em></h5>
 
 <p align="center">
   <a href="#Introduction">📖 Introduction</a> |
@@ -97,7 +97,7 @@ python main_pretrain.py --data_path <500K pre-training data> --output_dir <work_
 ```bash
 cd classification/linear_eval
 export SARATRX_PRETRAIN_CKPT=/path/to/weights/base/jiaquan_simple/checkpoint-1200.pth
-python SOC_50.py --data_root ../../dataset/classification/SOC_50classes
+python SOC_50.py --data_path ../../dataset/classification/SOC_50classes
 ```
 
 | Dataset / 数据集 | Method / 方法 | Paper result / 论文结果 |
@@ -109,9 +109,9 @@ python SOC_50.py --data_root ../../dataset/classification/SOC_50classes
 
 ## Detection / 检测
 
-**EN** — Rotated object detection on SAR benchmarks (RSAR, FAIR-CSAR, SARDet-100K, SSDD, HRSID) with ReDet / RoI Transformer / Oriented R-CNN + iTPN. The framework (mmrotate) is installed by the user; this repo provides the custom parts. See `detection/`.
+**EN** — Rotated object detection on SAR benchmarks with iTPN backbones. This repo ships the **custom MMRotate parts** (backbones, datasets, configs, hooks) for RSAR / FAIR-CSAR / DOTA / SIVED; the framework itself is installed by the user. The paper also reports detection results on SARDet-100K / SSDD / HRSID, whose configs are not included here — build them following the provided ones. See `detection/`.
 
-**中文** — 在 SAR 基准（RSAR、FAIR-CSAR、SARDet-100K、SSDD、HRSID）上进行旋转目标检测，采用 ReDet / RoI Transformer / Oriented R-CNN + iTPN。框架（mmrotate）由用户自行安装，本仓库提供自定义部分。见 `detection/`。
+**中文** — 在 SAR 基准上进行旋转目标检测，采用 ReDet / RoI Transformer / Oriented R-CNN + iTPN。本仓库提供 **MMRotate 自定义部分**（骨干、数据集、配置、Hook），覆盖 RSAR / FAIR-CSAR / DOTA / SIVED；框架由用户自行安装。论文中的 SARDet-100K / SSDD / HRSID 检测结果未附带配置，可参考现有配置自行搭建。见 `detection/`。
 
 ```bash
 # after copying detection/ into the mmrotate install / 将 detection/ 复制进 mmrotate 安装目录后：
@@ -122,9 +122,9 @@ bash tools/dist_test.sh configs/redet/redet_itpn_base_3x_rsar.py \
 
 ## Segmentation / 分割
 
-**EN** — Semantic segmentation on SAR benchmarks (AIR-PolarSAR-Seg-2.0, OpenEarthMap-SAR, WHU-OPT-SAR, DDHR-SK) with UperNet + iTPN / HiViT. The framework (mmsegmentation) is installed by the user; this repo provides the custom parts. See `segmentation/`.
+**EN** — Semantic segmentation on SAR benchmarks with UperNet + iTPN / HiViT. This repo ships the **custom MMSeg parts** for AIR-PolarSAR-Seg-2.0 / OpenEarthMap-SAR / WHU-OPT-SAR (and ADE20K as reference); the framework itself is installed by the user. The paper also reports segmentation results on DDHR-SK, whose config is not included here. See `segmentation/`.
 
-**中文** — 在 SAR 基准（AIR-PolarSAR-Seg-2.0、OpenEarthMap-SAR、WHU-OPT-SAR、DDHR-SK）上进行语义分割，采用 UperNet + iTPN / HiViT。框架（mmsegmentation）由用户自行安装，本仓库提供自定义部分。见 `segmentation/`。
+**中文** — 在 SAR 基准上进行语义分割，采用 UperNet + iTPN / HiViT。本仓库提供 **MMSeg 自定义部分**，覆盖 AIR-PolarSAR-Seg-2.0 / OpenEarthMap-SAR / WHU-OPT-SAR（及参考用的 ADE20K）；框架由用户自行安装。论文中的 DDHR-SK 分割结果未附带配置。见 `segmentation/`。
 
 ```bash
 bash tools/dist_train.sh \

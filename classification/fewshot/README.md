@@ -48,7 +48,7 @@ bash scripts/MIM_linear_itpn/main.sh MSTAR_SOC vit_b16 5
 bash scripts/MIM_linear_itpn/main.sh SOC_50classes vit_b16 10
 ```
 
-Pre-trained weights are specified via the `SARATRX_PRETRAIN_CKPT` / `HIVIT_PRETRAIN_CKPT` env vars, or loaded from the repo `weights/` by default (see `resolve_pretrain_ckpt` in `trainers/MIM_linear_itpn.py`).
+Pre-trained weights are specified via the `SARATRX_PRETRAIN_CKPT` / `SARATRX_HIVIT_CKPT` env vars, or loaded from the repo `weights/` by default (see `resolve_pretrain_ckpt` in `trainers/MIM_linear_itpn.py`).
 
 预训练权重通过环境变量指定，或默认从仓库 `weights/` 目录加载（见 `trainers/MIM_linear_itpn.py` 的 `resolve_pretrain_ckpt`）。
 

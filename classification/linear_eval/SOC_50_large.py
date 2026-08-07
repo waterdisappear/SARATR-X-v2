@@ -20,7 +20,6 @@ N-shot：--n_shot N>0 时，训练集按类随机各取至多 N 张（可复现�
 仍慢的主要原因：Large 整网前向（训练与 test）仍很重；可用 --eval_every 5、--num_workers 8 减轻。
 学习率调度在本脚本中按「每个 epoch 一次」与 CosineAnnealingLR(T_max=epochs) 对齐。
 """
-import sys
 import os
 import argparse
 import collections
@@ -31,7 +30,7 @@ import torchvision.transforms as transforms
 from tqdm import tqdm
 
 from utils.DataLoad import load_data, load_data_with_class_mapping
-from utils.TrainTest import model_train, model_val, model_test
+from utils.TrainTest import model_train, model_test
 from model.models_itpn import itpn_large
 
 # 仓库根目录：用于定位 dataset/ 下数据的默认路径

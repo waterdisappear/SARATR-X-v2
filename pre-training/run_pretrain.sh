@@ -17,9 +17,12 @@ cd "${ROOT}"
 
 NUM_GPUS="${1:-8}"
 
-DATA_PATH="/home/data/500K/"        # 500K 预训练数据根目录
+# 500K 预训练数据根目录（可通过环境变量 SARATRX_PRETRAIN_DATA 覆盖）
+DATA_PATH="${SARATRX_PRETRAIN_DATA:-/path/to/500K}"
+# 可选 warm-start：iTPN ImageNet 权重（官方 itpn_base_fpn256.pth），可用环境变量
+# SARATRX_INIT_CKPT 覆盖；不需要时置空。
+INIT_CKPT="${SARATRX_INIT_CKPT:-${ROOT}/weights/base/itpn/itpn_base_fpn256.pth}"
 OUTPUT_DIR="${ROOT}/output/500K/multi"
-INIT_CKPT="${ROOT}/weights/itpn_base_fpn256.pth"   # 可选 warm-start 权重
 
 mkdir -p "${OUTPUT_DIR}"
 

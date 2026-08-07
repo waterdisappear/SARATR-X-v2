@@ -18,7 +18,6 @@
   itpn_large_dec512d8b: large 版（embed 768 / 40 层）
 """
 
-from typing import Iterable
 import torch
 import torch.nn as nn
 from functools import partial

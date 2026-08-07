@@ -37,7 +37,7 @@ torchrun --nproc_per_node=8 main_pretrain.py \
     --output_dir ./output/500K/multi \
     --epochs 1200 --warmup_epochs 5 --batch_size 200 \
     --mask_ratio 0.75 --target_mode multi --norm_pix_loss \
-    --init_ckpt ./weights/itpn_base_fpn256.pth   # optional warm-start / 可选 warm-start
+    --init_ckpt ../weights/base/itpn/itpn_base_fpn256.pth   # optional warm-start / 可选 warm-start
 ```
 
 `--init_ckpt` is an optional warm-start: load the official iTPN ImageNet weights (`itpn_base_fpn256.pth`) for a non-strict initialization, then continue pre-training with the SAR structural target (corresponding to the Implementation Details in the paper).
@@ -50,6 +50,12 @@ torchrun --nproc_per_node=8 main_pretrain.py \
 bash run_pretrain_target_ablation.sh          # run all 8 target modes for 50 epochs / 8 个 target_mode 各跑 50 epochs
 bash run_pretrain_target_ablation.sh 8 pixel  # run only one mode / 只跑某一种
 ```
+
+Checkpoints (`checkpoint-49.pth`) are written directly to `<repo>/weights/base/<mode>/` so that the downstream
+linear-probe ablation (`classification/fewshot/scripts/MIM_linear_itpn/run_target_ablation.sh`) picks them up.
+
+消融权重（`checkpoint-49.pth`）直接输出到 `<repo>/weights/base/<mode>/`，供下游少样本线性探测消融
+（`classification/fewshot/scripts/MIM_linear_itpn/run_target_ablation.sh`）直接使用。
 
 ## Code Structure / 代码结构
 

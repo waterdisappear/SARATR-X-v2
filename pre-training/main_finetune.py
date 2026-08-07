@@ -17,7 +17,7 @@
 import argparse
 import datetime
 import json
-from typing import Iterable, List, Tuple
+from typing import List, Tuple
 from collections import OrderedDict
 import numpy as np
 import os
@@ -28,7 +28,6 @@ import torch
 import torch.backends.cudnn as cudnn
 from torch.utils.tensorboard import SummaryWriter
 
-import timm
 from timm.models.layers import trunc_normal_
 from timm.data.mixup import Mixup
 from timm.loss import LabelSmoothingCrossEntropy, SoftTargetCrossEntropy

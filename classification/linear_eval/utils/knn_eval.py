@@ -44,7 +44,7 @@ def resolve_pretrain_ckpt(backbone: str = 'base') -> str:
     if ckpt:
         return ckpt
     if backbone == 'base':
-        default = os.path.join(REPO_ROOT, 'weights', 'jiaquan_simple', 'checkpoint-1200.pth')
+        default = os.path.join(REPO_ROOT, 'weights', 'base', 'jiaquan_simple', 'checkpoint-1200.pth')
     else:
         default = os.path.join(REPO_ROOT, 'weights', 'large', 'jiaquan_simple', 'checkpoint-1200.pth')
     return os.path.normpath(default)

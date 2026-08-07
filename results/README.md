@@ -1,50 +1,27 @@
 # results — Experiment Results / 实验结果说明
 
-This directory stores the experimental results from the paper (checkpoints, logs, metric files). Since these files are large, they are **not committed**; download them from the release / 网盘 and place them following the structure below.
+This directory stores the experiment data used for paper-figure reproduction. Only the small csv/json data needed by the visualization scripts is committed here (under `results/visualize/`). Larger downstream outputs (checkpoints, logs, metric files from classification / detection / segmentation) are **not committed** — see the paper tables and each module's README for the numbers.
 
-本目录存放论文中的实验结果（检查点、日志、指标文件）。由于文件较大，**不随仓库提交**，请从 release 附件 / 网盘下载后按下列结构放置。
+本目录存放论文图表复现所需的小体积实验数据。只有可视化脚本依赖的 csv/json 数据随仓库提交（位于 `results/visualize/`）。分类 / 检测 / 分割的大体积下游输出（检查点、日志、指标文件）**不随仓库提交**，具体数值以论文表格与各模块 README 为准。
 
 ## Directory Structure / 目录结构
 
 ```
 results/
-├── classification/               # Classification results / 分类结果
-│   ├── soc50/                    # SOC-50 (linear / k-NN / few-shot) / 线性 / k-NN / 少样本
-│   ├── sarvasa/                  # SAR-VSA
-│   └── fusar/                    # FUSAR-Ship
-├── detection/                    # Rotated detection results (mmrotate work_dirs export) / 旋转目标检测结果
-│   ├── rsar/                     # RSAR (ReDet + iTPN-B/L)
-│   ├── hrsid/                    # HRSID
-│   ├── ssdd/                     # SSDD
-│   └── sardet/                   # SARDet-100k
-├── segmentation/                 # Semantic segmentation results (mmseg work_dirs export) / 语义分割结果
-│   ├── air_polarsar2/            # AIR-PolarSAR-Seg-2.0 (UperNet + iTPN-B/L)
-│   ├── whu-opt-sar/              # WHU-OPT-SAR
-│   └── ddhr-sk/                  # DDHR-SK
-├── target_ablation/              # Target-design ablation (10-shot accuracy etc.) / 目标设计消融
-│   ├── pixel/                    # Pixel target / 像素级目标
-│   ├── multi/                    # Multi-scale fused target (main method) / 多尺度融合目标（论文主方法）
-│   └── single_s1 .. single_s6/   # Individual single-scale targets / 各单尺度目标
-└── visualize/                    # Experiment data for visualization scripts (csv/json, committed) / 可视化数据
+└── visualize/                 # Experiment data for visualization scripts (csv/json, committed) / 可视化脚本依赖的实验数据（随仓库提交）
 ```
 
-## Mapping to Paper Tables / 与论文表格的对应关系
+## Contents / 内容说明
 
-| Paper table / 论文表格 | Location / 数据位置 |
+| File(s) / 文件 | Description / 说明 |
 | --- | --- |
-| 12-benchmark overview (class./det./seg.) / 12 基准总表 | `classification/`、`detection/`、`segmentation/` |
-| Target-design ablation (pixel/S1–S6/multi) / 目标设计消融 | `target_ablation/`（`target_ablation_soc_10shot_summary.json` in `results/visualize/`） |
-| Speckle stability / stability-transfer / 斑点稳定性 / 稳定性迁移 | `results/visualize/`（`speckle_stability_*`、`stability_transfer_xy.*`） |
+| `speckle_stability_out/`、`speckle_stability_out_50ep/` | Speckle-stability experiment data (1200-epoch / 50-epoch settings) / 斑点稳定性实验数据（1200 epoch / 50 epoch 设置） |
+| `stability_transfer_out/` | Stability–transfer scatter data (x: drift, y: 10-shot acc.) / 稳定性—迁移散点数据 |
+| `target_ablation_soc_10shot_summary.csv/.json` | 10-shot target-ablation summary on SOC-50 / SOC-50 上 10-shot 目标消融汇总 |
 
 ## Usage / 使用方式
 
-- Classification eval scripts output to their `work_dirs`; see each README for metric summaries.
-  分类评测脚本默认将结果输出到各自 `work_dirs`；指标汇总见对应 README。
 - Visualization scripts (`visualize/`) read the csv/json under `results/visualize/` directly.
   可视化脚本（`visualize/`）读取 `results/visualize/` 下的 csv/json 直接出图。
-- Detection/segmentation checkpoints follow the framework READMEs (`latest.pth` / `best_mIoU_*.pth`).
-  检测/分割的模型检查点按各框架 README 使用 `latest.pth` / `best_mIoU_*.pth`。
-
-> Note / 说明：The experiment data files (csv/json) under `results/visualize/` are small and **committed**
-> for paper-figure reproduction; the remaining large files are uploaded separately.
-> `results/visualize/` 下的实验数据文件（csv/json，体积小）已随仓库提交，便于论文图表复现；其余大文件由用户单独上传。
+- For downstream task results, see `classification/`、`detection/`、`segmentation/` READMEs and the paper's experimental section.
+  下游任务结果见 `classification/`、`detection/`、`segmentation/` 各 README 及论文实验章节。

@@ -19,15 +19,11 @@ the iTPN backbone is frozen and only the linear head (fc_norm + head) is trained
 """
 
 import os
-import sys
-import re
 import argparse
 import collections
-from functools import partial
 
 import numpy as np
 import torch
-import torch.nn as nn
 import torchvision.transforms as transforms
 from tqdm import tqdm
 
