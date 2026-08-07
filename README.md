@@ -25,9 +25,9 @@
   <img src="docs/figures/fig_framework_v3.png" width="88%">
 </p>
 
-*<div align="center">**Fig. 1 | Overall framework of SARATR-X-v2 with scale-aware structural pre-training.** Bottom: fixed multi-scale structural extractors spanning six receptive fields produce scale-specific responses, fused by learnable cross-scale weights into one target $y$, each operator robust to multiplicative speckle. Top: hierarchical encoder extracts multi-scale latent features from the masked input, and a decoder reconstructs $y$ under an L2 loss — *design the target to carry the physics*.
+<div align="center">**Fig. 1 | Overall framework of SARATR-X-v2 with scale-aware structural pre-training.** Bottom: fixed multi-scale structural extractors spanning six receptive fields produce scale-specific responses, fused by learnable cross-scale weights into one target $y$, each operator robust to multiplicative speckle. Top: hierarchical encoder extracts multi-scale latent features from the masked input, and a decoder reconstructs $y$ under an L2 loss — *design the target to carry the physics*.
 
-**图 1 | SARATR-X-v2 尺度感知结构预训练总体框架。** 下半部分：覆盖六个感受野的固定多尺度结构算子产生各尺度响应，经可学习跨尺度权重融合为统一目标 $y$，每个算子对乘性斑点稳健；上半部分：层次编码器从掩码输入提取多尺度潜在特征，解码器在 L2 损失下重建 $y$ —— “让目标承载物理”。</div>*
+**图 1 | SARATR-X-v2 尺度感知结构预训练总体框架。** 下半部分：覆盖六个感受野的固定多尺度结构算子产生各尺度响应，经可学习跨尺度权重融合为统一目标 $y$，每个算子对乘性斑点稳健；上半部分：层次编码器从掩码输入提取多尺度潜在特征，解码器在 L2 损失下重建 $y$ —— “让目标承载物理”。</div>
 
 </div>
 
@@ -45,9 +45,9 @@ This repository provides a clean, well-commented, and executable implementation 
   <img src="docs/figures/fig1_motivation_v2.png" width="85%">
 </p>
 
-*<div align="center">**Fig. 2 | Perturbation-sensitive supervision and task-scale mismatch limit SAR pre-training.** (a) SAR-specific speckle perturbations destabilize pixel-space supervision, while downstream tasks require representations at different scales; (b) our method constructs a fine-to-coarse structural target and performs hierarchical pre-training, yielding perturbation-stable and scale-compatible representations; (c) the resulting representations achieve leading transfer performance across twelve downstream benchmarks.
+<div align="center">**Fig. 2 | Perturbation-sensitive supervision and task-scale mismatch limit SAR pre-training.** (a) SAR-specific speckle perturbations destabilize pixel-space supervision, while downstream tasks require representations at different scales; (b) our method constructs a fine-to-coarse structural target and performs hierarchical pre-training, yielding perturbation-stable and scale-compatible representations; (c) the resulting representations achieve leading transfer performance across twelve downstream benchmarks.
 
-**图 2 | 扰动敏感监督与任务尺度错配制约 SAR 预训练。** (a) SAR 特有的斑点扰动使像素空间监督不稳定，而下游任务需要不同尺度的表示；(b) 本方法构造由细到粗的结构目标并进行层次化预训练，得到扰动稳定、尺度兼容的表示；(c) 所得表示在 12 个下游基准上取得领先的迁移性能。</div>*
+**图 2 | 扰动敏感监督与任务尺度错配制约 SAR 预训练。** (a) SAR 特有的斑点扰动使像素空间监督不稳定，而下游任务需要不同尺度的表示；(b) 本方法构造由细到粗的结构目标并进行层次化预训练，得到扰动稳定、尺度兼容的表示；(c) 所得表示在 12 个下游基准上取得领先的迁移性能。</div>
 
 ## Highlights / 方法亮点
 
@@ -145,9 +145,9 @@ bash tools/dist_train.sh \
   <img src="docs/figures/sar_benchmark_4x3_horizontal_bar.png" width="85%">
 </p>
 
-*<div align="center">**Fig. 3 | Comprehensive comparison of SARATR-X-v2 on twelve SAR benchmarks** spanning classification (ATRNet-STAR, MSTAR, SAR-VSA, FUSAR-Ship), object detection (SARDet-100K, RSAR, SSDD, HRSID), and semantic segmentation (AIR-PolSAR-Seg-2.0, OpenEarthMap-SAR, WHU-OPT-SAR, DDHR-SK). SARATR-X-v2 achieves the best result on 10 of 12 benchmarks and second-best on the remaining two.
+<div align="center">**Fig. 3 | Comprehensive comparison of SARATR-X-v2 on twelve SAR benchmarks** spanning classification (ATRNet-STAR, MSTAR, SAR-VSA, FUSAR-Ship), object detection (SARDet-100K, RSAR, SSDD, HRSID), and semantic segmentation (AIR-PolSAR-Seg-2.0, OpenEarthMap-SAR, WHU-OPT-SAR, DDHR-SK). SARATR-X-v2 achieves the best result on 10 of 12 benchmarks and second-best on the remaining two.
 
-**图 3 | SARATR-X-v2 在 12 个 SAR 基准上的综合对比**，涵盖分类（ATRNet-STAR、MSTAR、SAR-VSA、FUSAR-Ship）、目标检测（SARDet-100K、RSAR、SSDD、HRSID）与语义分割（AIR-PolSAR-Seg-2.0、OpenEarthMap-SAR、WHU-OPT-SAR、DDHR-SK）。SARATR-X-v2 在 12 个基准中取得 10 个最优、2 个次优。</div>*
+**图 3 | SARATR-X-v2 在 12 个 SAR 基准上的综合对比**，涵盖分类（ATRNet-STAR、MSTAR、SAR-VSA、FUSAR-Ship）、目标检测（SARDet-100K、RSAR、SSDD、HRSID）与语义分割（AIR-PolSAR-Seg-2.0、OpenEarthMap-SAR、WHU-OPT-SAR、DDHR-SK）。SARATR-X-v2 在 12 个基准中取得 10 个最优、2 个次优。</div>
 
 Under synthetic speckle variation, the proposed target reduces perturbation drift in the learned representation by **nearly two orders of magnitude** relative to pixel-space supervision.
 
@@ -157,9 +157,9 @@ Under synthetic speckle variation, the proposed target reduces perturbation drif
   <img src="docs/figures/stability_transfer_scatter.png" width="55%">
 </p>
 
-*<div align="center">**Fig. 4 | Stability–transfer relationship across pre-training targets.** Each point is one supervision target (pixel, single-scale S1–S6, multi-scale fusion). Horizontal axis: mean $\ell_1$ drift under speckle at $\sigma=0.15$; vertical axis: 10-shot linear-probe accuracy on ATRNet-STAR (SOC-50) with frozen iTPN-B. Lower drift correlates with higher accuracy ($\rho=-0.93$, $p=0.002$).
+<div align="center">**Fig. 4 | Stability–transfer relationship across pre-training targets.** Each point is one supervision target (pixel, single-scale S1–S6, multi-scale fusion). Horizontal axis: mean $\ell_1$ drift under speckle at $\sigma=0.15$; vertical axis: 10-shot linear-probe accuracy on ATRNet-STAR (SOC-50) with frozen iTPN-B. Lower drift correlates with higher accuracy ($\rho=-0.93$, $p=0.002$).
 
-**图 4 | 各预训练目标的稳定性–迁移关系。** 每个点为一种监督目标（像素、单尺度 S1–S6、多尺度融合）。横轴：$\sigma=0.15$ 斑点下的均值 $\ell_1$ 漂移；纵轴：冻结 iTPN-B 在 ATRNet-STAR（SOC-50）上的 10-shot 线性探测精度。漂移越小精度越高（$\rho=-0.93$，$p=0.002$）。</div>*
+**图 4 | 各预训练目标的稳定性–迁移关系。** 每个点为一种监督目标（像素、单尺度 S1–S6、多尺度融合）。横轴：$\sigma=0.15$ 斑点下的均值 $\ell_1$ 漂移；纵轴：冻结 iTPN-B 在 ATRNet-STAR（SOC-50）上的 10-shot 线性探测精度。漂移越小精度越高（$\rho=-0.93$，$p=0.002$）。</div>
 
 ## Data / 数据
 
