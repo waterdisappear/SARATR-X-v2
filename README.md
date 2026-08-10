@@ -17,6 +17,7 @@
   <a href="https://arxiv.org/abs/2607.23238"><img src="https://img.shields.io/badge/Paper-arxiv-red"></a>
   <a href="https://github.com/waterdisappear/SARATR-X-v2"><img src="https://img.shields.io/badge/Code-GitHub-blue"></a>
   <a href="https://github.com/waterdisappear/SARATR-X-v2/releases"><img src="https://img.shields.io/badge/Data%26Checkpoint-Release-yellow"></a>
+  <a href="https://zhuanlan.zhihu.com/p/2070277357513004786"><img src="https://img.shields.io/badge/文章-知乎-blue"></a>
 </p>
 
 <p align="center">
