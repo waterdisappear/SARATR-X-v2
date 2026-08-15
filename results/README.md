@@ -24,7 +24,7 @@ results/
 └── visualize/                   # Experiment data for visualization scripts (csv/json)
 ```
 
-Each downstream folder contains both `base` and `large` (prefix `large_`) log files plus the exact config that produced them. The `*.py` configs here cover the benchmarks that have **no config in `detection/` or `segmentation/`** (SARDet-100K / SSDD / HRSID / WHU-OPT-SAR / DDHR-SK); they follow the MMDetection / MMSegmentation style and can be adapted for reproduction.
+Each downstream folder contains both `base` and `large` (prefix `large_`) log files plus the exact config that produced them. The `*.py` configs here cover the benchmarks that have **no config in `detection/` or `segmentation/`** (SARDet-100K / SSDD / HRSID / WHU-OPT-SAR / DDHR-SK); they follow the MMDetection and MMSegmentation style and can be adapted for reproduction.
 
 ## Main Results
 

@@ -24,7 +24,7 @@ results/
 └── visualize/                   # 可视化脚本依赖的实验数据
 ```
 
-每个下游目录包含 `base` 与 `large`（前缀 `large_`）两份日志及对应的实验配置。这里的 `*.py` 配置覆盖了 `detection/`、`segmentation/` 中**未收录配置**的基准（SARDet-100K / SSDD / HRSID / WHU-OPT-SAR / DDHR-SK），为 MMDetection / MMSegmentation 风格，可直接参考复现。
+每个下游目录包含 `base` 与 `large`（前缀 `large_`）两份日志及对应的实验配置。这里的 `*.py` 配置覆盖了 `detection/`、`segmentation/` 中**未收录配置**的基准（SARDet-100K / SSDD / HRSID / WHU-OPT-SAR / DDHR-SK），为 MMDetection 与 MMSegmentation 风格，可直接参考复现。
 
 ## 主要结果
 

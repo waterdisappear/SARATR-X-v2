@@ -46,7 +46,7 @@ SOC_50classes/
 
 The eval scripts infer the number of classes automatically from the training set (see `classification/linear_eval/SOC_50.py` etc.).
 
-## Detection / Segmentation Data Format
+## Detection and Segmentation Data Format
 
 Detection and segmentation data follow the standard MMDetection/MMRotate/MMSegmentation formats (COCO / DOTA / custom JSON annotations or semantic-segmentation label maps). See the config descriptions under `detection/mmrotate/` and `segmentation/mmseg/` for details.
 

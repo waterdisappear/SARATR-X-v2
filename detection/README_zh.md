@@ -28,7 +28,7 @@ detection/
 │   ├── rotated_fcos/             # Rotated FCOS + iTPN (SIVED)
 │   ├── rotated_faster_rcnn/      # Rotated Faster R-CNN + iTPN (DOTA / SIVED)
 │   ├── rotated_retinanet/        # Rotated RetinaNet + iTPN (FAIR-CSAR FSI)
-│   └── _base_/                   # 数据集 / 调度 / 运行时
+│   └── _base_/                   # 数据集、调度、运行时
 └── mmrotate/                     # 自定义模块（复制到 mmrotate 安装目录）
     ├── models/backbones/         # iTPN_pixel、iTPN_CLIP、fast_itpn、ReResNet + mmcv_custom
     ├── datasets/                 # sar.py (RSAR/SAR)、faircsar.py (FAIR-CSAR)
