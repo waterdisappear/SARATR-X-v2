@@ -1,33 +1,35 @@
-# segmentation — SAR Semantic Segmentation (MMSegmentation Custom Extension) / SAR 语义分割（MMSegmentation 自定义扩展）
+<p align="right">
+  <b>English</b> | <a href="./README_zh.md">中文</a>
+</p>
+
+# segmentation — SAR Semantic Segmentation (MMSegmentation Custom Extension)
 
 This directory contains the custom code for the **segmentation downstream task** of SARATR-X-v2, based on [MMSegmentation](https://github.com/open-mmlab/mmsegmentation) (0.11.0 + mmcv 1.3.x). Only the paper-related custom parts are kept:
 
-本目录为 SARATR-X-v2 论文中**分割下游任务**的自定义代码，基于 [MMSegmentation](https://github.com/open-mmlab/mmsegmentation)（0.11.0 + mmcv 1.3.x）实现，保留论文相关的自定义部分：
+- Custom backbones: `iTPN` (`backbone/iTPN.py`, same source as the pre-training iTPN), `HiViT` (`backbone/hivit.py`)
+- Custom datasets: `AIRPolSARSegDataset` (AIR-PolSAR-Seg 6 classes), `EarthMapOEM8OversampleDataset`
+- Custom pipelines: `LoadHHAs3ChSAR` / `LoadPreprocessedGrayAs3Ch` / `LoadPolSARAmplitudeRGB` (SAR amplitude/polarimetric data loading)
+- Custom losses: `CEFocalLoss`, `CEAndLovaszLoss`
+- Custom optimizer: `LayerDecayOptimizerConstructor` (with iTPN / HiViT layer-decay variants)
+- Custom evaluation: `rs_metrics` (PA/OA/mIoU/mPA/Kappa), `val_test_eval_hooks`
+- Custom training API: `mmcv_custom/train_api.py` (`tools/train.py` auto-uses the in-repo implementation)
 
-- Custom backbones / 自定义骨干：`iTPN`（`backbone/iTPN.py`，same source as the pre-training iTPN / 与预训练 iTPN 同源）、`HiViT`（`backbone/hivit.py`）
-- Custom datasets / 自定义数据集：`AIRPolSARSegDataset`（AIR-PolSAR-Seg 6 classes / 6 类）、`EarthMapOEM8OversampleDataset`
-- Custom pipelines / 自定义 Pipeline：`LoadHHAs3ChSAR` / `LoadPreprocessedGrayAs3Ch` / `LoadPolSARAmplitudeRGB`（SAR amplitude/polarimetric data loading / SAR 幅度/极化数据加载）
-- Custom losses / 自定义损失：`CEFocalLoss`、`CEAndLovaszLoss`
-- Custom optimizer / 自定义优化器：`LayerDecayOptimizerConstructor`（with iTPN / HiViT layer-decay variants / 含 iTPN / HiViT 层衰减版）
-- Custom evaluation / 自定义评测：`rs_metrics`（PA/OA/mIoU/mPA/Kappa）、`val_test_eval_hooks`
-- Custom training API / 自定义训练入口：`mmcv_custom/train_api.py`（`tools/train.py` auto-uses the in-repo implementation / 自动使用仓库内实现）
-
-## Directory Structure / 目录结构
+## Directory Structure
 
 ```
 segmentation/
-├── README.md                     # This file / 本文件
-├── backbone/                     # iTPN / HiViT / BEiT backbones (mmseg-registered) / 骨干（mmseg 注册版）
+├── README.md                     # This file
+├── backbone/                     # iTPN / HiViT / BEiT backbones (mmseg-registered)
 ├── mmcv_custom/                  # Custom datasets / pipelines / losses / optimizers / hooks / train API
-├── models/                       # Custom models (HiViT-related) / 自定义模型
-├── configs/                      # Paper-related training/eval configs / 论文相关训练/评测配置
+├── models/                       # Custom models (HiViT-related)
+├── configs/                      # Paper-related training/eval configs
 │   ├── itpn/                     # UperNet + iTPN (AIR-PolarSAR-Seg / EarthMap / WHU-OPT-SAR / ADE20K)
 │   ├── hivit/                    # UperNet + HiViT (AIR-PolarSAR-Seg-2.0)
-│   └── _base_/                   # Dataset / model / schedule / runtime configs / 基础配置
-└── tools/                        # Data conversion and train/eval scripts / 数据转换与训练/评测脚本
+│   └── _base_/                   # Dataset / model / schedule / runtime configs
+└── tools/                        # Data conversion and train/eval scripts
 ```
 
-## Environment Setup / 环境搭建
+## Environment Setup
 
 ```bash
 conda create -n itpn_seg python=3.7 -y
@@ -39,19 +41,18 @@ pip install scipy timm==0.3.2
 
 > This repo was developed under mmseg 0.11.0 / mmcv 1.3.x. Adapt if using a newer mmseg
 > (e.g. `mmseg.utils.get_root_logger` → mmengine-style API).
-> 本仓库代码在 mmseg 0.11.0 / mmcv 1.3.x 下开发。若使用新版 mmseg 需适配（如 `mmseg.utils.get_root_logger` → mmengine 风格 API）。
 
-## Data Preparation / 数据准备
+## Data Preparation
 
-| Dataset / 数据集 | Default path / 默认路径 | Description / 说明 |
+| Dataset | Default path | Description |
 | --- | --- | --- |
-| AIR-PolarSAR-Seg-2.0 | `data/air-polarsar-seg-2.0/{train,val}` | Main segmentation dataset in the paper (amplitude RGB) / 论文分割主数据集 |
-| AIR-PolarSAR-Seg | `data/air-polarsar-seg/{train_set,test_set}` | HH-channel version / HH 通道版 |
-| EarthMap | `data/earthmap/{train,val,test}` | Land-cover (SAR + OEM8 labels) / 地物分类 |
-| WHU-OPT-SAR | `data/whu_opt_sar_mmseg_256_split` | Multi-modal segmentation (256 tiles) / 多模态分割 |
-| ADE20K | `data/ade/ADEChallengeData2016` | General segmentation reference (official model transfer) / 通用分割参考 |
+| AIR-PolarSAR-Seg-2.0 | `data/air-polarsar-seg-2.0/{train,val}` | Main segmentation dataset in the paper (amplitude RGB) |
+| AIR-PolarSAR-Seg | `data/air-polarsar-seg/{train_set,test_set}` | HH-channel version |
+| EarthMap | `data/earthmap/{train,val,test}` | Land-cover (SAR + OEM8 labels) |
+| WHU-OPT-SAR | `data/whu_opt_sar_mmseg_256_split` | Multi-modal segmentation (256 tiles) |
+| ADE20K | `data/ade/ADEChallengeData2016` | General segmentation reference (official model transfer) |
 
-Data conversion tools (`tools/`)：
+Data conversion tools (`tools/`):
 
 ```bash
 # Convert AIR-PolSAR-Seg RGB labels to mmseg index labels
@@ -64,22 +65,19 @@ python tools/split_whu_opt_sar_for_mmseg.py --data-root <root>
 # visualize_polsar_amplitude_params.py (polarimetric amplitude pseudo-RGB debugging)
 ```
 
-## Pre-trained Weights / 预训练权重
+## Pre-trained Weights
 
 The iTPN / HiViT pre-trained weights are **not committed**; download from `weights/` and place under mmseg's `ckpts/`:
 
-iTPN / HiViT 预训练权重不随仓库提交，从 `weights/` 获取后放置到 mmseg 目录：
-
-| Model / 模型 | Default path / 默认路径 | Description / 说明 |
+| Model | Default path | Description |
 | --- | --- | --- |
-| iTPN-Base | `ckpts/itpn_base/checkpoint-1200.pth` | Main experiment / 论文主实验 |
-| iTPN-Large | `ckpts/itpn_large/checkpoint-1200.pth` | Large-model experiment / 大模型实验 |
-| HiViT-Base | `ckpts/hivit/checkpoint-1200.pth` | Comparison / 对比实验 |
+| iTPN-Base | `ckpts/itpn_base/checkpoint-1200.pth` | Main experiment |
+| iTPN-Large | `ckpts/itpn_large/checkpoint-1200.pth` | Large-model experiment |
+| HiViT-Base | `ckpts/hivit/checkpoint-1200.pth` | Comparison |
 
 Override the default path with `--cfg-options model.pretrained=/path/to/ckpt` in the training command.
-可在训练命令中用 `--cfg-options model.pretrained=/path/to/ckpt` 覆盖默认路径。
 
-## Training / Testing / 训练 / 测试
+## Training / Testing
 
 ```bash
 # Training (8-GPU example, AIR-PolarSAR-Seg-2.0 amplitude version)
@@ -98,12 +96,12 @@ python tools/train.py \
     --cfg-options model.pretrained=/path/to/checkpoint-1200.pth data_root=/path/to/data
 ```
 
-## Mapping to Paper Results / 论文对应关系
+## Mapping to Paper Results
 
-- **AIR-PolarSAR-Seg-2.0 segmentation / 分割**：UperNet + iTPN-Base / iTPN-Large（`pixel_upernet_itpn_*_air_polarsar2_amp_linux.py`）
-- **AIR-PolarSAR-Seg segmentation / 分割**：UperNet + iTPN（`pixel_upernet_itpn_*_air_polarsar_hh_linux*.py`）
-- **WHU-OPT-SAR segmentation / 分割**：UperNet + iTPN（`pixel_upernet_itpn_*_whu_opt_sar_sar_linux.py`）
-- **DDHR-SK segmentation / 分割**：UperNet + iTPN — reference config & training log under `results/segmentation/ddhr-sk/` / 参考配置与训练日志见 `results/segmentation/ddhr-sk/`
-- **Comparison experiments / 对比实验**：UperNet + HiViT（`configs/hivit/`）、CLIP-UperNet + iTPN（`clip_upernet_itpn_*`）
+- **AIR-PolarSAR-Seg-2.0 segmentation**: UperNet + iTPN-Base / iTPN-Large (`pixel_upernet_itpn_*_air_polarsar2_amp_linux.py`)
+- **AIR-PolarSAR-Seg segmentation**: UperNet + iTPN (`pixel_upernet_itpn_*_air_polarsar_hh_linux*.py`)
+- **WHU-OPT-SAR segmentation**: UperNet + iTPN (`pixel_upernet_itpn_*_whu_opt_sar_sar_linux.py`)
+- **DDHR-SK segmentation**: UperNet + iTPN — reference config & training log under `results/segmentation/ddhr-sk/`
+- **Comparison experiments**: UperNet + HiViT (`configs/hivit/`), CLIP-UperNet + iTPN (`clip_upernet_itpn_*`)
 
-See the paper's experimental section for the exact numbers; per-dataset logs/configs (including WHU-OPT-SAR and DDHR-SK) are under `results/segmentation/`. 具体数值以论文实验章节为准；各数据集日志与配置（含 WHU-OPT-SAR 与 DDHR-SK）见 `results/segmentation/`。
+See the paper's experimental section for the exact numbers; per-dataset logs/configs (including WHU-OPT-SAR and DDHR-SK) are under `results/segmentation/`.
