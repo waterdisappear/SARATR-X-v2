@@ -52,6 +52,15 @@ bash run_pretrain_target_ablation.sh 8 pixel  # 只跑某一种
 消融权重（`checkpoint-49.pth`）直接输出到 `<repo>/weights/base/<mode>/`，供下游少样本线性探测消融
 （`classification/fewshot/scripts/MIM_linear_itpn/run_target_ablation.sh`）直接使用。
 
+## 目标 FLOPs 分析
+
+在 `224×224` 上对结构目标构造（`pixel` / `single_s1` / `single_s6` / `multi`）做与硬件无关的近似 MAC 统计；无需 GPU，计数规则与 `models/masked_autoencoder.py` 中的算子一致。
+
+```bash
+cd pre-training
+python bench_target_flops.py   # 打印表格，并在同目录写出 bench_target_flops.json
+```
+
 ## 代码结构
 
 ```
@@ -62,6 +71,8 @@ pre-training/
 ├── engine_finetune.py                # 微调单轮训练 + 评估
 ├── run_pretrain.sh                   # 主预训练启动脚本
 ├── run_pretrain_target_ablation.sh   # 目标消融预训练脚本
+├── bench_target_flops.py             # 结构目标解析 FLOPs（无需 GPU）
+├── bench_target_flops.json           # 上述脚本的缓存输出
 ├── models/
 │   ├── masked_autoencoder.py         # ★ 多尺度结构目标 + MAE 基类
 │   ├── models_itpn.py                # iTPN 分层编码器

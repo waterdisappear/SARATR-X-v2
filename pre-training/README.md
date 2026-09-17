@@ -52,6 +52,15 @@ bash run_pretrain_target_ablation.sh 8 pixel  # run only one mode
 Checkpoints (`checkpoint-49.pth`) are written directly to `<repo>/weights/base/<mode>/` so that the downstream
 linear-probe ablation (`classification/fewshot/scripts/MIM_linear_itpn/run_target_ablation.sh`) picks them up.
 
+## Target FLOPs Analysis
+
+Hardware-independent approximate MACs for constructing the structural target (`pixel` / `single_s1` / `single_s6` / `multi`) at `224×224`. No GPU required; matches the operators in `models/masked_autoencoder.py`.
+
+```bash
+cd pre-training
+python bench_target_flops.py   # prints table; writes bench_target_flops.json next to the script
+```
+
 ## Code Structure
 
 ```
@@ -62,6 +71,8 @@ pre-training/
 ├── engine_finetune.py                # Finetuning loop + evaluation
 ├── run_pretrain.sh                   # Main pre-training script
 ├── run_pretrain_target_ablation.sh   # Target ablation script
+├── bench_target_flops.py             # Analytic FLOPs of structural targets (no GPU)
+├── bench_target_flops.json           # Cached output of the script above
 ├── models/
 │   ├── masked_autoencoder.py         # ★ Multi-scale structural target + MAE base class (method core)
 │   ├── models_itpn.py                # iTPN hierarchical encoder (with FPN)

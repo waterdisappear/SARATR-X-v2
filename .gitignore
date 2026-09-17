@@ -56,3 +56,7 @@ data/
 !docs/figures/*.pdf
 
 # 权重/结果目录说明 README 保留；占位 .gitkeep 无规则匹配，默认保留
+
+# 本地/内部工作流（不随仓库公开）
+.superpowers/
+docs/superpowers/

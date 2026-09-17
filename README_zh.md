@@ -20,15 +20,18 @@
 <p align="center">
   <a href="https://arxiv.org/abs/2607.23238"><img src="https://img.shields.io/badge/Paper-arxiv-red"></a>
   <a href="https://github.com/waterdisappear/SARATR-X-v2"><img src="https://img.shields.io/badge/Code-GitHub-blue"></a>
-  <a href="https://github.com/waterdisappear/SARATR-X-v2/releases"><img src="https://img.shields.io/badge/Data%26Checkpoint-Release-yellow"></a>
+  <a href="https://pan.baidu.com/s/1jwtNSoDEHwd-pYESFqOmGQ"><img src="https://img.shields.io/badge/Data&Checkpoint-BaiduYun-blue"></a>
+  <a href="https://huggingface.co/waterdisappear/SARATR-X-v2"><img src="https://img.shields.io/badge/Data&Checkpoint-Hugging%20face-yellow"></a>
   <a href="https://zhuanlan.zhihu.com/p/2070277357513004786"><img src="https://img.shields.io/badge/文章-知乎-blue"></a>
 </p>
+
+> **提示：** 本论文尚在审稿中。数据与权重（[百度网盘](https://pan.baidu.com/s/1jwtNSoDEHwd-pYESFqOmGQ) / [Hugging Face](https://huggingface.co/waterdisappear/SARATR-X-v2)）需邮件申请获取，请联系 **lwj2150508321@sina.com**。
 
 <p align="center">
   <img src="docs/figures/fig_framework_v3.png" width="88%">
 </p>
 
-<div align="center"><b>图 1 | SARATR-X-v2 尺度感知结构预训练总体框架。</b> 下半部分：覆盖六个感受野的固定多尺度结构算子产生各尺度响应，经可学习跨尺度权重融合为统一目标 <i>y</i>，每个算子对乘性斑点稳健；上半部分：层次编码器从掩码输入提取多尺度潜在特征，解码器在 L2 损失下重建 <i>y</i> —— “让目标承载物理”。</div>
+<div align="center"><b>图 1 | SARATR-X-v2 尺度感知结构预训练总体框架。</b> 下半部分：覆盖六个感受野的固定多尺度结构算子产生各尺度响应，经可学习跨尺度权重融合为统一目标 <i>y</i>，每个算子对乘性散斑稳健；上半部分：层次编码器从掩码输入提取多尺度潜在特征，解码器在 L2 损失下重建 <i>y</i> —— “让目标承载物理”。</div>
 
 </div>
 
@@ -42,15 +45,15 @@ SARATR-X-v2 是一个面向 SAR 目标识别的视觉基础模型，采用 **尺
   <img src="docs/figures/fig1_motivation_v2.png" width="85%">
 </p>
 
-<div align="center"><b>图 2 | 扰动敏感监督与任务尺度错配制约 SAR 预训练。</b> (a) SAR 特有的斑点扰动使像素空间监督不稳定，而下游任务需要不同尺度的表示；(b) 本方法构造由细到粗的结构目标并进行层次化预训练，得到扰动稳定、尺度兼容的表示；(c) 所得表示在 12 个下游基准上取得领先的迁移性能。</div>
+<div align="center"><b>图 2 | 扰动敏感监督与任务尺度错配制约 SAR 预训练。</b> (a) SAR 特有的散斑扰动使像素空间监督不稳定，而下游任务需要不同尺度的表示；(b) 本方法构造由细到粗的结构目标并进行层次化预训练，得到扰动稳定、尺度兼容的表示；(c) 所得表示在 12 个下游基准上取得领先的迁移性能。</div>
 
 ## 方法亮点
 
 - **多尺度结构目标**：以 SAR 物理先验构造重建目标，而非直接重建像素。
-  - 最细尺度 `S1`：**盲点平均**，3×3 核中心权重为 0，对斑点不敏感。
-  - 更大尺度 `S2`–`S6`：**对数比方向对比**，相邻半区互斥核分离结构与斑点。
+  - 最细尺度 `S1`：**盲点平均**，3×3 核中心权重为 0，对散斑不敏感。
+  - 更大尺度 `S2`–`S6`：**对数比方向对比**，相邻半区互斥核分离结构与散斑。
 - **可学习跨尺度融合**：softmax 约束的融合权重将多尺度结构响应合成为单一尺度感知目标。
-- **斑点稳健性**：`S_multi < S_k < S_pixel`，融合目标对相干成像扰动最稳定（见 `visualize/` 的稳定性实验）。
+- **散斑稳健性**：`S_multi < S_k < S_pixel`，融合目标对相干成像扰动最稳定（见 `visualize/` 的稳定性实验）。
 - **12 个 SAR 基准全面领先**：分类（ATRNet-STAR / MSTAR / SAR-VSA / FUSAR-Ship）、检测（SARDet-100K / RSAR / SSDD / HRSID）、分割（AIR-PolSAR-Seg-2.0 / OpenEarthMap-SAR / WHU-OPT-SAR / DDHR-SK）。
 
 ## 仓库结构
@@ -132,13 +135,13 @@ SARATR-X-v2 在覆盖分类、检测、分割的 **12 个 SAR 基准**上取得�
 
 <div align="center"><b>图 3 | SARATR-X-v2 在 12 个 SAR 基准上的综合对比</b>，涵盖分类（ATRNet-STAR、MSTAR、SAR-VSA、FUSAR-Ship）、目标检测（SARDet-100K、RSAR、SSDD、HRSID）与语义分割（AIR-PolSAR-Seg-2.0、OpenEarthMap-SAR、WHU-OPT-SAR、DDHR-SK）。SARATR-X-v2 在 12 个基准中取得 10 个最优、2 个次优。</div>
 
-在合成斑点扰动下，所提目标将学习表示的扰动漂移相对像素空间监督降低了**近两个数量级**。
+在合成散斑扰动下，所提目标将学习表示的扰动漂移相对像素空间监督降低了**近两个数量级**。
 
 <p align="center">
   <img src="docs/figures/stability_transfer_scatter.png" width="55%">
 </p>
 
-<div align="center"><b>图 4 | 各预训练目标的稳定性–迁移关系。</b> 每个点为一种监督目标（像素、单尺度 S1–S6、多尺度融合）。横轴：σ = 0.15 斑点下的均值 ℓ₁ 漂移；纵轴：冻结 iTPN-B 在 ATRNet-STAR（SOC-50）上的 10-shot 线性探测精度。漂移越小精度越高（ρ = −0.93，p = 0.002）。</div>
+<div align="center"><b>图 4 | 各预训练目标的稳定性–迁移关系。</b> 每个点为一种监督目标（像素、单尺度 S1–S6、多尺度融合）。横轴：σ = 0.15 散斑下的均值 ℓ₁ 漂移；纵轴：冻结 iTPN-B 在 ATRNet-STAR（SOC-50）上的 10-shot 线性探测精度。漂移越小精度越高（ρ = −0.93，p = 0.002）。</div>
 
 ## 数据
 
@@ -151,7 +154,7 @@ SARATR-X-v2 在覆盖分类、检测、分割的 **12 个 SAR 基准**上取得�
 
 ## 权重与结果
 
-预训练权重较大，**不随仓库提交**；请从 release 附件获取后按 `weights/README_zh.md` 放置。检测与分割的实验日志与配置、以及可视化所需的小体积数据已随仓库提交在 `results/`。
+预训练权重较大，**不随仓库提交**；请发邮件至 **lwj2150508321@sina.com** 申请获取，再从 [百度网盘](https://pan.baidu.com/s/1jwtNSoDEHwd-pYESFqOmGQ) / [Hugging Face](https://huggingface.co/waterdisappear/SARATR-X-v2) 下载，并按 `weights/README_zh.md` 放置。检测与分割的实验日志与配置、以及可视化所需的小体积数据已随仓库提交在 `results/`。
 
 - `weights/README_zh.md`：预训练权重目录结构与下游任务对应关系，默认使用 `checkpoint-1200.pth`。
 - `results/README_zh.md`：下游实验结果目录结构。

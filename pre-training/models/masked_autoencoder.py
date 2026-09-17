@@ -9,11 +9,11 @@
 
 对应论文 Method 章节：
   * SAR_Lay  ：最小尺度 S1，3x3 blind-spot 邻域聚合（中心像素置 0），
-               保证目标值不包含中心像素自身的相干斑实现，从构造上抑制斑点泄漏；
+               保证目标值不包含中心像素自身的相干斑实现，从构造上抑制散斑泄漏；
   * SAR_Layer：大尺度 S2~S6 的 log-ratio 方向对比。将 (2r+1)x(2r+1) 支撑域
                分成两个不相交的半区（中间一行/一列置 0），做对数域均值差：
                g = log(左/上半区) - log(右/下半区)，再对水平/垂直两个方向
-               取 L2 范数并过 sigmoid。乘性斑点在同侧按比例抵消，故响应
+               取 L2 范数并过 sigmoid。乘性散斑在同侧按比例抵消，故响应
                主要由“结构不平衡”而非辐射度变化主导；
   * My_SAR_feature：六个尺度分支的输出通过 softmax 约束的可学习权重融合：
                y = sum_s alpha_s * f_s(x),  alpha = softmax(w)
@@ -36,7 +36,7 @@ import torch.nn.functional as F
 class SAR_Lay(nn.Module):
     """S1：最小尺度 blind-spot 聚合分支（3x3 邻域，中心权重为 0）。
 
-    只聚合 8 个相邻像素，使位置 i 的目标值不包含位置 i 自身的斑点实现；
+    只聚合 8 个相邻像素，使位置 i 的目标值不包含位置 i 自身的散斑实现；
     同时保留边缘、点散射体、纹理边界等局部结构线索。
     """
 
@@ -74,7 +74,7 @@ class SAR_Layer(nn.Module):
         gy = log(上侧半区) - log(下侧半区)
     两个方向响应取 L2 范数再 sigmoid：
         f = sigmoid( sqrt(gx^2 + gy^2) )
-    乘性斑点对两个半区成比例影响，在对数差中相互抵消，因此该响应
+    乘性散斑对两个半区成比例影响，在对数差中相互抵消，因此该响应
     稳定地反映结构对比而非辐射度变化。
     """
 
@@ -114,7 +114,7 @@ class SAR_Layer(nn.Module):
         gy_1 = torch.log(F.conv2d(x, self.weight_y1, bias=None, stride=1, padding=0, groups=1) + self.eps)
         gy_2 = torch.log(F.conv2d(x, self.weight_y2, bias=None, stride=1, padding=0, groups=1) + self.eps)
 
-        # 水平/垂直方向对比（对数差抵消乘性斑点）
+        # 水平/垂直方向对比（对数差抵消乘性散斑）
         gx_rgb = gx_1 - gx_2
         gy_rgb = gy_1 - gy_2
 

@@ -4,7 +4,7 @@
 
 # results — Experiment Results
 
-This directory stores the experiment data of SARATR-X-v2. It contains the raw training logs / configs of the **detection and segmentation** downstream experiments (copied from the original run folder `D:\2024_SARatrX_2\result`), plus the small csv/json data needed by the visualization scripts.
+This directory stores the experiment data of SARATR-X-v2. It contains the raw training logs / configs of the **detection and segmentation** downstream experiments, plus the small csv/json data needed by the visualization scripts.
 
 > Note: Model checkpoints (`.pth`, 1–4 GB each) are **not committed** — they live under `weights/` and are uploaded separately. The logs here contain the final metrics used in the paper tables.
 
@@ -45,13 +45,14 @@ Each downstream folder contains both `base` and `large` (prefix `large_`) log fi
 | WHU-OPT-SAR | UperNet + iTPN | mIoU | 46.1 | 47.1 |
 | DDHR-SK | UperNet + iTPN | mIoU | 83.4 | 83.6 |
 
-> **Correspondence with the paper.** These numbers are exactly the values reported in the paper (Appendix tables `tab_RSAR`, `tab_SARDet-100K`, `tab_SSDD`, `tab_HRSID`, `tab_airpolsar_amplitude`, `tab_whu_opt_sar`, `tab_ddhr_sk`). SSDD / HRSID and all segmentation logs match the paper exactly; the RSAR row uses the *test* set (the log field `test_mAP50`).
+> These numbers match the paper tables. SSDD / HRSID and all segmentation logs match exactly; the RSAR row uses the *test* set (log field `test_mAP50`).
 
 ## Contents under visualize/
 
 | File(s) | Description |
 | --- | --- |
 | `speckle_stability_out/`、`speckle_stability_out_50ep/` | Speckle-stability experiment data (1200-epoch / 50-epoch settings) |
+| `speckle_stability_gamma_out/`、`speckle_stability_meannorm_out/` | Extra speckle-stability variants (gamma / mean-norm) |
 | `stability_transfer_out/` | Stability–transfer scatter data (x: drift, y: 10-shot acc.) |
 | `target_ablation_soc_10shot_summary.csv/.json` | 10-shot target-ablation summary on SOC-50 |
 

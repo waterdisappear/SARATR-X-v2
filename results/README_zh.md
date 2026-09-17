@@ -4,7 +4,7 @@
 
 # results — 实验结果说明
 
-本目录存放 SARATR-X-v2 的实验结果数据：包括**检测与分割**下游实验的原始训练日志与配置（从原始实验目录 `D:\2024_SARatrX_2\result` 复制），以及可视化脚本所需的小体积 csv/json 数据。
+本目录存放 SARATR-X-v2 的实验结果数据：包括**检测与分割**下游实验的原始训练日志与配置，以及可视化脚本所需的小体积 csv/json 数据。
 
 > 提示：模型检查点（`.pth`，单个 1–4 GB）**不随仓库提交**，统一放在 `weights/` 目录单独上传。这里存放的日志包含论文表格所用的最终指标。
 
@@ -45,13 +45,14 @@ results/
 | WHU-OPT-SAR | UperNet + iTPN | mIoU | 46.1 | 47.1 |
 | DDHR-SK | UperNet + iTPN | mIoU | 83.4 | 83.6 |
 
-> **与论文的对应关系。** 以上数字与论文报告值完全一致（附录 `tab_RSAR`、`tab_SARDet-100K`、`tab_SSDD`、`tab_HRSID`、`tab_airpolsar_amplitude`、`tab_whu_opt_sar`、`tab_ddhr_sk`）。SSDD / HRSID 及全部分割日志与论文完全对应；RSAR 行采用 **测试集** 指标（日志字段 `test_mAP50`）。
+> 以上数字与论文表格一致。SSDD / HRSID 及全部分割日志完全对应；RSAR 行采用 **测试集** 指标（日志字段 `test_mAP50`）。
 
 ## visualize/ 内容说明
 
 | 文件 | 说明 |
 | --- | --- |
-| `speckle_stability_out/`、`speckle_stability_out_50ep/` | 斑点稳定性实验数据（1200 epoch / 50 epoch 设置） |
+| `speckle_stability_out/`、`speckle_stability_out_50ep/` | 散斑稳定性实验数据（1200 epoch / 50 epoch 设置） |
+| `speckle_stability_gamma_out/`、`speckle_stability_meannorm_out/` | 散斑稳定性额外设置（gamma / mean-norm） |
 | `stability_transfer_out/` | 稳定性—迁移散点数据 |
 | `target_ablation_soc_10shot_summary.csv/.json` | SOC-50 上 10-shot 目标消融汇总 |
 

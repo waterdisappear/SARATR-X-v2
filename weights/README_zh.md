@@ -4,7 +4,7 @@
 
 # weights — 预训练权重说明
 
-本目录存放 SARATR-X-v2 的预训练权重。由于模型文件较大（每个约 1 GB），**不随仓库提交**，请从 release 附件 / 网盘下载后按下列结构放置。
+本目录存放 SARATR-X-v2 的预训练权重。由于模型文件较大（每个约 1 GB），**不随仓库提交**；请发邮件至 **lwj2150508321@sina.com** 申请获取，再从 [百度网盘](https://pan.baidu.com/s/1jwtNSoDEHwd-pYESFqOmGQ) / [Hugging Face](https://huggingface.co/waterdisappear/SARATR-X-v2) 下载后按下列结构放置。
 
 ## 目录结构
 

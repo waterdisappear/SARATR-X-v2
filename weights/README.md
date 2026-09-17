@@ -4,7 +4,7 @@
 
 # weights — Pre-trained Weights
 
-This directory stores the pre-trained weights of SARATR-X-v2. Since each model file is large (~1 GB), they are **not committed** to the repository; download them from the release and place them following the structure below.
+This directory stores the pre-trained weights of SARATR-X-v2. Since each model file is large (~1 GB), they are **not committed** to the repository; email **lwj2150508321@sina.com** to request access, then download from [BaiduYun](https://pan.baidu.com/s/1jwtNSoDEHwd-pYESFqOmGQ) / [Hugging Face](https://huggingface.co/waterdisappear/SARATR-X-v2) and place them following the structure below.
 
 ## Directory Structure
 

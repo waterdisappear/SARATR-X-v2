@@ -1,0 +1,50 @@
+{
+  "input_hw": [
+    224,
+    224
+  ],
+  "spatial_locations": 50176,
+  "counting_rule": "Dense conv2d MACs as implemented (F.conv2d); log/sigmoid/pad omitted; multi adds 11N fusion MACs.",
+  "branch_macs": {
+    "S1": 451584,
+    "S2": 9834496,
+    "S3": 24285184,
+    "S4": 72454144,
+    "S5": 146313216,
+    "S6": 245862400
+  },
+  "modes": [
+    {
+      "mode": "pixel",
+      "macs": 0,
+      "gmacs": 0.0,
+      "rel_to_single_s1": 0.0,
+      "rel_to_multi": 0.0,
+      "pct_of_multi": 0.0
+    },
+    {
+      "mode": "single_s1",
+      "macs": 451584,
+      "gmacs": 0.000452,
+      "rel_to_single_s1": 1.0,
+      "rel_to_multi": 0.0009,
+      "pct_of_multi": 0.09
+    },
+    {
+      "mode": "single_s6",
+      "macs": 245862400,
+      "gmacs": 0.245862,
+      "rel_to_single_s1": 544.44,
+      "rel_to_multi": 0.492,
+      "pct_of_multi": 49.2
+    },
+    {
+      "mode": "multi",
+      "macs": 499752960,
+      "gmacs": 0.499753,
+      "rel_to_single_s1": 1106.67,
+      "rel_to_multi": 1.0,
+      "pct_of_multi": 100.0
+    }
+  ]
+}

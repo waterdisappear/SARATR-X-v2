@@ -87,8 +87,10 @@ def parse_args() -> argparse.Namespace:
         "--speckle_mode",
         type=str,
         default="lognormal",
-        choices=("lognormal", "gamma"),
-        help="Multiplicative speckle model.",
+        choices=("lognormal", "lognormal_meannorm", "gamma"),
+        help="Multiplicative speckle model. "
+        "lognormal: n=exp(σϵ); lognormal_meannorm: n=exp(σϵ)/exp(σ²/2) (unit mean); "
+        "gamma: unit-mean Gamma(L,L).",
     )
     p.add_argument(
         "--speckle_std",
@@ -220,6 +222,13 @@ def speckle_lognormal(x: torch.Tensor, std: float, g: torch.Generator) -> torch.
     return (x * n).clamp(0.0, 1.0)
 
 
+def speckle_lognormal_meannorm(x: torch.Tensor, std: float, g: torch.Generator) -> torch.Tensor:
+    """Unit-mean log-normal: n = exp(σϵ) / E[exp(σϵ)] = exp(σϵ - σ²/2)."""
+    eps = torch.randn(x.shape, device=x.device, dtype=x.dtype, generator=g)
+    n = torch.exp(std * eps - 0.5 * (std ** 2))
+    return (x * n).clamp(0.0, 1.0)
+
+
 def speckle_gamma(x: torch.Tensor, L: float, g: torch.Generator) -> torch.Tensor:
     conc = torch.tensor(L, device=x.device, dtype=x.dtype)
     dist = torch.distributions.Gamma(concentration=conc, rate=conc)
@@ -304,6 +313,8 @@ def compute_mean_stability(
             g = gens[r]
             if speckle_mode == "lognormal":
                 xs.append(speckle_lognormal(x0, speckle_std, g))
+            elif speckle_mode == "lognormal_meannorm":
+                xs.append(speckle_lognormal_meannorm(x0, speckle_std, g))
             else:
                 xs.append(speckle_gamma(x0, speckle_L, g))
 
@@ -363,11 +374,14 @@ def main() -> None:
     p = args.patch_size
     K = args.num_realizations
 
-    if args.speckle_mode == "lognormal":
+    if args.speckle_mode in ("lognormal", "lognormal_meannorm"):
         levels = parse_float_list(args.speckle_std_list)
         if not levels:
             levels = [args.speckle_std]
-        xlabel = r"Speckle strength $\sigma$ (log-normal multiplicative)"
+        if args.speckle_mode == "lognormal":
+            xlabel = r"Speckle strength $\sigma$ (log-normal multiplicative)"
+        else:
+            xlabel = r"Speckle strength $\sigma$ (mean-normalized log-normal, $\mathbb{E}[n]=1$)"
         x_tick_labels = [f"{v:g}" for v in levels]
         param_key = "speckle_std"
     else:
@@ -387,7 +401,7 @@ def main() -> None:
 
     for ci, param in enumerate(levels):
         run_seed = args.seed + ci * 1_000_003
-        if args.speckle_mode == "lognormal":
+        if args.speckle_mode in ("lognormal", "lognormal_meannorm"):
             std, L = param, args.speckle_L
         else:
             std, L = args.speckle_std, param
@@ -437,7 +451,9 @@ def main() -> None:
                 "num_images": len(paths),
                 "num_realizations_K": K,
                 "speckle_mode": args.speckle_mode,
-                "speckle_std_list": levels if args.speckle_mode == "lognormal" else None,
+                "speckle_std_list": levels
+                if args.speckle_mode in ("lognormal", "lognormal_meannorm")
+                else None,
                 "speckle_L_list": levels if args.speckle_mode == "gamma" else None,
                 "patch_size": p,
                 "min_spatial": args.min_spatial,

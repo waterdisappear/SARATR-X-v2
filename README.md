@@ -20,9 +20,12 @@
 <p align="center">
   <a href="https://arxiv.org/abs/2607.23238"><img src="https://img.shields.io/badge/Paper-arxiv-red"></a>
   <a href="https://github.com/waterdisappear/SARATR-X-v2"><img src="https://img.shields.io/badge/Code-GitHub-blue"></a>
-  <a href="https://github.com/waterdisappear/SARATR-X-v2/releases"><img src="https://img.shields.io/badge/Data%26Checkpoint-Release-yellow"></a>
+  <a href="https://pan.baidu.com/s/1jwtNSoDEHwd-pYESFqOmGQ"><img src="https://img.shields.io/badge/Data&Checkpoint-BaiduYun-blue"></a>
+  <a href="https://huggingface.co/waterdisappear/SARATR-X-v2"><img src="https://img.shields.io/badge/Data&Checkpoint-Hugging%20face-yellow"></a>
   <a href="https://zhuanlan.zhihu.com/p/2070277357513004786"><img src="https://img.shields.io/badge/文章-知乎-blue"></a>
 </p>
+
+> **Note:** This paper is currently under review. Data and checkpoints ([BaiduYun](https://pan.baidu.com/s/1jwtNSoDEHwd-pYESFqOmGQ) / [Hugging Face](https://huggingface.co/waterdisappear/SARATR-X-v2)) are available upon request — please email **lwj2150508321@sina.com**.
 
 <p align="center">
   <img src="docs/figures/fig_framework_v3.png" width="88%">
@@ -151,7 +154,7 @@ See `dataset/README.md` for directory conventions and how to obtain the datasets
 
 ## Weights & Results
 
-Pre-trained weights are large and **not committed**; download them from the release and place them per `weights/README.md`. Experiment logs/configs (detection/segmentation) and the small visualization csv/json are committed under `results/`.
+Pre-trained weights are large and **not committed**; email **lwj2150508321@sina.com** to request access, then download from [BaiduYun](https://pan.baidu.com/s/1jwtNSoDEHwd-pYESFqOmGQ) / [Hugging Face](https://huggingface.co/waterdisappear/SARATR-X-v2) and place them per `weights/README.md`. Experiment logs/configs (detection/segmentation) and the small visualization csv/json are committed under `results/`.
 
 - `weights/README.md`: pre-trained weight layout (iTPN-B/L × fusion targets/ablations) and mapping to downstream tasks; `checkpoint-1200.pth` by default;
 - `results/README.md`: downstream result layout;
