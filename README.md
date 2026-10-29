@@ -25,7 +25,7 @@
   <a href="https://zhuanlan.zhihu.com/p/2070277357513004786"><img src="https://img.shields.io/badge/文章-知乎-blue"></a>
 </p>
 
-> **Note:** This paper is currently under review. Data and checkpoints ([BaiduYun](https://pan.baidu.com/s/1jwtNSoDEHwd-pYESFqOmGQ) / [Hugging Face](https://huggingface.co/waterdisappear/SARATR-X-v2)) are available upon request — please email **lwj2150508321@sina.com**.
+> **Note:** Data and checkpoints ([BaiduYun](https://pan.baidu.com/s/1jwtNSoDEHwd-pYESFqOmGQ) / [Hugging Face](https://huggingface.co/waterdisappear/SARATR-X-v2)) are available upon request — please email **lwj2150508321@sina.com**.
 
 <p align="center">
   <img src="docs/figures/fig_framework_v3.png" width="88%">
@@ -164,15 +164,15 @@ Pre-trained weights are large and **not committed**; email **lwj2150508321@sina.
 ### Citation
 
 ```bibtex
-@article{saratrxv2,
-  title={SARATR-X-v2: Scale-Aware Structural Pre-Training for SAR Foundation Models},
-  author={Li, Weijie and Song, Yafei and Liu, Yongxiang and Peng, Bowen and Zhou, Jie and
-          Xia, Jingyuan and Yang, Wei and Liu, Tianpeng and Liu, Zhen and Liu, Li},
-  journal={IEEE Geoscience and Remote Sensing Magazine},
+@ARTICLE{li2026saratr,
+  author={Li, Weijie and Song, Yafei and Liu, Yongxiang and Peng, Bowen and Zhou, Jie and Xia, Jingyuan and Yang, Wei and Liu, Tianpeng and Liu, Zhen and Liu, Li},
+  journal={IEEE Geoscience and Remote Sensing Magazine}, 
+  title={SARATR-X-v2: Scale-aware structural pretraining for synthetic aperture radar foundation models}, 
   year={2026},
-  eprint={2607.23238},
-  archivePrefix={arXiv},
-  primaryClass={cs.CV}
+  volume={},
+  number={},
+  pages={2-20},
+  doi={10.1109/MGRS.2026.3738381}
 }
 ```
 
