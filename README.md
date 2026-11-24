@@ -19,6 +19,7 @@
 
 <p align="center">
   <a href="https://arxiv.org/abs/2607.23238"><img src="https://img.shields.io/badge/Paper-arxiv-red"></a>
+  <a href="./docs/SARATR-X-v2_中文版_全文.pdf"><img src="https://img.shields.io/badge/Paper-中文版-green"></a>
   <a href="https://github.com/waterdisappear/SARATR-X-v2"><img src="https://img.shields.io/badge/Code-GitHub-blue"></a>
   <a href="https://pan.baidu.com/s/1jwtNSoDEHwd-pYESFqOmGQ"><img src="https://img.shields.io/badge/Data&Checkpoint-BaiduYun-blue"></a>
   <a href="https://huggingface.co/waterdisappear/SARATR-X-v2"><img src="https://img.shields.io/badge/Data&Checkpoint-Hugging%20face-yellow"></a>
@@ -68,7 +69,8 @@ SARATR-X-v2/
 ├── dataset/                 # Dataset conventions & acquisition
 ├── weights/                 # Pre-trained weights (large files, uploaded separately)
 ├── results/                 # Experiment logs & configs (detection/segmentation) + visualize data
-└── docs/figures/            # Paper figures used in this README (PNG/PDF)
+├── docs/figures/            # Paper figures used in this README (PNG/PDF)
+└── docs/SARATR-X-v2_中文版_全文.pdf   # Chinese full-text paper (PDF)
 ```
 
 ## Pre-training

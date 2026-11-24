@@ -19,13 +19,14 @@
 
 <p align="center">
   <a href="https://arxiv.org/abs/2607.23238"><img src="https://img.shields.io/badge/Paper-arxiv-red"></a>
+  <a href="./docs/SARATR-X-v2_中文版_全文.pdf"><img src="https://img.shields.io/badge/论文-中文版-green"></a>
   <a href="https://github.com/waterdisappear/SARATR-X-v2"><img src="https://img.shields.io/badge/Code-GitHub-blue"></a>
   <a href="https://pan.baidu.com/s/1jwtNSoDEHwd-pYESFqOmGQ"><img src="https://img.shields.io/badge/Data&Checkpoint-BaiduYun-blue"></a>
   <a href="https://huggingface.co/waterdisappear/SARATR-X-v2"><img src="https://img.shields.io/badge/Data&Checkpoint-Hugging%20face-yellow"></a>
   <a href="https://zhuanlan.zhihu.com/p/2070277357513004786"><img src="https://img.shields.io/badge/文章-知乎-blue"></a>
 </p>
 
-> **提示：** 本论文尚在审稿中。数据与权重（[百度网盘](https://pan.baidu.com/s/1jwtNSoDEHwd-pYESFqOmGQ) / [Hugging Face](https://huggingface.co/waterdisappear/SARATR-X-v2)）需邮件申请获取，请联系 **lwj2150508321@sina.com**。
+> **提示：** 数据与权重（[百度网盘](https://pan.baidu.com/s/1jwtNSoDEHwd-pYESFqOmGQ) / [Hugging Face](https://huggingface.co/waterdisappear/SARATR-X-v2)）需邮件申请获取，请联系 **lwj2150508321@sina.com**。
 
 <p align="center">
   <img src="docs/figures/fig_framework_v3.png" width="88%">
@@ -68,7 +69,8 @@ SARATR-X-v2/
 ├── dataset/                 # 数据集说明与获取方式
 ├── weights/                 # 预训练权重（大文件，单独上传）
 ├── results/                 # 实验结果日志与配置 + 可视化数据
-└── docs/figures/            # 论文图
+├── docs/figures/            # 论文图
+└── docs/SARATR-X-v2_中文版_全文.pdf   # 中文全文（PDF）
 ```
 
 ## 预训练

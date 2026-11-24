@@ -60,3 +60,9 @@ data/
 # 本地/内部工作流（不随仓库公开）
 .superpowers/
 docs/superpowers/
+
+# Full-text PDF placed directly under docs/ (Chinese version)
+!docs/*.pdf
+
+# Local-only working folders under docs/ (not committed)
+docs/huggingface/
